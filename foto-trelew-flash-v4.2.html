@@ -6,17 +6,18 @@
 <title>Trelewflash · Asistente de pedidos</title>
 <style>
     :root {
-        --color-principal: #1e293b;
-        --color-boton: #3b82f6;
-        --color-boton-hover: #1d4ed8;
+        --color-principal: #4a4a00;
+        --color-boton: #FCFC14;
+        --color-boton-hover: #d6d600;
+        --color-boton-texto: #1a1a00;
         --color-wa: #25D366;
         --color-wa-hover: #128C7E;
-        --gris-borde: #e2e8f0;
-        --gris-suave: #f8fafc;
+        --gris-borde: #fff59d;
+        --gris-suave: #fffde7;
     }
     * { box-sizing: border-box; }
     body {
-        background-color: #f1f5f9; font-family: system-ui, -apple-system, sans-serif;
+        background-color: #fff9c4; font-family: system-ui, -apple-system, sans-serif;
         margin: 0; padding: 12px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh;
     }
     .pantalla {
@@ -39,9 +40,9 @@
         border-radius: 20px; font-weight: bold; font-size: 14px; cursor: pointer; }
     .chip-carrito:hover { background: var(--color-wa-hover); }
 
-    .btn-menu { display: block; width: 100%; background: var(--color-boton); color: #fff; border: none;
+    .btn-menu { display: block; width: 100%; background: var(--color-boton); color: var(--color-boton-texto); border: none;
         padding: 20px 15px; font-size: 18px; font-weight: bold; border-radius: 12px; cursor: pointer;
-        margin-bottom: 14px; box-shadow: 0 4px 6px rgba(59,130,246,0.2); transition: transform .1s, background-color .2s; }
+        margin-bottom: 14px; box-shadow: 0 4px 6px rgba(252,252,20,0.4); transition: transform .1s, background-color .2s; }
     .btn-menu:hover { background: var(--color-boton-hover); transform: scale(1.01); }
     .btn-menu:active { transform: scale(.99); }
     .btn-secundario { background: #64748b; box-shadow: 0 4px 6px rgba(100,116,139,.2); }
@@ -74,9 +75,9 @@
     .panel-retoque { background: var(--gris-suave); border: 2px dashed #cbd5e1; border-radius: 8px; padding: 12px;
         margin: 12px 0; display: flex; align-items: center; text-align: left; cursor: pointer; }
     .panel-retoque input { width: 22px; height: 22px; margin-right: 12px; accent-color: var(--color-wa); cursor: pointer; }
-    .panel-retoque h4 { margin: 0; font-size: 14px; color: #1e293b; }
+    .panel-retoque h4 { margin: 0; font-size: 14px; color: var(--color-principal); }
     .panel-retoque p  { margin: 2px 0 0; font-size: 12px; }
-    .nota-info { background:#eff6ff; border:1px solid #bfdbfe; color:#1e40af; font-size:13px; text-align:left;
+    .nota-info { background:var(--gris-suave); border:1px solid var(--gris-borde); color:var(--color-principal); font-size:13px; text-align:left;
         padding:9px 12px; border-radius:8px; margin:10px 0; }
 
     .fila-especial { display:flex; gap:8px; align-items:center; text-align:left; margin:10px 0; flex-wrap:wrap; }
@@ -96,7 +97,7 @@
 
     .btn-tool { background: #fff; border: 2px solid #cbd5e1; padding: 9px 12px; font-size: 13px; font-weight: bold;
         border-radius: 8px; cursor: pointer; display:inline-block; }
-    .btn-tool:hover { border-color: var(--color-boton); color: var(--color-boton); }
+    .btn-tool:hover { border-color: var(--color-boton-hover); color: var(--color-principal); }
     .btn-tool.peligro:hover { border-color: #dc2626; color: #dc2626; }
 
     .thumbs { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
@@ -113,14 +114,18 @@
         font-size: 11px; color: rgba(30,41,59,.5); pointer-events: none; }
     .foto-taza { position: absolute; width: 90px; cursor: grab; user-select: none; touch-action: none;
         box-shadow: 0 2px 8px rgba(0,0,0,.3); border: 2px solid transparent; }
-    .foto-taza.seleccionada { border-color: var(--color-boton); }
+    .foto-taza.seleccionada, .texto-taza.seleccionada { border-color: var(--color-boton); }
+    .texto-taza { position: absolute; cursor: grab; user-select: none; touch-action: none;
+        font-weight: bold; font-size: 24px; color: var(--color-principal); line-height: 1.2; text-align: center;
+        white-space: pre-wrap; max-width: 92%; padding: 3px 7px; border: 2px solid transparent;
+        text-shadow: 0 1px 2px rgba(255,255,255,.7); }
     .herramientas { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; margin-bottom: 10px; }
     .slider-fila { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
     .slider-fila input[type=range] { flex: 1; accent-color: var(--color-boton); }
 
     .item-carrito { display: flex; justify-content: space-between; align-items: flex-start; text-align: left;
         padding: 12px; border: 1px solid var(--gris-borde); border-radius: 10px; margin-bottom: 10px; background: var(--gris-suave); }
-    .item-carrito .desc { font-weight: bold; color: #1e293b; font-size: 15px; }
+    .item-carrito .desc { font-weight: bold; color: var(--color-principal); font-size: 15px; }
     .item-carrito .sub  { font-size: 13px; color: #64748b; margin-top: 3px; }
     .item-carrito .precio { font-weight: bold; color: #0f172a; white-space: nowrap; margin-left: 10px; text-align:right; }
     .item-carrito .mini-thumbs { display:flex; gap:4px; margin-top:6px; flex-wrap:wrap; }
@@ -266,17 +271,28 @@
         <label class="btn-tool">📷 Agregar fotos<input type="file" accept="image/*" multiple style="display:none" onchange="subirFotosTaza(event)"></label>
         <label class="btn-tool">🖼 Fondo<input type="file" accept="image/*" style="display:none" onchange="subirFondoTaza(event)"></label>
         <label class="btn-tool">🎨 Color<input type="color" style="display:none" value="#ffffff" onchange="colorFondoTaza(event)"></label>
-        <button class="btn-tool" onclick="traerAlFrente()">⬆ Traer al frente</button>
-        <button class="btn-tool peligro" onclick="borrarFotoSel()">🗑 Borrar foto</button>
+        <button class="btn-tool" onclick="duplicarSel()">📄 Duplicar</button>
+        <button class="btn-tool" onclick="traerAlFrente()">⬆ Al frente</button>
+        <button class="btn-tool" onclick="mandarAlFondo()">⬇ Al fondo</button>
+        <button class="btn-tool peligro" onclick="borrarFotoSel()">🗑 Borrar</button>
     </div>
     <div class="slider-fila">
-        <span style="font-size:13px;color:#475569;font-weight:bold;">Tamaño</span>
+        <span style="font-size:13px;color:#475569;font-weight:bold;min-width:52px;">Tamaño</span>
         <input type="range" id="slider-taza" min="40" max="240" value="90" oninput="redimensionarSel(this.value)">
+    </div>
+    <div class="slider-fila">
+        <span style="font-size:13px;color:#475569;font-weight:bold;min-width:52px;">Rotar</span>
+        <input type="range" id="slider-rot" min="-180" max="180" value="0" oninput="rotarSel(this.value)">
+        <button class="btn-tool" style="padding:4px 8px;" onclick="rotar90()">↻ 90°</button>
     </div>
 
     <div class="campo" style="margin-top:6px;">
         <label>3. Texto que llevará el diseño (opcional):</label>
-        <textarea id="taza-texto" rows="2" placeholder="Ej: Feliz cumple mamá · 2026"></textarea>
+        <textarea id="taza-texto" rows="2" placeholder="Ej: Feliz cumple mamá · 2026" oninput="actualizarTextoTaza()"></textarea>
+        <div class="slider-fila" style="margin-top:6px;">
+            <label class="btn-tool" style="margin:0;">🎨 Color del texto<input type="color" id="color-texto-taza" value="#1e293b" style="display:none" oninput="colorTextoTaza(this.value)"></label>
+            <span style="font-size:12px;color:#64748b;">Tocá el texto en el diseño para moverlo o cambiarle el tamaño.</span>
+        </div>
     </div>
 
     <div class="fila-cantidad">
@@ -426,6 +442,7 @@ let adjuntosSouv = [];
 let taza = { tipo: TIPOS_TAZA[1], tieneFondo: false };
 let fotoTazaSel = null;
 let zTop = 1;
+let zBottom = 0;
 let eventoActual = null;
 
 /* =========================================================
@@ -687,6 +704,8 @@ function abrirTaza() {
     lienzo.innerHTML = ""; lienzo.style.backgroundImage = ""; lienzo.style.background = "#fff";
     taza.tieneFondo = false; fotoTazaSel = null;
     document.getElementById("taza-texto").value = "";
+    document.getElementById("color-texto-taza").value = "#1e293b";
+    document.getElementById("slider-rot").value = 0;
     document.getElementById("in-cant-taza").value = 1;
     recalcularTaza();
     mostrar("p-taza");
@@ -722,29 +741,83 @@ function colorFondoTaza(ev) {
     l.style.backgroundImage = ""; l.style.backgroundColor = ev.target.value; taza.tieneFondo = true;
 }
 function hacerArrastrable(el) {
-    let dx, dy, activo = false;
+    let sx, sy, startL, startT, activo = false;
     el.addEventListener("pointerdown", e => {
         seleccionarFotoTaza(el); activo = true; el.setPointerCapture(e.pointerId);
-        const r = el.getBoundingClientRect(); dx = e.clientX - r.left; dy = e.clientY - r.top; e.preventDefault();
+        sx = e.clientX; sy = e.clientY;
+        startL = parseFloat(el.style.left) || 0; startT = parseFloat(el.style.top) || 0;
+        e.preventDefault();
     });
     el.addEventListener("pointermove", e => {
         if (!activo) return;
         const c = document.getElementById("lienzo-taza").getBoundingClientRect();
-        let x = e.clientX - c.left - dx, y = e.clientY - c.top - dy;
+        let x = startL + (e.clientX - sx), y = startT + (e.clientY - sy);
         x = Math.max(0, Math.min(x, c.width - el.offsetWidth));
         y = Math.max(0, Math.min(y, c.height - el.offsetHeight));
         el.style.left = x + "px"; el.style.top = y + "px";
     });
     el.addEventListener("pointerup", () => activo = false);
+    el.addEventListener("pointercancel", () => activo = false);
 }
 function seleccionarFotoTaza(el) {
-    document.querySelectorAll(".foto-taza").forEach(f => f.classList.remove("seleccionada"));
+    document.querySelectorAll(".foto-taza, .texto-taza").forEach(f => f.classList.remove("seleccionada"));
     el.classList.add("seleccionada"); fotoTazaSel = el;
-    document.getElementById("slider-taza").value = el.offsetWidth;
+    const s = document.getElementById("slider-taza");
+    if (el.classList.contains("texto-taza")) { s.min = 14; s.max = 80; s.value = parseFloat(el.style.fontSize) || 24; }
+    else { s.min = 40; s.max = 240; s.value = el.offsetWidth; }
+    document.getElementById("slider-rot").value = parseFloat(el.dataset.rot) || 0;
 }
-function redimensionarSel(val) { if (fotoTazaSel) fotoTazaSel.style.width = val + "px"; }
+function redimensionarSel(val) {
+    if (!fotoTazaSel) return;
+    if (fotoTazaSel.classList.contains("texto-taza")) fotoTazaSel.style.fontSize = val + "px";
+    else fotoTazaSel.style.width = val + "px";
+}
+function aplicarRot(el) { el.style.transform = "rotate(" + (parseFloat(el.dataset.rot) || 0) + "deg)"; }
+function rotarSel(val) { if (!fotoTazaSel) return; fotoTazaSel.dataset.rot = val; aplicarRot(fotoTazaSel); }
+function rotar90() {
+    if (!fotoTazaSel) return;
+    let r = (parseFloat(fotoTazaSel.dataset.rot) || 0) + 90;
+    if (r > 180) r -= 360;
+    fotoTazaSel.dataset.rot = r; aplicarRot(fotoTazaSel);
+    document.getElementById("slider-rot").value = r;
+}
 function traerAlFrente() { if (fotoTazaSel) fotoTazaSel.style.zIndex = ++zTop; }
-function borrarFotoSel() { if (!fotoTazaSel) return; fotoTazaSel.remove(); fotoTazaSel = null; }
+function mandarAlFondo() { if (fotoTazaSel) fotoTazaSel.style.zIndex = --zBottom; }
+function duplicarSel() {
+    if (!fotoTazaSel || fotoTazaSel.classList.contains("texto-taza")) return;
+    const orig = fotoTazaSel;
+    const copia = orig.cloneNode(true);
+    copia.classList.remove("seleccionada");
+    copia.style.left = ((parseFloat(orig.style.left) || 0) + 16) + "px";
+    copia.style.top = ((parseFloat(orig.style.top) || 0) + 16) + "px";
+    copia.style.zIndex = ++zTop;
+    hacerArrastrable(copia);
+    document.getElementById("lienzo-taza").appendChild(copia);
+    seleccionarFotoTaza(copia);
+}
+function borrarFotoSel() {
+    if (!fotoTazaSel) return;
+    if (fotoTazaSel.classList.contains("texto-taza")) document.getElementById("taza-texto").value = "";
+    fotoTazaSel.remove(); fotoTazaSel = null;
+}
+function actualizarTextoTaza() {
+    const val = document.getElementById("taza-texto").value;
+    const lienzo = document.getElementById("lienzo-taza");
+    let el = document.getElementById("texto-taza-el");
+    if (!val.trim()) { if (el) { if (fotoTazaSel === el) fotoTazaSel = null; el.remove(); } return; }
+    if (!el) {
+        el = document.createElement("div");
+        el.id = "texto-taza-el"; el.className = "texto-taza";
+        el.style.left = "18px"; el.style.top = "95px"; el.style.zIndex = ++zTop;
+        el.style.color = document.getElementById("color-texto-taza").value;
+        hacerArrastrable(el); lienzo.appendChild(el); seleccionarFotoTaza(el);
+    }
+    el.textContent = val;
+}
+function colorTextoTaza(c) {
+    const el = document.getElementById("texto-taza-el");
+    if (el) el.style.color = c;
+}
 function precioTazaActual() {
     const cant = Math.max(1, parseInt(document.getElementById("in-cant-taza").value) || 1);
     return taza.tipo.precio * cant;
