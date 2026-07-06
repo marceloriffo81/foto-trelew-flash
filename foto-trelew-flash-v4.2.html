@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trelewflash · Asistente de pedidos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@600&family=Dancing+Script:wght@600&family=Great+Vibes&family=Lobster&family=Pacifico&family=Playfair+Display:wght@600&family=Satisfy&display=swap" rel="stylesheet">
 <style>
     :root {
         --color-principal: #4a4a00;
@@ -105,6 +108,21 @@
     .thumb img { width:46px; height:46px; object-fit:cover; border-radius:6px; border:1px solid #cbd5e1; }
     .thumb button { position:absolute; top:-6px; right:-6px; width:18px; height:18px; border-radius:50%;
         border:none; background:#dc2626; color:#fff; font-size:11px; line-height:1; cursor:pointer; }
+    .thumb .btn-texto-foto { top:auto; bottom:-6px; background:#f8fafc; color:#334155; border:1px solid #cbd5e1; font-size:10px; padding:0; }
+    .thumb .btn-crop-foto { top:auto; bottom:-6px; right:auto; left:-6px; background:#f8fafc; color:#334155; border:1px solid #cbd5e1; font-size:10px; padding:0; }
+
+    .modal-flotante { position: fixed; inset: 0; background: rgba(15,23,42,.75); z-index: 1000;
+        display: flex; align-items: center; justify-content: center; padding: 14px; }
+    .modal-flotante.oculto { display: none; }
+    .caja-modal { background: #fff; border-radius: 12px; padding: 16px; width: 100%; max-width: 480px; text-align: center; }
+    .caja-modal h4 { margin: 0 0 10px; color: var(--color-principal); font-size: 16px; }
+    #crop-area { position: relative; display: inline-block; max-width: 100%; overflow: hidden; touch-action: none; margin-bottom: 12px; }
+    #crop-img { display: block; max-width: 100%; max-height: 55vh; user-select: none; -webkit-user-drag: none; }
+    #crop-rect { position: absolute; border: 2px dashed var(--color-boton); box-sizing: border-box; cursor: move;
+        box-shadow: 0 0 0 9999px rgba(0,0,0,.5); touch-action: none; }
+    #crop-handle { position: absolute; right: -10px; bottom: -10px; width: 20px; height: 20px; border-radius: 50%;
+        background: var(--color-boton); border: 2px solid #333; cursor: nwse-resize; touch-action: none; }
+    .thumb.con-texto img { border: 2px solid var(--color-wa); }
 
     .taza-tipos { display: grid; grid-template-columns: repeat(3,1fr); gap: 9px; margin-bottom: 8px; }
     .lienzo-taza { position: relative; width: 100%; height: 240px; margin: 12px 0; border-radius: 8px;
@@ -113,8 +131,9 @@
     .lienzo-taza::after { content: "Zona de impresión de la taza"; position: absolute; top: 6px; left: 8px;
         font-size: 11px; color: rgba(30,41,59,.5); pointer-events: none; }
     .foto-taza { position: absolute; width: 90px; cursor: grab; user-select: none; touch-action: none;
-        box-shadow: 0 2px 8px rgba(0,0,0,.3); border: 2px solid transparent; }
-    .foto-taza.seleccionada, .texto-taza.seleccionada { border-color: var(--color-boton); }
+        box-shadow: 0 2px 8px rgba(0,0,0,.3); }
+    .foto-taza.seleccionada, .texto-taza.seleccionada, .foto-collage.seleccionada {
+        outline: 3px solid var(--color-boton); outline-offset: 1px; }
     .texto-taza { position: absolute; cursor: grab; user-select: none; touch-action: none;
         font-weight: bold; font-size: 24px; color: var(--color-principal); line-height: 1.2; text-align: center;
         white-space: pre-wrap; max-width: 92%; padding: 3px 7px; border: 2px solid transparent;
@@ -130,8 +149,7 @@
     .lienzo-collage { position: relative; width: 100%; aspect-ratio: 2 / 3; margin: 12px 0; border-radius: 8px;
         border: 2px solid #cbd5e1; background: #fff; overflow: hidden; touch-action: none; }
     .foto-collage { position: absolute; cursor: grab; user-select: none; touch-action: none; object-fit: cover;
-        box-shadow: 0 1px 5px rgba(0,0,0,.25); border: 2px solid transparent; }
-    .foto-collage.seleccionada { border-color: var(--color-boton); }
+        box-shadow: 0 1px 5px rgba(0,0,0,.25); }
 
     .item-carrito { display: flex; justify-content: space-between; align-items: flex-start; text-align: left;
         padding: 12px; border: 1px solid var(--gris-borde); border-radius: 10px; margin-bottom: 10px; background: var(--gris-suave); }
@@ -145,6 +163,19 @@
     .carrito-vacio { color: #94a3b8; padding: 30px 0; }
     .datos-cliente-mini { text-align: left; font-size: 13px; color: #475569; background: var(--gris-suave);
         padding: 10px 12px; border-radius: 8px; margin-bottom: 14px; }
+
+    #toast-carrito { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%) translateY(90px);
+        background: #1e293b; color: #fff; padding: 9px 10px 9px 16px; border-radius: 24px; font-size: 14px;
+        font-weight: bold; box-shadow: 0 6px 18px rgba(0,0,0,.35); z-index: 999; opacity: 0;
+        transition: all .25s ease; white-space: nowrap; display: flex; align-items: center; gap: 10px; }
+    #toast-carrito.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #toast-carrito button { background: var(--color-wa); color: #fff; border: none; border-radius: 16px;
+        padding: 6px 12px; font-weight: bold; font-size: 13px; cursor: pointer; }
+    #toast-carrito button:hover { background: var(--color-wa-hover); }
+    .item-carrito .mini-thumbs { flex-wrap: nowrap; overflow: hidden; }
+    .item-carrito .mini-thumbs .mini-mas { width: 34px; height: 34px; min-width: 34px; border-radius: 5px;
+        border: 1px dashed #94a3b8; background: #fff; color: #475569; font-size: 12px; font-weight: bold; cursor: pointer; }
+    .item-carrito .mini-thumbs.abierta { flex-wrap: wrap; overflow: visible; }
 </style>
 </head>
 <body>
@@ -154,7 +185,7 @@
     <h1>¡Hola! Bienvenido a Trelewflash</h1>
     <p>Armá tu pedido paso a paso y nos lo enviás por WhatsApp.</p>
     <button class="btn-menu" onclick="irAPedido()">🛒 Empezar mi pedido</button>
-    <button class="btn-menu btn-secundario" onclick="irAEventos()">🥳 Ver fotos de eventos sociales</button>
+    <button class="btn-menu" onclick="irAEventos()">🥳 Ver fotos de eventos sociales</button>
 </div>
 
 <!-- DATOS DEL CLIENTE -->
@@ -221,13 +252,17 @@
         <input type="checkbox" id="chk-retoque" onchange="recalcularSim()">
         <div><h4>Agregar retoque digital (+ $11.500)</h4><p>Restauración, corregir luces o cambiar el fondo.</p></div>
     </label>
+    <label class="panel-retoque oculto" id="panel-iman">
+        <input type="checkbox" id="chk-iman" onchange="recalcularSim()">
+        <div><h4>Convertir en foto imán (<span id="precio-iman-lbl">-</span>)</h4><p>Tu polaroid con imán para la heladera. Este precio reemplaza al de la impresión común.</p></div>
+    </label>
 
     <div class="fila-cantidad">
         <label id="lbl-cantidad">3. Cantidad de copias:</label>
         <input id="in-cantidad" type="number" min="1" value="1" onchange="recalcularSim()">
     </div>
 
-    <p class="instruccion">4. Adjuntá las fotos de esta medida:</p>
+    <p class="instruccion">4. Adjuntá las fotos de esta medida: <small style="font-weight:normal;">(tocá 📝 en una foto para agregarle un texto impreso, +$300 por foto)</small></p>
     <label class="btn-tool">📷 Adjuntar fotos<input type="file" accept="image/*" multiple style="display:none" onchange="adjuntarSim(event)"></label>
     <div id="thumbs-sim" class="thumbs"></div>
     <div id="nota-fotos-collage" class="nota-info oculto"></div>
@@ -238,6 +273,8 @@
         <div id="plantillas-collage" class="plantillas"></div>
         <div id="lienzo-collage" class="lienzo-collage oculto"></div>
         <div id="tools-collage" class="herramientas oculto">
+            <label class="btn-tool">🖼 Fondo<input type="file" accept="image/*" style="display:none" onchange="subirFondoCollage(event)"></label>
+            <button class="btn-tool" onclick="recortarCol()">✂ Recortar</button>
             <button class="btn-tool" onclick="frenteCol()">⬆ Al frente</button>
             <button class="btn-tool" onclick="fondoCol()">⬇ Al fondo</button>
             <button class="btn-tool peligro" onclick="borrarCol()">🗑 Quitar del diseño</button>
@@ -250,6 +287,11 @@
             <div class="slider-fila">
                 <span style="font-size:13px;color:#475569;font-weight:bold;min-width:52px;">Rotar</span>
                 <input type="range" id="slider-rot-col" min="-180" max="180" value="0" oninput="rotCol(this.value)">
+            </div>
+            <div class="slider-fila">
+                <span style="font-size:13px;color:#475569;font-weight:bold;min-width:52px;">Borde</span>
+                <input type="range" id="slider-borde-col" min="0" max="14" value="0" oninput="bordeCol(this.value)">
+                <label class="btn-tool" style="padding:4px 8px;" title="Color del borde">🎨<input type="color" id="color-borde-col" value="#ffffff" style="display:none" oninput="bordeColorCol(this.value)"></label>
             </div>
         </div>
     </div>
@@ -303,6 +345,7 @@
         <label class="btn-tool">📷 Agregar fotos<input type="file" accept="image/*" multiple style="display:none" onchange="subirFotosTaza(event)"></label>
         <label class="btn-tool">🖼 Fondo<input type="file" accept="image/*" style="display:none" onchange="subirFondoTaza(event)"></label>
         <label class="btn-tool">🎨 Color<input type="color" style="display:none" value="#ffffff" onchange="colorFondoTaza(event)"></label>
+        <button class="btn-tool" onclick="recortarSelTaza()">✂ Recortar</button>
         <button class="btn-tool" onclick="duplicarSel()">📄 Duplicar</button>
         <button class="btn-tool" onclick="traerAlFrente()">⬆ Al frente</button>
         <button class="btn-tool" onclick="mandarAlFondo()">⬇ Al fondo</button>
@@ -317,12 +360,18 @@
         <input type="range" id="slider-rot" min="-180" max="180" value="0" oninput="rotarSel(this.value)">
         <button class="btn-tool" style="padding:4px 8px;" onclick="rotar90()">↻ 90°</button>
     </div>
+    <div class="slider-fila">
+        <span style="font-size:13px;color:#475569;font-weight:bold;min-width:52px;">Borde</span>
+        <input type="range" id="slider-borde" min="0" max="14" value="0" oninput="bordeSel(this.value)">
+        <label class="btn-tool" style="padding:4px 8px;" title="Color del borde">🎨<input type="color" id="color-borde" value="#ffffff" style="display:none" oninput="bordeColorSel(this.value)"></label>
+    </div>
 
     <div class="campo" style="margin-top:6px;">
         <label>3. Texto que llevará el diseño (opcional):</label>
         <textarea id="taza-texto" rows="2" placeholder="Ej: Feliz cumple mamá · 2026" oninput="actualizarTextoTaza()"></textarea>
         <div class="slider-fila" style="margin-top:6px;">
             <label class="btn-tool" style="margin:0;">🎨 Color del texto<input type="color" id="color-texto-taza" value="#1e293b" style="display:none" oninput="colorTextoTaza(this.value)"></label>
+            <select id="fuente-taza" class="btn-tool" style="max-width:150px;" onchange="fuenteTextoTaza(this.value)" title="Tipo de letra"></select>
             <span style="font-size:12px;color:#64748b;">Tocá el texto en el diseño para moverlo o cambiarle el tamaño.</span>
         </div>
     </div>
@@ -367,7 +416,44 @@
     <div id="datos-cliente-mini" class="datos-cliente-mini"></div>
     <div id="lista-carrito"></div>
     <div class="total-carrito">Total: <span id="total-carrito">$ 0</span></div>
-    <a id="btn-wa-final" href="#" target="_blank" class="btn-agregar" style="display:inline-block;text-decoration:none;">🟢 Enviar pedido por WhatsApp</a>
+    <button id="btn-wa-final" class="btn-agregar" onclick="enviarPedido()">🟢 Enviar pedido por WhatsApp</button>
+</div>
+
+<!-- MODAL DE RECORTE -->
+<div id="modal-crop" class="modal-flotante oculto">
+    <div class="caja-modal">
+        <h4>✂ Recortá la foto (arrastrá el marco y el punto amarillo)</h4>
+        <div id="crop-area"><img id="crop-img"><div id="crop-rect"><div id="crop-handle"></div></div></div>
+        <div class="herramientas">
+            <button class="btn-tool" onclick="cropAplicar()">✔ Aplicar recorte</button>
+            <button class="btn-tool peligro" onclick="cropCerrar()">✖ Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL DE TEXTO POR FOTO -->
+<div id="modal-texto" class="modal-flotante oculto">
+    <div class="caja-modal">
+        <h4>📝 Texto impreso para esta foto (+$300)</h4>
+        <div class="campo"><input id="texto-foto-in" type="text" placeholder="Ej: Feliz cumple, Los quiero..." oninput="actualizarPreviewTexto()"></div>
+        <div class="campo"><label>Tipo de letra:</label><select id="texto-foto-fuente" onchange="actualizarPreviewTexto()"></select></div>
+        <div id="texto-foto-preview" style="font-size:26px;text-align:center;padding:10px;border:1px dashed #cbd5e1;border-radius:8px;min-height:44px;color:#1e293b;"></div>
+        <div class="herramientas" style="margin-top:12px;">
+            <button class="btn-tool" onclick="textoFotoAplicar()">✔ Aplicar</button>
+            <button class="btn-tool peligro" onclick="textoFotoQuitar()">🗑 Quitar texto</button>
+            <button class="btn-tool" onclick="cerrarModalTexto()">✖ Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL RESULTADO DEL PEDIDO -->
+<div id="modal-pedido" class="modal-flotante oculto">
+    <div class="caja-modal" style="text-align:center;">
+        <h3 id="pedido-num-titulo" style="margin-top:0;">Registrando pedido…</h3>
+        <div id="pedido-num-detalle" style="font-size:14px;color:#475569;line-height:1.4;"></div>
+        <a id="pedido-wa-btn" href="#" target="_blank" class="btn-agregar oculto" style="display:inline-block;text-decoration:none;margin-top:14px;">🟢 Abrir WhatsApp para enviar</a>
+        <div style="margin-top:10px;"><button class="btn-tool" onclick="document.getElementById('modal-pedido').classList.add('oculto')">Cerrar</button></div>
+    </div>
 </div>
 
 <script>
@@ -375,10 +461,26 @@
    1) MODELO DE DATOS  (fácil de portar a Python/Streamlit)
    ========================================================= */
 const TELEFONO_WA = "5492804299435";
+// Pegá acá la URL del Web App de Google Apps Script (ver guía "CONECTAR-HOJA.md").
+// Si queda vacía, el pedido se envía por WhatsApp sin número de pedido ni carpeta de imágenes.
+const PEDIDOS_URL = "https://script.google.com/macros/s/AKfycbyIWoWJiOGnuplVw2-_f1Kv4Tc3TfoyhTsmXZn-xNCPjOcj__5f_JZ9Z3_M4Jpik65WCA/exec";
 const COSTO_RETOQUE = 11500;
 const COSTO_COLLAGE = 11500;   // ya incluido en los precios del collage
 const COSTO_FOTO_EXTRA = 300;  // por cada foto de collage por encima de 5
 const FOTOS_COLLAGE_INCLUIDAS = 5;
+const COSTO_TEXTO_FOTO = 300;   // texto impreso por foto
+const PRECIOS_IMAN = { "5x7": 2900, "7x10": 2900, "9x13": 3400, "10x15": 4000, "13x18": 5500, "15x21": 6500 };
+const FUENTES = [
+    { nombre: "Clásica",    css: "system-ui, sans-serif" },
+    { nombre: "Elegante",   css: "'Playfair Display', serif" },
+    { nombre: "Manuscrita", css: "'Dancing Script', cursive" },
+    { nombre: "Caligrafía", css: "'Great Vibes', cursive" },
+    { nombre: "Divertida",  css: "'Pacifico', cursive" },
+    { nombre: "Retro",      css: "'Lobster', cursive" },
+    { nombre: "Casual",     css: "'Caveat', cursive" },
+    { nombre: "Moderna",    css: "'Bebas Neue', sans-serif" },
+    { nombre: "Romántica",  css: "'Satisfy', cursive" }
+];
 
 const PLANTILLAS_COLLAGE = {
     2: [[.03,.03,.94,.455],[.03,.515,.94,.455]],
@@ -403,7 +505,7 @@ const CATALOGO_FOTOS = {
         { nombre: "20x30 cm", precio: 7000,  w: 120, h: 180, estilo: "sin-borde" },
         { nombre: "30x40 cm", precio: 14500, w: 150, h: 200, estilo: "sin-borde" }
     ]},
-    polaroid: { titulo: "Estilo Polaroid", escena: "escritorio", items: [
+    polaroid: { titulo: "Estilo Polaroid", escena: "escritorio", esPolaroid: true, items: [
         { nombre: "5x7 cm",   precio: 1100, w: 50, h: 70,  estilo: "polaroid" },
         { nombre: "7x10 cm",  precio: 1100, w: 63, h: 90,  estilo: "polaroid" },
         { nombre: "9x13 cm",  precio: 1300, w: 72, h: 104, estilo: "polaroid" },
@@ -556,6 +658,8 @@ function cargarSimulador(categoria) {
 
     elegirMedida(grupoActual.items[0], null);
     document.getElementById("chk-retoque").checked = false;
+    document.getElementById("panel-iman").classList.toggle("oculto", !grupoActual.esPolaroid);
+    document.getElementById("chk-iman").checked = false;
     document.getElementById("in-cantidad").value = 1;
     adjuntosSim = [];
     renderThumbs("thumbs-sim", adjuntosSim, "sim");
@@ -596,10 +700,15 @@ function fotosExtraCollage() {
     if (!grupoActual || !grupoActual.esCollage) return 0;
     return Math.max(0, adjuntosSim.length - FOTOS_COLLAGE_INCLUIDAS);
 }
+function precioImanMedida() { return PRECIOS_IMAN[selFoto.nombre.replace(" cm", "")] || null; }
+function imanActivo() {
+    return !!(grupoActual && grupoActual.esPolaroid && document.getElementById("chk-iman").checked);
+}
 function precioConocidoFoto() {
     const copias = Math.max(1, parseInt(document.getElementById("in-cantidad").value) || 1);
     const retoqueOn = document.getElementById("chk-retoque").checked;
-    const base = selFoto.especial ? 0 : selFoto.precio;
+    const textos = adjuntosSim.filter(f => f.texto).length * COSTO_TEXTO_FOTO;
+    let base = selFoto.especial ? 0 : selFoto.precio;
 
     if (grupoActual && grupoActual.esCollage) {
         // La impresión se paga por copia; el armado, las fotos extra y el retoque
@@ -607,13 +716,27 @@ function precioConocidoFoto() {
         const armado = COSTO_COLLAGE;
         const extras = fotosExtraCollage() * COSTO_FOTO_EXTRA;
         const retoque = retoqueOn ? COSTO_RETOQUE : 0;
-        return base * copias + armado + extras + retoque;
+        return base * copias + armado + extras + retoque + textos;
     }
+    if (imanActivo()) base = precioImanMedida() || base;
     const retoque = retoqueOn ? COSTO_RETOQUE : 0;
-    return (base + retoque) * copias;
+    return (base + retoque) * copias + textos;
 }
 
 function recalcularSim() {
+    const inCant = document.getElementById("in-cantidad");
+    if (grupoActual && !grupoActual.esCollage) {
+        if (adjuntosSim.length) { inCant.value = adjuntosSim.length; inCant.disabled = true; }
+        else inCant.disabled = false;
+        document.getElementById("lbl-cantidad").innerText = adjuntosSim.length
+            ? "3. Copias (una por foto adjunta):" : "3. Cantidad de copias:";
+    } else {
+        inCant.disabled = false;
+    }
+    if (grupoActual && grupoActual.esPolaroid) {
+        const p = precioImanMedida();
+        document.getElementById("precio-iman-lbl").innerText = p ? formatear(p) + " por copia" : "a cotizar";
+    }
     document.getElementById("precio-sim").innerText =
         formatear(precioConocidoFoto()) + (selFoto.especial ? " + tamaño a cotizar" : "");
 
@@ -629,6 +752,16 @@ function recalcularSim() {
     }
 }
 
+function detalleFotoItem(it) {
+    const partes = [it.estilo === "polaroid" ? "Polaroid" : "Impresión estándar"];
+    if (it.iman) partes.push("con imán");
+    if (it.fotos.length) partes.push(it.fotos.length + " img adjuntas");
+    const nTxt = it.fotos.filter(f => f.texto).length;
+    if (nTxt) partes.push(nTxt + " con texto impreso");
+    if (it.retoque) partes.push("retoque digital");
+    return partes.join(" · ");
+}
+
 function agregarFotoAlCarrito() {
     const cant = Math.max(1, parseInt(document.getElementById("in-cantidad").value) || 1);
     const retoque = document.getElementById("chk-retoque").checked;
@@ -640,34 +773,64 @@ function agregarFotoAlCarrito() {
         nombreItem = "Medida especial " + a + "x" + b + " cm";
     }
 
-    let partes;
+    let fotosItem = adjuntosSim.slice();
+
     if (esCollage) {
-        partes = ["Collage", adjuntosSim.length + " foto(s)"];
+        // Cada collage es un diseño distinto: no se agrupa.
+        let partes = ["Collage", adjuntosSim.length + " foto(s)"];
         const extra = fotosExtraCollage();
         if (extra) partes.push(extra + " extra");
-    } else {
-        partes = [selFoto.estilo === "polaroid" ? "Polaroid" : "Impresión estándar"];
-        if (adjuntosSim.length) partes.push(adjuntosSim.length + " img adjuntas");
-    }
-    if (retoque) partes.push("retoque digital");
-
-    let fotosItem = adjuntosSim.slice();
-    if (esCollage) {
+        if (retoque) partes.push("retoque digital");
         const snap = snapshotCollage();
         if (snap) { fotosItem.unshift({ name: "diseño-collage.jpg", url: snap }); partes.push("con diseño propio"); }
+        carrito.push({
+            id: Date.now() + Math.random(),
+            tipo: "Foto collage",
+            desc: nombreItem + " × " + cant,
+            detalle: partes.join(" · "),
+            subtotal: precioConocidoFoto(),
+            aCotizar: selFoto.especial,
+            fotos: fotosItem
+        });
+    } else {
+        const imanOn = imanActivo();
+        // Si ya hay un ítem con la misma medida, estilo, retoque e imán, se agrupa.
+        const existente = carrito.find(it => it.tipo === "Revelado de foto" &&
+            it.medida === nombreItem && it.estilo === selFoto.estilo && it.retoque === retoque && it.iman === imanOn);
+        if (existente) {
+            existente.cant += cant;
+            existente.fotos = existente.fotos.concat(fotosItem);
+            const nTxt = existente.fotos.filter(f => f.texto).length;
+            existente.subtotal = (existente.precioUnit + (existente.retoque ? COSTO_RETOQUE : 0)) * existente.cant + nTxt * COSTO_TEXTO_FOTO;
+            existente.desc = nombreItem + " × " + existente.cant;
+            existente.detalle = detalleFotoItem(existente);
+        } else {
+            let unit = selFoto.especial ? 0 : selFoto.precio;
+            if (imanOn) unit = precioImanMedida() || unit;
+            const nuevo = {
+                id: Date.now() + Math.random(),
+                tipo: "Revelado de foto",
+                medida: nombreItem, estilo: selFoto.estilo, retoque: retoque, iman: imanOn,
+                cant: cant, precioUnit: unit,
+                desc: nombreItem + " × " + cant,
+                detalle: "",
+                subtotal: precioConocidoFoto(),
+                aCotizar: selFoto.especial,
+                fotos: fotosItem
+            };
+            nuevo.detalle = detalleFotoItem(nuevo);
+            carrito.push(nuevo);
+        }
     }
 
-    carrito.push({
-        id: Date.now() + Math.random(),
-        tipo: esCollage ? "Foto collage" : "Revelado de foto",
-        desc: nombreItem + " × " + cant,
-        detalle: partes.join(" · "),
-        subtotal: precioConocidoFoto(),
-        aCotizar: selFoto.especial,
-        fotos: fotosItem
-    });
+    // Limpiar el formulario para seguir agregando sin salir de la página
     adjuntosSim = [];
+    renderThumbs("thumbs-sim", adjuntosSim, "sim");
+    document.getElementById("in-cantidad").value = 1;
+    document.getElementById("chk-retoque").checked = false;
+    document.getElementById("chk-iman").checked = false;
     if (esCollage) reiniciarCollage();
+    recalcularSim();
     actualizarBadges();
     avisoAgregado();
 }
@@ -749,8 +912,8 @@ function arrastrableCol(el) {
         if (!activo) return;
         const c = document.getElementById("lienzo-collage").getBoundingClientRect();
         let x = sl + (e.clientX - sx), y = st + (e.clientY - sy);
-        x = Math.max(0, Math.min(x, c.width - el.offsetWidth));
-        y = Math.max(0, Math.min(y, c.height - el.offsetHeight));
+        x = limitar(x, 0, c.width - el.offsetWidth);
+        y = limitar(y, 0, c.height - el.offsetHeight);
         el.style.left = x + "px"; el.style.top = y + "px";
     });
     el.addEventListener("pointerup", () => activo = false);
@@ -761,8 +924,10 @@ function seleccionarCol(el) {
     document.querySelectorAll(".foto-collage").forEach(f => f.classList.remove("seleccionada"));
     el.classList.add("seleccionada"); colSel = el;
     const lw = document.getElementById("lienzo-collage").getBoundingClientRect().width;
+    document.getElementById("slider-col").max = el.classList.contains("es-fondo") ? 300 : 100;
     document.getElementById("slider-col").value = Math.round(el.offsetWidth / lw * 100);
     document.getElementById("slider-rot-col").value = parseFloat(el.dataset.rot) || 0;
+    document.getElementById("slider-borde-col").value = parseInt(el.dataset.bw) || 0;
 }
 
 function resizeCol(val) {
@@ -774,6 +939,18 @@ function resizeCol(val) {
 }
 
 function rotCol(val) { if (!colSel) return; colSel.dataset.rot = val; colSel.style.transform = "rotate(" + val + "deg)"; }
+function bordeCol(v) { if (colSel) { colSel.dataset.bw = v; aplicarBorde(colSel); } }
+function bordeColorCol(c) { if (colSel) { colSel.dataset.bc = c; aplicarBorde(colSel); } }
+function recortarCol() {
+    if (!colSel) { alert("Tocá primero una foto del diseño."); return; }
+    const el = colSel;
+    if (!el.dataset.orig) el.dataset.orig = el.src;
+    abrirCrop(el.dataset.orig, res => { el.src = res; });
+}
+function aplicarBorde(el) {
+    const w = parseInt(el.dataset.bw) || 0;
+    el.style.border = w > 0 ? w + "px solid " + (el.dataset.bc || "#ffffff") : "none";
+}
 function frenteCol() { if (colSel) colSel.style.zIndex = ++zTop; }
 function fondoCol()  { if (colSel) colSel.style.zIndex = --zBottom; }
 function borrarCol() { if (colSel) { colSel.remove(); colSel = null; } }
@@ -799,6 +976,48 @@ function snapshotCollage() {
         const sw = w / s, sh = h / s;
         ctx.save(); ctx.translate(x + w / 2, y + h / 2); ctx.rotate(rot);
         try { ctx.drawImage(img, (iw - sw) / 2, (ih - sh) / 2, sw, sh, -w / 2, -h / 2, w, h); } catch (e) {}
+        const bw = (parseInt(img.dataset.bw) || 0) * esc;
+        if (bw > 0) { ctx.strokeStyle = img.dataset.bc || "#ffffff"; ctx.lineWidth = bw; ctx.strokeRect(-w / 2 + bw / 2, -h / 2 + bw / 2, w - bw, h - bw); }
+        ctx.restore();
+    });
+    try { return cv.toDataURL("image/jpeg", 0.85); } catch (e) { return null; }
+}
+
+function snapshotTaza() {
+    const lienzo = document.getElementById("lienzo-taza");
+    const hijos = [...lienzo.querySelectorAll(".foto-taza, .texto-taza")];
+    if (lienzo.classList.contains("oculto") || !hijos.length) return null;
+    const rc = lienzo.getBoundingClientRect();
+    if (!rc.width || !rc.height) return null;
+    const esc = 2;
+    const cv = document.createElement("canvas");
+    cv.width = Math.round(rc.width * esc); cv.height = Math.round(rc.height * esc);
+    const ctx = cv.getContext("2d");
+    const bg = lienzo.style.backgroundColor;
+    ctx.fillStyle = (bg && bg !== "") ? bg : "#ffffff";
+    ctx.fillRect(0, 0, cv.width, cv.height);
+    hijos.sort((a, b) => (parseInt(a.style.zIndex) || 0) - (parseInt(b.style.zIndex) || 0)).forEach(el => {
+        const x = (parseFloat(el.style.left) || 0) * esc, y = (parseFloat(el.style.top) || 0) * esc;
+        const w = el.offsetWidth * esc, h = el.offsetHeight * esc;
+        const rot = (parseFloat(el.dataset.rot) || 0) * Math.PI / 180;
+        ctx.save(); ctx.translate(x + w / 2, y + h / 2); ctx.rotate(rot);
+        if (el.classList.contains("texto-taza")) {
+            const fs = (parseFloat(el.style.fontSize) || 24) * esc;
+            ctx.font = "bold " + fs + "px " + (el.style.fontFamily || "sans-serif");
+            ctx.fillStyle = el.style.color || "#1e293b";
+            ctx.textAlign = "center"; ctx.textBaseline = "middle";
+            const lineas = (el.textContent || "").split("\n"), lh = fs * 1.2;
+            const y0 = -(lineas.length - 1) * lh / 2;
+            lineas.forEach((ln, i) => ctx.fillText(ln, 0, y0 + i * lh));
+        } else {
+            const iw = el.naturalWidth, ih = el.naturalHeight;
+            if (iw && ih) {
+                const s = Math.max(w / iw, h / ih), sw = w / s, sh = h / s;
+                try { ctx.drawImage(el, (iw - sw) / 2, (ih - sh) / 2, sw, sh, -w / 2, -h / 2, w, h); } catch (e) {}
+            }
+            const bw = (parseInt(el.dataset.bw) || 0) * esc;
+            if (bw > 0) { ctx.strokeStyle = el.dataset.bc || "#ffffff"; ctx.lineWidth = bw; ctx.strokeRect(-w / 2 + bw / 2, -h / 2 + bw / 2, w - bw, h - bw); }
+        }
         ctx.restore();
     });
     try { return cv.toDataURL("image/jpeg", 0.85); } catch (e) { return null; }
@@ -867,6 +1086,9 @@ function agregarSouvAlCarrito() {
         fotos: adjuntosSouv.slice()
     });
     adjuntosSouv = [];
+    renderThumbs("thumbs-souv", adjuntosSouv, "souv");
+    document.getElementById("in-cant-souv").value = 1;
+    recalcularSouv();
     actualizarBadges();
     avisoAgregado();
 }
@@ -889,6 +1111,9 @@ function abrirTaza() {
     taza.tieneFondo = false; fotoTazaSel = null;
     document.getElementById("taza-texto").value = "";
     document.getElementById("color-texto-taza").value = "#1e293b";
+    llenarSelectFuentes("fuente-taza");
+    document.getElementById("fuente-taza").value = 0;
+    document.getElementById("slider-borde").value = 0;
     document.getElementById("slider-rot").value = 0;
     document.getElementById("in-cant-taza").value = 1;
     recalcularTaza();
@@ -915,10 +1140,30 @@ function subirFotosTaza(ev) {
     ev.target.value = "";
 }
 function subirFondoTaza(ev) {
-    const file = ev.target.files[0]; if (!file) return;
+    const file = ev.target.files[0]; ev.target.value = ""; if (!file) return;
     const reader = new FileReader();
-    reader.onload = e => { document.getElementById("lienzo-taza").style.backgroundImage = "url('" + e.target.result + "')"; taza.tieneFondo = true; };
-    reader.readAsDataURL(file); ev.target.value = "";
+    reader.onload = e => agregarFondoElemento("lienzo-taza", e.target.result, "foto-taza");
+    reader.readAsDataURL(file);
+}
+function subirFondoCollage(ev) {
+    const file = ev.target.files[0]; ev.target.value = ""; if (!file) return;
+    if (document.getElementById("lienzo-collage").classList.contains("oculto")) {
+        alert("Primero elegí una plantilla para armar el diseño."); return;
+    }
+    const reader = new FileReader();
+    reader.onload = e => agregarFondoElemento("lienzo-collage", e.target.result, "foto-collage");
+    reader.readAsDataURL(file);
+}
+function agregarFondoElemento(lienzoId, url, clase) {
+    const lienzo = document.getElementById(lienzoId);
+    const viejo = lienzo.querySelector(".es-fondo"); if (viejo) viejo.remove();
+    const img = document.createElement("img");
+    img.src = url; img.className = clase + " es-fondo";
+    const rc = lienzo.getBoundingClientRect();
+    img.style.left = "0px"; img.style.top = "0px"; img.style.width = rc.width + "px";
+    img.style.zIndex = --zBottom;
+    if (clase === "foto-taza") { hacerArrastrable(img); lienzo.appendChild(img); seleccionarFotoTaza(img); taza.tieneFondo = true; }
+    else { arrastrableCol(img); lienzo.appendChild(img); seleccionarCol(img); }
 }
 function colorFondoTaza(ev) {
     const l = document.getElementById("lienzo-taza");
@@ -936,8 +1181,8 @@ function hacerArrastrable(el) {
         if (!activo) return;
         const c = document.getElementById("lienzo-taza").getBoundingClientRect();
         let x = startL + (e.clientX - sx), y = startT + (e.clientY - sy);
-        x = Math.max(0, Math.min(x, c.width - el.offsetWidth));
-        y = Math.max(0, Math.min(y, c.height - el.offsetHeight));
+        x = limitar(x, 0, c.width - el.offsetWidth);
+        y = limitar(y, 0, c.height - el.offsetHeight);
         el.style.left = x + "px"; el.style.top = y + "px";
     });
     el.addEventListener("pointerup", () => activo = false);
@@ -948,8 +1193,12 @@ function seleccionarFotoTaza(el) {
     el.classList.add("seleccionada"); fotoTazaSel = el;
     const s = document.getElementById("slider-taza");
     if (el.classList.contains("texto-taza")) { s.min = 14; s.max = 80; s.value = parseFloat(el.style.fontSize) || 24; }
-    else { s.min = 40; s.max = 240; s.value = el.offsetWidth; }
+    else {
+        const rcw = document.getElementById("lienzo-taza").getBoundingClientRect().width;
+        s.min = 40; s.max = el.classList.contains("es-fondo") ? Math.round(rcw * 2.5) : 240; s.value = el.offsetWidth;
+    }
     document.getElementById("slider-rot").value = parseFloat(el.dataset.rot) || 0;
+    document.getElementById("slider-borde").value = parseInt(el.dataset.bw) || 0;
 }
 function redimensionarSel(val) {
     if (!fotoTazaSel) return;
@@ -968,7 +1217,7 @@ function rotar90() {
 function traerAlFrente() { if (fotoTazaSel) fotoTazaSel.style.zIndex = ++zTop; }
 function mandarAlFondo() { if (fotoTazaSel) fotoTazaSel.style.zIndex = --zBottom; }
 function duplicarSel() {
-    if (!fotoTazaSel || fotoTazaSel.classList.contains("texto-taza")) return;
+    if (!fotoTazaSel || fotoTazaSel.classList.contains("texto-taza") || fotoTazaSel.classList.contains("es-fondo")) return;
     const orig = fotoTazaSel;
     const copia = orig.cloneNode(true);
     copia.classList.remove("seleccionada");
@@ -994,6 +1243,7 @@ function actualizarTextoTaza() {
         el.id = "texto-taza-el"; el.className = "texto-taza";
         el.style.left = "18px"; el.style.top = "95px"; el.style.zIndex = ++zTop;
         el.style.color = document.getElementById("color-texto-taza").value;
+        el.style.fontFamily = FUENTES[+document.getElementById("fuente-taza").value || 0].css;
         hacerArrastrable(el); lienzo.appendChild(el); seleccionarFotoTaza(el);
     }
     el.textContent = val;
@@ -1001,6 +1251,18 @@ function actualizarTextoTaza() {
 function colorTextoTaza(c) {
     const el = document.getElementById("texto-taza-el");
     if (el) el.style.color = c;
+}
+function fuenteTextoTaza(i) {
+    const el = document.getElementById("texto-taza-el");
+    if (el) el.style.fontFamily = FUENTES[+i || 0].css;
+}
+function bordeSel(v) { if (fotoTazaSel && !fotoTazaSel.classList.contains("texto-taza")) { fotoTazaSel.dataset.bw = v; aplicarBorde(fotoTazaSel); } }
+function bordeColorSel(c) { if (fotoTazaSel && !fotoTazaSel.classList.contains("texto-taza")) { fotoTazaSel.dataset.bc = c; aplicarBorde(fotoTazaSel); } }
+function recortarSelTaza() {
+    if (!fotoTazaSel || fotoTazaSel.classList.contains("texto-taza")) { alert("Tocá primero una foto del diseño."); return; }
+    const el = fotoTazaSel;
+    if (!el.dataset.orig) el.dataset.orig = el.src;
+    abrirCrop(el.dataset.orig, res => { el.src = res; });
 }
 function precioTazaActual() {
     const cant = Math.max(1, parseInt(document.getElementById("in-cant-taza").value) || 1);
@@ -1010,10 +1272,12 @@ function recalcularTaza() { document.getElementById("precio-taza").innerText = f
 function agregarTazaAlCarrito() {
     const cant = Math.max(1, parseInt(document.getElementById("in-cant-taza").value) || 1);
     const texto = document.getElementById("taza-texto").value.trim();
-    const fotos = [...document.querySelectorAll(".foto-taza")].map(img => ({ name: "foto-taza", url: img.src }));
+    const fotos = [...document.querySelectorAll(".foto-taza:not(.es-fondo)")].map(img => ({ name: "foto-taza", url: img.src }));
     const partes = [fotos.length + " foto(s)"];
     if (taza.tieneFondo) partes.push("con fondo");
-    if (texto) partes.push('texto: "' + texto + '"');
+    if (texto) partes.push('texto: "' + texto + '" (letra ' + FUENTES[+document.getElementById("fuente-taza").value || 0].nombre + ')');
+    const snapTaza = snapshotTaza();
+    if (snapTaza) { fotos.unshift({ name: "diseño-taza.jpg", url: snapTaza }); partes.push("con diseño propio"); }
     carrito.push({
         id: Date.now() + Math.random(),
         tipo: "Taza personalizada",
@@ -1080,10 +1344,65 @@ function leerAdjuntos(ev, destino, contId, tipo, onDone) {
     ev.target.value = "";
 }
 function renderThumbs(contId, arr, tipo) {
-    document.getElementById(contId).innerHTML = arr.map((f, i) =>
-        '<div class="thumb"><img src="' + f.url + '"><button onclick="quitarAdjunto(\'' + tipo + '\',' + i + ')">×</button></div>'
+    let out = arr.map((f, i) =>
+        '<div class="thumb' + (tipo === "sim" && f.texto ? ' con-texto' : '') + '"><img src="' + f.url + '">' +
+        '<button onclick="quitarAdjunto(\'' + tipo + '\',' + i + ')">×</button>' +
+        (tipo === "sim"
+            ? '<button class="btn-texto-foto" title="Agregar texto impreso (+$300)" onclick="editarTextoFoto(' + i + ')">📝</button>' +
+              '<button class="btn-crop-foto" title="Recortar esta foto" onclick="recortarAdjunto(' + i + ')">✂</button>'
+            : '') +
+        '</div>'
     ).join("");
+    if (tipo === "sim") {
+        const conTexto = arr.map((f, i) => f.texto
+            ? '📝 Foto ' + (i + 1) + ': <span style="font-family:' + FUENTES[f.fuenteIdx || 0].css + ';font-size:16px;">"' + escHtml(f.texto) + '"</span> <small>(' + FUENTES[f.fuenteIdx || 0].nombre + ')</small>'
+            : null).filter(Boolean);
+        if (conTexto.length) out += '<div class="nota-info" style="flex-basis:100%;margin:4px 0 0;">' + conTexto.join("<br>") + '</div>';
+    }
+    document.getElementById(contId).innerHTML = out;
 }
+
+function recortarAdjunto(i) {
+    const f = adjuntosSim[i]; if (!f) return;
+    if (!f.orig) f.orig = f.url;
+    abrirCrop(f.orig, res => { f.url = res; renderThumbs("thumbs-sim", adjuntosSim, "sim"); });
+}
+
+let textoFotoIdx = null;
+function editarTextoFoto(i) {
+    const f = adjuntosSim[i]; if (!f) return;
+    textoFotoIdx = i;
+    llenarSelectFuentes("texto-foto-fuente");
+    document.getElementById("texto-foto-in").value = f.texto || "";
+    document.getElementById("texto-foto-fuente").value = f.fuenteIdx || 0;
+    actualizarPreviewTexto();
+    document.getElementById("modal-texto").classList.remove("oculto");
+}
+function actualizarPreviewTexto() {
+    const fi = +document.getElementById("texto-foto-fuente").value || 0;
+    const p = document.getElementById("texto-foto-preview");
+    p.style.fontFamily = FUENTES[fi].css;
+    p.textContent = document.getElementById("texto-foto-in").value || "Así se verá tu texto";
+}
+function textoFotoAplicar() {
+    const f = adjuntosSim[textoFotoIdx];
+    if (f) {
+        f.texto = document.getElementById("texto-foto-in").value.trim();
+        f.fuenteIdx = +document.getElementById("texto-foto-fuente").value || 0;
+        if (!f.texto) delete f.fuenteIdx;
+    }
+    cerrarModalTexto();
+    renderThumbs("thumbs-sim", adjuntosSim, "sim");
+    recalcularSim();
+}
+function textoFotoQuitar() {
+    const f = adjuntosSim[textoFotoIdx];
+    if (f) { f.texto = ""; delete f.fuenteIdx; }
+    cerrarModalTexto();
+    renderThumbs("thumbs-sim", adjuntosSim, "sim");
+    recalcularSim();
+}
+function cerrarModalTexto() { document.getElementById("modal-texto").classList.add("oculto"); textoFotoIdx = null; }
 function quitarAdjunto(tipo, i) {
     if (tipo === "sim")  { adjuntosSim.splice(i, 1);  renderThumbs("thumbs-sim", adjuntosSim, "sim"); recalcularSim(); }
     if (tipo === "souv") { adjuntosSouv.splice(i, 1); renderThumbs("thumbs-souv", adjuntosSouv, "souv"); }
@@ -1098,7 +1417,10 @@ function actualizarBadges() {
     });
 }
 function totalCarrito() { return carrito.reduce((s, it) => s + it.subtotal, 0); }
-function quitarItem(id) { carrito = carrito.filter(it => it.id !== id); actualizarBadges(); renderCarrito(); }
+function quitarItem(id) { carrito = carrito.filter(it => it.id !== id); thumbsAbiertos.delete(id); actualizarBadges(); renderCarrito(); }
+const MAX_MINI_THUMBS = 6;
+let thumbsAbiertos = new Set();
+function toggleThumbs(id) { thumbsAbiertos.has(id) ? thumbsAbiertos.delete(id) : thumbsAbiertos.add(id); renderCarrito(); }
 
 function renderCarrito() {
     document.getElementById("datos-cliente-mini").innerHTML =
@@ -1112,8 +1434,19 @@ function renderCarrito() {
         gateBotonWA(false);
     } else {
         lista.innerHTML = carrito.map(it => {
-            const thumbs = it.fotos && it.fotos.length
-                ? '<div class="mini-thumbs">' + it.fotos.map(f => '<img src="' + f.url + '">').join("") + '</div>' : "";
+            let thumbs = "";
+            if (it.fotos && it.fotos.length) {
+                const abierto = thumbsAbiertos.has(it.id);
+                const visibles = abierto ? it.fotos : it.fotos.slice(0, MAX_MINI_THUMBS);
+                let extra = "";
+                if (it.fotos.length > MAX_MINI_THUMBS) {
+                    extra = '<button class="mini-mas" onclick="toggleThumbs(' + it.id + ')" title="' +
+                            (abierto ? 'Ver menos' : 'Ver todas') + '">' +
+                            (abierto ? '−' : '+' + (it.fotos.length - MAX_MINI_THUMBS)) + '</button>';
+                }
+                thumbs = '<div class="mini-thumbs' + (abierto ? ' abierta' : '') + '">' +
+                         visibles.map(f => '<img src="' + f.url + '">').join("") + extra + '</div>';
+            }
             const precioTxt = formatear(it.subtotal) + (it.aCotizar ? "<br><small>+ tamaño a cotizar</small>" : "");
             return '<div class="item-carrito"><div>' +
                    '<div class="desc">' + it.desc + '</div>' +
@@ -1127,15 +1460,53 @@ function renderCarrito() {
 
     document.getElementById("total-carrito").innerHTML =
         formatear(totalCarrito()) + (hayCotizar ? ' <small style="font-size:14px;color:#64748b;">+ medidas a cotizar</small>' : "");
-    document.getElementById("btn-wa-final").href = armarLinkWhatsApp();
 }
 function gateBotonWA(activo) {
     const b = document.getElementById("btn-wa-final");
-    b.style.pointerEvents = activo ? "auto" : "none";
+    b.disabled = !activo;
     b.style.opacity = activo ? "1" : ".5";
 }
-function armarLinkWhatsApp() {
+
+/* Envía el pedido: lo registra en la hoja (si está configurada) y arma el mensaje de WhatsApp. */
+async function enviarPedido() {
+    if (!carrito.length) return;
+    const btn = document.getElementById("btn-wa-final");
+    const txtOrig = btn.textContent;
+    btn.disabled = true; btn.textContent = "⏳ Registrando pedido…";
+
+    const payload = {
+        fecha: new Date().toISOString(),
+        cliente: cliente,
+        total: totalCarrito(),
+        aCotizar: carrito.some(it => it.aCotizar),
+        items: carrito.map(it => ({
+            tipo: it.tipo, desc: it.desc, detalle: it.detalle,
+            subtotal: it.subtotal, aCotizar: !!it.aCotizar,
+            imagenes: (it.fotos || []).map((f, k) => ({ name: f.name || ("foto-" + (k + 1) + ".jpg"), url: f.url }))
+        }))
+    };
+
+    let numero = null, carpeta = null, ok = false;
+    if (PEDIDOS_URL) {
+        try {
+            const resp = await fetch(PEDIDOS_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload)
+            });
+            const data = await resp.json();
+            if (data && data.ok) { numero = data.numero; carpeta = data.carpeta; ok = true; }
+        } catch (e) { ok = false; }
+    }
+
+    btn.disabled = false; btn.textContent = txtOrig;
+    const wa = "https://wa.me/" + TELEFONO_WA + "?text=" + encodeURIComponent(mensajePedido(numero, carpeta));
+    mostrarResultadoPedido(numero, carpeta, wa, ok);
+}
+
+function mensajePedido(numero, carpeta) {
     let msg = "¡Hola Trelewflash! Armé mi pedido desde la página web:\n\n";
+    if (numero) msg += "N° de pedido: " + numero + "\n";
     msg += "Cliente: " + cliente.nombre + "\nWhatsApp: " + cliente.telefono + "\n";
     if (cliente.email) msg += "Email: " + cliente.email + "\n";
     msg += "\n--- PEDIDO ---\n";
@@ -1143,23 +1514,118 @@ function armarLinkWhatsApp() {
     carrito.forEach((it, i) => {
         totalImgs += (it.fotos ? it.fotos.length : 0);
         msg += (i + 1) + ") " + it.desc + "\n   " + it.detalle + " — " + formatear(it.subtotal) + (it.aCotizar ? " + tamaño a cotizar" : "") + "\n";
+        if (it.fotos) it.fotos.forEach((f, k) => { if (f.texto) msg += '   📝 Foto ' + (k + 1) + ': "' + f.texto + '" (letra ' + FUENTES[f.fuenteIdx || 0].nombre + ')\n'; });
     });
     msg += "\nTOTAL ESTIMADO: " + formatear(totalCarrito());
     if (carrito.some(it => it.aCotizar)) msg += " (+ medidas especiales a cotizar)";
     msg += "\n";
-    if (totalImgs > 0) msg += "\nTengo " + totalImgs + " imagen(es) para enviarte por este chat.\n";
+    if (carpeta) msg += "\n📎 Mis fotos y diseños quedaron acá: " + carpeta + "\n";
+    else if (totalImgs > 0) msg += "\nTengo " + totalImgs + " imagen(es) para enviarte por este chat.\n";
     msg += "\nQuedo a la espera para coordinar el pago y la entrega. ¡Gracias!";
-    return "https://wa.me/" + TELEFONO_WA + "?text=" + encodeURIComponent(msg);
+    return msg;
+}
+
+function mostrarResultadoPedido(numero, carpeta, wa, ok) {
+    const tit = document.getElementById("pedido-num-titulo");
+    const det = document.getElementById("pedido-num-detalle");
+    const waBtn = document.getElementById("pedido-wa-btn");
+    if (ok && numero) {
+        tit.innerHTML = "✅ Pedido registrado<br><span style='color:var(--color-boton);'>N° " + numero + "</span>";
+        det.innerHTML = "Guardamos tu pedido" + (carpeta ? " y tus imágenes" : "") +
+                        ". Ahora tocá el botón para enviarlo por WhatsApp y coordinar el pago.";
+    } else {
+        tit.innerHTML = "📲 Enviá tu pedido";
+        det.innerHTML = "Tocá el botón para abrir WhatsApp con tu pedido cargado. Acordate de adjuntar tus fotos en el chat.";
+    }
+    waBtn.href = wa; waBtn.classList.remove("oculto");
+    document.getElementById("modal-pedido").classList.remove("oculto");
 }
 
 /* =========================================================
    9) UTILIDADES
    ========================================================= */
 function formatear(n) { return "$ " + n.toLocaleString("es-AR"); }
+function limitar(v, a, b) { const lo = Math.min(a, b), hi = Math.max(a, b); return Math.max(lo, Math.min(v, hi)); }
+function llenarSelectFuentes(id) {
+    const sel = document.getElementById(id);
+    if (sel.options.length) return;
+    FUENTES.forEach((f, i) => {
+        const o = document.createElement("option");
+        o.value = i; o.textContent = f.nombre; o.style.fontFamily = f.css;
+        sel.appendChild(o);
+    });
+}
+
+/* --- Modal de recorte --- */
+let cropDestino = null;
+function abrirCrop(url, onAplicar) {
+    cropDestino = onAplicar;
+    const img = document.getElementById("crop-img");
+    img.onload = () => {
+        const r = document.getElementById("crop-rect");
+        r.style.left = "0px"; r.style.top = "0px";
+        r.style.width = img.clientWidth + "px"; r.style.height = img.clientHeight + "px";
+    };
+    img.src = url;
+    document.getElementById("modal-crop").classList.remove("oculto");
+}
+function cropCerrar() { document.getElementById("modal-crop").classList.add("oculto"); cropDestino = null; }
+function cropAplicar() {
+    const img = document.getElementById("crop-img"), r = document.getElementById("crop-rect");
+    const esc = img.naturalWidth / img.clientWidth;
+    const x = (parseFloat(r.style.left) || 0) * esc, y = (parseFloat(r.style.top) || 0) * esc;
+    const w = r.offsetWidth * esc, h = r.offsetHeight * esc;
+    const cv = document.createElement("canvas");
+    cv.width = Math.max(1, Math.round(w)); cv.height = Math.max(1, Math.round(h));
+    cv.getContext("2d").drawImage(img, x, y, w, h, 0, 0, cv.width, cv.height);
+    let out;
+    try { out = cv.toDataURL("image/jpeg", 0.92); } catch (e) { out = null; }
+    const fn = cropDestino;
+    cropCerrar();
+    if (out && fn) fn(out);
+}
+(function initCrop() {
+    const rect = document.getElementById("crop-rect"), handle = document.getElementById("crop-handle"),
+          img = document.getElementById("crop-img");
+    let modo = null, sx, sy, sl, st, sw, sh;
+    rect.addEventListener("pointerdown", e => {
+        if (e.target === handle) return;
+        modo = "mover"; sx = e.clientX; sy = e.clientY;
+        sl = parseFloat(rect.style.left) || 0; st = parseFloat(rect.style.top) || 0;
+        rect.setPointerCapture(e.pointerId); e.preventDefault();
+    });
+    rect.addEventListener("pointermove", e => {
+        if (modo !== "mover") return;
+        rect.style.left = limitar(sl + e.clientX - sx, 0, img.clientWidth - rect.offsetWidth) + "px";
+        rect.style.top  = limitar(st + e.clientY - sy, 0, img.clientHeight - rect.offsetHeight) + "px";
+    });
+    rect.addEventListener("pointerup", () => modo = null);
+    rect.addEventListener("pointercancel", () => modo = null);
+    handle.addEventListener("pointerdown", e => {
+        modo = "tam"; sx = e.clientX; sy = e.clientY;
+        sw = rect.offsetWidth; sh = rect.offsetHeight;
+        handle.setPointerCapture(e.pointerId); e.stopPropagation(); e.preventDefault();
+    });
+    handle.addEventListener("pointermove", e => {
+        if (modo !== "tam") return;
+        const l = parseFloat(rect.style.left) || 0, t = parseFloat(rect.style.top) || 0;
+        rect.style.width  = limitar(sw + e.clientX - sx, 24, img.clientWidth - l) + "px";
+        rect.style.height = limitar(sh + e.clientY - sy, 24, img.clientHeight - t) + "px";
+    });
+    handle.addEventListener("pointerup", () => modo = null);
+    handle.addEventListener("pointercancel", () => modo = null);
+})();
+function escHtml(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
 function avisoAgregado() {
-    if (confirm("✅ Agregado al carrito.\n\n¿Querés ir al carrito ahora?\n(Cancelar = seguir pidiendo)")) mostrar("p-carrito");
-    else mostrar("p-menu");
+    let t = document.getElementById("toast-carrito");
+    if (!t) { t = document.createElement("div"); t.id = "toast-carrito"; document.body.appendChild(t); }
+    t.innerHTML = '✅ Agregado · ' + carrito.length + ' ítem(s) en el carrito' +
+                  '<button onclick="mostrar(\'p-carrito\')">🛒 Ver carrito</button>';
+    t.classList.add("visible");
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove("visible"), 4000);
 }
 </script>
+<!-- pedidos: integración con hoja de cálculo + captura de diseños -->
 </body>
 </html>
