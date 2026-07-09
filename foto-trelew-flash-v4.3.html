@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
+<!-- Foto Trelew Flash v4.3 -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trelewflash · Asistente de pedidos</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@600&family=Dancing+Script:wght@600&family=Great+Vibes&family=Lobster&family=Pacifico&family=Playfair+Display:wght@600&family=Satisfy&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./Trelewflash · Asistente de pedidos_files/css2" rel="stylesheet">
 <style>
     :root {
         --color-principal: #4a4a00;
@@ -209,7 +209,7 @@
 
 <!-- DATOS DEL CLIENTE -->
 <div id="p-cliente" class="pantalla oculto">
-    <div class="barra-sup"><button class="btn-volver" onclick="mostrar('p-bienvenida')">⬅ Volver</button></div>
+    <div class="barra-sup"><button class="btn-volver" onclick="mostrar(&#39;p-bienvenida&#39;)">⬅ Volver</button></div>
     <h2>Tus datos</h2>
     <p>Para poder contactarte y coordinar tu pedido o consulta.</p>
     <div class="campo"><label>Nombre y apellido *</label><input id="in-nombre" type="text" placeholder="Ej: Marcelo Pérez"></div>
@@ -222,11 +222,11 @@
 <!-- MENÚ PRINCIPAL -->
 <div id="p-menu" class="pantalla oculto">
     <div class="barra-sup">
-        <button class="btn-volver" onclick="mostrar('p-cliente')">⬅ Volver</button>
-        <button class="chip-carrito" onclick="mostrar('p-carrito')">🛒 Carrito (<span id="badge-menu">0</span>)</button>
+        <button class="btn-volver" onclick="mostrar(&#39;p-cliente&#39;)">⬅ Volver</button>
+        <button class="chip-carrito" onclick="mostrar(&#39;p-carrito&#39;)">🛒 Carrito (<span id="badge-menu">0</span>)</button>
     </div>
     <h2>¿Qué querés pedir?</h2>
-    <button class="btn-menu" onclick="mostrar('p-categorias')">📸 Revelar fotos</button>
+    <button class="btn-menu" onclick="mostrar(&#39;p-categorias&#39;)">📸 Revelar fotos</button>
     <button class="btn-menu" onclick="abrirTaza()">☕ Taza personalizada</button>
     <button class="btn-menu" onclick="abrirSouvenirs()">🎁 Souvenirs</button>
 </div>
@@ -234,25 +234,25 @@
 <!-- CATEGORÍAS DE FOTO -->
 <div id="p-categorias" class="pantalla oculto">
     <div class="barra-sup">
-        <button class="btn-volver" onclick="mostrar('p-menu')">⬅ Volver</button>
-        <button class="chip-carrito" onclick="mostrar('p-carrito')">🛒 Carrito (<span id="badge-cat">0</span>)</button>
+        <button class="btn-volver" onclick="mostrar(&#39;p-menu&#39;)">⬅ Volver</button>
+        <button class="chip-carrito" onclick="mostrar(&#39;p-carrito&#39;)">🛒 Carrito (<span id="badge-cat">0</span>)</button>
     </div>
     <h2>Elegí el tamaño</h2>
-    <button class="btn-menu" onclick="cargarSimulador('chicos')">🖼 Tamaños chicos</button>
-    <button class="btn-menu" onclick="cargarSimulador('medianos')">🖼 Tamaños medianos</button>
-    <button class="btn-menu" onclick="cargarSimulador('grandes')">🖼 Tamaños grandes</button>
-    <button class="btn-menu" onclick="cargarSimulador('polaroid')">🎞 Estilo Polaroid</button>
-    <button class="btn-menu" onclick="cargarSimulador('collage')">🧩 Foto collage</button>
+    <button class="btn-menu" onclick="cargarSimulador(&#39;chicos&#39;)">🖼 Tamaños chicos</button>
+    <button class="btn-menu" onclick="cargarSimulador(&#39;medianos&#39;)">🖼 Tamaños medianos</button>
+    <button class="btn-menu" onclick="cargarSimulador(&#39;grandes&#39;)">🖼 Tamaños grandes</button>
+    <button class="btn-menu" onclick="cargarSimulador(&#39;polaroid&#39;)">🎞 Estilo Polaroid</button>
+    <button class="btn-menu" onclick="cargarSimulador(&#39;collage&#39;)">🧩 Foto collage</button>
 </div>
 
 <!-- SIMULADOR DE FOTO -->
 <div id="p-simulador" class="pantalla oculto">
     <div class="barra-sup">
-        <button class="btn-volver" onclick="mostrar('p-categorias')">⬅ Volver</button>
-        <button class="chip-carrito" onclick="mostrar('p-carrito')">🛒 Carrito (<span id="badge-sim">0</span>)</button>
+        <button class="btn-volver" onclick="mostrar(&#39;p-categorias&#39;)">⬅ Volver</button>
+        <button class="chip-carrito" onclick="mostrar(&#39;p-carrito&#39;)">🛒 Carrito (<span id="badge-sim">0</span>)</button>
     </div>
     <h2 id="titulo-sim">Simulá tu foto</h2>
-    <div id="nota-collage" class="nota-info oculto">🧩 El armado del collage (<strong>$11.500</strong>) y las fotos extra se cobran <strong>una sola vez por diseño</strong>; cada copia adicional del mismo diseño paga solo la impresión. Incluye hasta <strong>5 fotos</strong>; cada foto extra <strong>+$300</strong>.</div>
+    <div id="nota-collage" class="nota-info oculto">🧩 El armado del collage (<strong id="lbl-monto-armado">$ 11.500</strong>) y las fotos extra se cobran <strong>una sola vez por diseño</strong>; cada copia adicional del mismo diseño paga solo la impresión. Incluye hasta <strong id="lbl-fotos-incluidas">5</strong> fotos; cada foto extra <strong>+<span id="lbl-monto-foto-extra">$ 300</span></strong>.</div>
 
     <p class="instruccion">1. Tocá una medida para ver cómo queda:</p>
     <div id="toggle-vista" class="oculto" style="display:flex;gap:8px;margin:0 0 10px;">
@@ -273,7 +273,7 @@
     <p class="instruccion">2. ¿Necesita algún arreglo?</p>
     <label class="panel-retoque">
         <input type="checkbox" id="chk-retoque" onchange="recalcularSim()">
-        <div><h4>Agregar retoque digital (+ $11.500)</h4><p>Restauración, corregir luces o cambiar el fondo.</p></div>
+        <div><h4>Agregar retoque digital (+ <span id="lbl-monto-retoque">$ 11.500</span>)</h4><p>Restauración, corregir luces o cambiar el fondo.</p></div>
     </label>
     <label class="panel-retoque oculto" id="panel-iman">
         <input type="checkbox" id="chk-iman" onchange="recalcularSim()">
@@ -285,8 +285,8 @@
         <input id="in-cantidad" type="number" min="1" value="1" onchange="recalcularSim()">
     </div>
 
-    <p class="instruccion">4. Adjuntá las fotos de esta medida: <small style="font-weight:normal;">(tocá 📝 en una foto para agregarle un texto impreso, +$300 por foto)</small></p>
-    <label class="btn-tool">📷 Adjuntar fotos<input type="file" accept="image/*" multiple style="display:none" onchange="adjuntarSim(event)"></label>
+    <p class="instruccion">4. Adjuntá las fotos de esta medida: <small style="font-weight:normal;">(tocá 📝 en una foto para agregarle un texto impreso, +<span id="lbl-monto-texto">$ 300</span> por foto)</small></p>
+    <label class="btn-tool">📷 Adjuntar fotos<input type="file" accept="image/*" multiple="" style="display:none" onchange="adjuntarSim(event)"></label>
     <div id="thumbs-sim" class="thumbs"></div>
     <div id="nota-fotos-collage" class="nota-info oculto"></div>
 
@@ -329,8 +329,8 @@
 <!-- SOUVENIRS -->
 <div id="p-souvenirs" class="pantalla oculto">
     <div class="barra-sup">
-        <button class="btn-volver" onclick="mostrar('p-menu')">⬅ Volver</button>
-        <button class="chip-carrito" onclick="mostrar('p-carrito')">🛒 Carrito (<span id="badge-souv">0</span>)</button>
+        <button class="btn-volver" onclick="mostrar(&#39;p-menu&#39;)">⬅ Volver</button>
+        <button class="chip-carrito" onclick="mostrar(&#39;p-carrito&#39;)">🛒 Carrito (<span id="badge-souv">0</span>)</button>
     </div>
     <h2>Souvenirs</h2>
     <p class="instruccion">1. Tipo de souvenir:</p>
@@ -344,7 +344,7 @@
     </div>
 
     <p class="instruccion">4. Adjuntá las fotos (opcional):</p>
-    <label class="btn-tool">📷 Adjuntar fotos<input type="file" accept="image/*" multiple style="display:none" onchange="adjuntarSouv(event)"></label>
+    <label class="btn-tool">📷 Adjuntar fotos<input type="file" accept="image/*" multiple="" style="display:none" onchange="adjuntarSouv(event)"></label>
     <div id="thumbs-souv" class="thumbs"></div>
 
     <div class="caja-precio" style="margin-top:14px;">
@@ -356,8 +356,8 @@
 <!-- ARMADOR DE TAZA -->
 <div id="p-taza" class="pantalla oculto">
     <div class="barra-sup">
-        <button class="btn-volver" onclick="mostrar('p-menu')">⬅ Volver</button>
-        <button class="chip-carrito" onclick="mostrar('p-carrito')">🛒 Carrito (<span id="badge-taza">0</span>)</button>
+        <button class="btn-volver" onclick="mostrar(&#39;p-menu&#39;)">⬅ Volver</button>
+        <button class="chip-carrito" onclick="mostrar(&#39;p-carrito&#39;)">🛒 Carrito (<span id="badge-taza">0</span>)</button>
     </div>
     <h2>Armá tu taza</h2>
     <p class="instruccion">1. Tipo de taza:</p>
@@ -366,7 +366,7 @@
     <p class="instruccion">2. Diseño (arrastrá las fotos para ubicarlas):</p>
     <div id="lienzo-taza" class="lienzo-taza"></div>
     <div class="herramientas">
-        <label class="btn-tool">📷 Agregar fotos<input type="file" accept="image/*" multiple style="display:none" onchange="subirFotosTaza(event)"></label>
+        <label class="btn-tool">📷 Agregar fotos<input type="file" accept="image/*" multiple="" style="display:none" onchange="subirFotosTaza(event)"></label>
         <label class="btn-tool">🖼 Fondo<input type="file" accept="image/*" style="display:none" onchange="subirFondoTaza(event)"></label>
         <label class="btn-tool">🎨 Color<input type="color" style="display:none" value="#ffffff" onchange="colorFondoTaza(event)"></label>
         <button type="button" class="btn-tool" onclick="abrirStickers('taza')">⭐ Stickers y Emojis</button>
@@ -415,18 +415,18 @@
 
 <!-- EVENTOS: CATEGORÍAS -->
 <div id="p-eventos" class="pantalla oculto">
-    <div class="barra-sup"><button class="btn-volver" onclick="mostrar('p-cliente')">⬅ Volver</button></div>
+    <div class="barra-sup"><button class="btn-volver" onclick="mostrar(&#39;p-cliente&#39;)">⬅ Volver</button></div>
     <h2>Fotos de eventos sociales</h2>
     <p>Elegí el tipo de evento para que podamos buscar tus fotos.</p>
-    <button class="btn-menu" onclick="abrirEventoForm('danzas')">💃 Danzas</button>
-    <button class="btn-menu" onclick="abrirEventoForm('actos')">🎓 Actos escolares</button>
-    <button class="btn-menu" onclick="abrirEventoForm('bautismos')">⛪ Bautismos</button>
-    <button class="btn-menu" onclick="abrirEventoForm('otros')">✨ Otros</button>
+    <button class="btn-menu" onclick="abrirEventoForm(&#39;danzas&#39;)">💃 Danzas</button>
+    <button class="btn-menu" onclick="abrirEventoForm(&#39;actos&#39;)">🎓 Actos escolares</button>
+    <button class="btn-menu" onclick="abrirEventoForm(&#39;bautismos&#39;)">⛪ Bautismos</button>
+    <button class="btn-menu" onclick="abrirEventoForm(&#39;otros&#39;)">✨ Otros</button>
 </div>
 
 <!-- EVENTOS: FORMULARIO -->
 <div id="p-evento-form" class="pantalla oculto">
-    <div class="barra-sup"><button class="btn-volver" onclick="mostrar('p-eventos')">⬅ Volver</button></div>
+    <div class="barra-sup"><button class="btn-volver" onclick="mostrar(&#39;p-eventos&#39;)">⬅ Volver</button></div>
     <h2 id="titulo-evento">Evento</h2>
     <p>Completá los datos que recuerdes; con eso buscamos tus fotos.</p>
     <div id="evento-campos"></div>
@@ -436,7 +436,7 @@
 
 <!-- CARRITO -->
 <div id="p-carrito" class="pantalla oculto">
-    <div class="barra-sup"><button class="btn-volver" onclick="mostrar('p-menu')">⬅ Seguir pidiendo</button></div>
+    <div class="barra-sup"><button class="btn-volver" onclick="mostrar(&#39;p-menu&#39;)">⬅ Seguir pidiendo</button></div>
     <h2>Tu carrito</h2>
     <div id="datos-cliente-mini" class="datos-cliente-mini"></div>
     <div id="lista-carrito"></div>
@@ -459,7 +459,7 @@
 <!-- MODAL DE TEXTO POR FOTO -->
 <div id="modal-texto" class="modal-flotante oculto">
     <div class="caja-modal">
-        <h4>📝 Texto impreso para esta foto (+$300)</h4>
+        <h4>📝 Texto impreso para esta foto (+<span id="lbl-monto-texto-modal">$ 300</span>)</h4>
         <div class="campo"><input id="texto-foto-in" type="text" placeholder="Ej: Feliz cumple, Los quiero..." oninput="actualizarPreviewTexto()"></div>
         <div class="campo"><label>Tipo de letra:</label><select id="texto-foto-fuente" onchange="actualizarPreviewTexto()"></select></div>
         <div id="texto-foto-preview" style="font-size:26px;text-align:center;padding:10px;border:1px dashed #cbd5e1;border-radius:8px;min-height:44px;color:#1e293b;"></div>
@@ -477,7 +477,7 @@
         <h3 id="pedido-num-titulo" style="margin-top:0;">Registrando pedido…</h3>
         <div id="pedido-num-detalle" style="font-size:14px;color:#475569;line-height:1.4;"></div>
         <a id="pedido-wa-btn" href="#" target="_blank" class="btn-agregar oculto" style="display:inline-block;text-decoration:none;margin-top:14px;">🟢 Abrir WhatsApp para enviar</a>
-        <div style="margin-top:10px;"><button class="btn-tool" onclick="document.getElementById('modal-pedido').classList.add('oculto')">Cerrar</button></div>
+        <div style="margin-top:10px;"><button class="btn-tool" onclick="document.getElementById(&#39;modal-pedido&#39;).classList.add(&#39;oculto&#39;)">Cerrar</button></div>
     </div>
 </div>
 
@@ -489,12 +489,861 @@ const TELEFONO_WA = "5492804696961";
 // Pegá acá la URL del Web App de Google Apps Script (ver guía "CONECTAR-HOJA.md").
 // Si queda vacía, el pedido se envía por WhatsApp sin número de pedido ni carpeta de imágenes.
 const PEDIDOS_URL = "https://script.google.com/macros/s/AKfycbyIWoWJiOGnuplVw2-_f1Kv4Tc3TfoyhTsmXZn-xNCPjOcj__5f_JZ9Z3_M4Jpik65WCA/exec";
-const COSTO_RETOQUE = 11500;
-const COSTO_COLLAGE = 11500;   // ya incluido en los precios del collage
-const COSTO_FOTO_EXTRA = 300;  // por cada foto de collage por encima de 5
-const FOTOS_COLLAGE_INCLUIDAS = 5;
-const COSTO_TEXTO_FOTO = 300;   // texto impreso por foto
-const PRECIOS_IMAN = { "5x7": 2900, "7x10": 2900, "9x13": 3400, "10x15": 4000, "13x18": 5500, "15x21": 6500 };
+const APP_VERSION = "4.3";
+
+/* =========================================================
+   CATÁLOGO ÚNICO v2 (v4.3)
+   - Misma estructura que catalogo_precios_v2.json (fuente única).
+   - Al iniciar, la app intenta refrescarlo desde la hoja vía
+     PEDIDOS_URL?accion=catalogo; si falla, usa este embebido.
+   - Regla: variante = combinación con SKU y precio propio;
+     modificador = ajuste fijo/porcentual con ámbito.
+   ========================================================= */
+const CATALOGO_V2 = {
+  "meta": {
+    "version": "2.0",
+    "moneda": "ARS",
+    "fecha": "2026-07-08",
+    "vigencia_confirmada": false,
+    "fuente": "Consolidación de catalogo_precios.json v1 + constantes de foto-trelew-flash v4.2",
+    "nota": "FUENTE ÚNICA de precios. La app (v4.3+), el catálogo B2B y el backend leen de acá o de su espejo en la pestaña 'Catalogo' de la hoja de pedidos. VERIFICAR contra la cartilla PDF vigente antes de publicar.",
+    "decisiones": [
+      "Modelo: producto → variante (SKU + precio propio) → modificador (fijo o porcentaje, con ámbito).",
+      "Imán se modela como VARIANTE (producto foto_iman), no como recargo: su precio depende de la medida.",
+      "Se incorporó IMAN-9X13 a $3.400: existía en la app (polaroid + imán) pero faltaba en el catálogo v1.",
+      "Foto extra de collage confirmada en $300 y texto impreso en $300/foto (valores que la app v4.2 ya cobraba; el v1 los tenía en null o ausentes).",
+      "Retoque: ámbito por_foto (una vez por foto adjunta; mínimo 1 por ítem). En collage se aplica por_diseno (una vez por diseño, como en v4.2). ANTES en revelado se cobraba por copia: solo cambia el caso sin fotos adjuntas con cantidad > 1, a favor del cliente. Para revertir, cambiar 'ambito' del modificador retoque a 'por_copia'.",
+      "Pines pasan a estar visibles en la web (estaban en el catálogo pero no en la app).",
+      "Polaroid disponible en 5x7, 7x10, 9x13 y 10x15 (según la app; el v1 solo listaba 7x10 y 9x13)."
+    ],
+    "pendientes": [
+      "Cantimplora: sin precio en la fuente (variante inactiva, a cotizar).",
+      "Presentes combos: sin precio en la fuente (variantes inactivas, a cotizar).",
+      "Costos: campo 'costo' creado en todas las variantes, en null. Completarlo destraba márgenes, tabla de descuentos B2B (regla: descuento máximo <= 60% del margen bruto) y CAC objetivo (debilidad D8).",
+      "Reproducción (+30%): existe como modificador pero la app aún no tiene flujo de UI para ofrecerlo."
+    ]
+  },
+  "modificadores": [
+    {
+      "id": "retoque",
+      "nombre": "Retoque digital",
+      "tipo": "fijo",
+      "ambito": "por_foto",
+      "valor": 11500,
+      "nota": "Una vez por foto adjunta (mín. 1 por ítem). En collage se aplica por_diseno (override en el producto)."
+    },
+    {
+      "id": "texto_impreso",
+      "nombre": "Texto impreso",
+      "tipo": "fijo",
+      "ambito": "por_foto",
+      "valor": 300
+    },
+    {
+      "id": "reproduccion",
+      "nombre": "Reproducción (cliente trae foto en papel y se escanea)",
+      "tipo": "porcentaje",
+      "ambito": "por_copia",
+      "valor": 30
+    },
+    {
+      "id": "armado_collage",
+      "nombre": "Armado de collage (diseño único)",
+      "tipo": "fijo",
+      "ambito": "por_diseno",
+      "valor": 11500
+    },
+    {
+      "id": "foto_extra_collage",
+      "nombre": "Foto extra de collage",
+      "tipo": "fijo",
+      "ambito": "por_unidad_sobre_incluidas",
+      "valor": 300,
+      "incluidas": 5
+    }
+  ],
+  "ui": {
+    "grupos_fotos": {
+      "chicos": {
+        "titulo": "Tamaños chicos",
+        "escena": "celular"
+      },
+      "medianos": {
+        "titulo": "Tamaños medianos",
+        "escena": "escritorio"
+      },
+      "grandes": {
+        "titulo": "Tamaños grandes",
+        "escena": "living"
+      },
+      "polaroid": {
+        "titulo": "Estilo Polaroid",
+        "escena": "celular",
+        "esPolaroid": true
+      },
+      "collage": {
+        "titulo": "Foto collage",
+        "escena": "living",
+        "esCollage": true
+      }
+    }
+  },
+  "productos": [
+    {
+      "id": "revelado",
+      "nombre": "Revelado de fotos",
+      "categoria": "impresion",
+      "modificadores": [
+        "retoque",
+        "texto_impreso",
+        "reproduccion"
+      ],
+      "variantes": [
+        {
+          "sku": "REV-5X7-EST",
+          "nombre": "5x7 cm",
+          "atributos": {
+            "medida": "5x7",
+            "estilo": "estandar"
+          },
+          "precio": 1100,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "chicos",
+            "w": 50,
+            "h": 70
+          }
+        },
+        {
+          "sku": "REV-7X10-EST",
+          "nombre": "7x10 cm",
+          "atributos": {
+            "medida": "7x10",
+            "estilo": "estandar"
+          },
+          "precio": 1100,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "chicos",
+            "w": 63,
+            "h": 90
+          }
+        },
+        {
+          "sku": "REV-9X13-EST",
+          "nombre": "9x13 cm",
+          "atributos": {
+            "medida": "9x13",
+            "estilo": "estandar"
+          },
+          "precio": 1300,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "chicos",
+            "w": 72,
+            "h": 104
+          }
+        },
+        {
+          "sku": "REV-10X15-EST",
+          "nombre": "10x15 cm",
+          "atributos": {
+            "medida": "10x15",
+            "estilo": "estandar"
+          },
+          "precio": 1400,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "medianos",
+            "w": 80,
+            "h": 120
+          }
+        },
+        {
+          "sku": "REV-13X18-EST",
+          "nombre": "13x18 cm",
+          "atributos": {
+            "medida": "13x18",
+            "estilo": "estandar"
+          },
+          "precio": 1500,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "medianos",
+            "w": 91,
+            "h": 126
+          }
+        },
+        {
+          "sku": "REV-15X21-EST",
+          "nombre": "15x21 cm",
+          "atributos": {
+            "medida": "15x21",
+            "estilo": "estandar"
+          },
+          "precio": 1800,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "medianos",
+            "w": 98,
+            "h": 137
+          }
+        },
+        {
+          "sku": "REV-20X30-EST",
+          "nombre": "20x30 cm",
+          "atributos": {
+            "medida": "20x30",
+            "estilo": "estandar"
+          },
+          "precio": 7000,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "grandes",
+            "w": 120,
+            "h": 180
+          }
+        },
+        {
+          "sku": "REV-30X40-EST",
+          "nombre": "30x40 cm",
+          "atributos": {
+            "medida": "30x40",
+            "estilo": "estandar"
+          },
+          "precio": 14500,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "grandes",
+            "w": 150,
+            "h": 200
+          }
+        },
+        {
+          "sku": "REV-5X7-POL",
+          "nombre": "5x7 cm",
+          "atributos": {
+            "medida": "5x7",
+            "estilo": "polaroid"
+          },
+          "precio": 1100,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "polaroid",
+            "w": 50,
+            "h": 70
+          }
+        },
+        {
+          "sku": "REV-7X10-POL",
+          "nombre": "7x10 cm",
+          "atributos": {
+            "medida": "7x10",
+            "estilo": "polaroid"
+          },
+          "precio": 1100,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "polaroid",
+            "w": 63,
+            "h": 90
+          }
+        },
+        {
+          "sku": "REV-9X13-POL",
+          "nombre": "9x13 cm",
+          "atributos": {
+            "medida": "9x13",
+            "estilo": "polaroid"
+          },
+          "precio": 1300,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "polaroid",
+            "w": 72,
+            "h": 104
+          }
+        },
+        {
+          "sku": "REV-10X15-POL",
+          "nombre": "10x15 cm",
+          "atributos": {
+            "medida": "10x15",
+            "estilo": "polaroid"
+          },
+          "precio": 1400,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "polaroid",
+            "w": 80,
+            "h": 120
+          }
+        }
+      ]
+    },
+    {
+      "id": "collage",
+      "nombre": "Foto collage",
+      "categoria": "impresion",
+      "nota": "El precio de la variante es SOLO impresión por copia. El armado, las fotos extra y el retoque se cobran una vez por diseño (modificadores).",
+      "modificadores": [
+        "armado_collage",
+        "foto_extra_collage",
+        {
+          "id": "retoque",
+          "ambito": "por_diseno"
+        },
+        "texto_impreso"
+      ],
+      "variantes": [
+        {
+          "sku": "COLL-10X15",
+          "nombre": "10x15 cm",
+          "atributos": {
+            "medida": "10x15"
+          },
+          "precio": 1400,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "collage",
+            "w": 80,
+            "h": 120
+          }
+        },
+        {
+          "sku": "COLL-13X18",
+          "nombre": "13x18 cm",
+          "atributos": {
+            "medida": "13x18"
+          },
+          "precio": 1500,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "collage",
+            "w": 91,
+            "h": 126
+          }
+        },
+        {
+          "sku": "COLL-15X21",
+          "nombre": "15x21 cm",
+          "atributos": {
+            "medida": "15x21"
+          },
+          "precio": 1800,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "collage",
+            "w": 98,
+            "h": 137
+          }
+        },
+        {
+          "sku": "COLL-20X30",
+          "nombre": "20x30 cm",
+          "atributos": {
+            "medida": "20x30"
+          },
+          "precio": 7000,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "collage",
+            "w": 120,
+            "h": 180
+          }
+        },
+        {
+          "sku": "COLL-30X40",
+          "nombre": "30x40 cm",
+          "atributos": {
+            "medida": "30x40"
+          },
+          "precio": 14500,
+          "costo": null,
+          "activo": true,
+          "render": {
+            "grupo": "collage",
+            "w": 150,
+            "h": 200
+          }
+        },
+        {
+          "sku": "COLL-ESP",
+          "nombre": "Medida especial",
+          "atributos": {},
+          "precio": null,
+          "costo": null,
+          "activo": true,
+          "a_cotizar": true,
+          "especial": true,
+          "render": {
+            "grupo": "collage"
+          }
+        }
+      ]
+    },
+    {
+      "id": "foto_iman",
+      "nombre": "Foto imán",
+      "categoria": "souvenir",
+      "nota": "Variante propia, NO es 'foto tarjeta + recargo': el precio del imán depende de la medida. Desde el simulador (polaroid + imán) resuelve al mismo SKU.",
+      "modificadores": [],
+      "variantes": [
+        {
+          "sku": "IMAN-5X7",
+          "nombre": "5x7 cm",
+          "atributos": {
+            "medida": "5x7"
+          },
+          "precio": 2900,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "IMAN-7X10",
+          "nombre": "7x10 cm",
+          "atributos": {
+            "medida": "7x10"
+          },
+          "precio": 2900,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "IMAN-9X13",
+          "nombre": "9x13 cm",
+          "atributos": {
+            "medida": "9x13"
+          },
+          "precio": 3400,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "IMAN-10X15",
+          "nombre": "10x15 cm",
+          "atributos": {
+            "medida": "10x15"
+          },
+          "precio": 4000,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "IMAN-13X18",
+          "nombre": "13x18 cm",
+          "atributos": {
+            "medida": "13x18"
+          },
+          "precio": 5500,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "IMAN-15X21",
+          "nombre": "15x21 cm",
+          "atributos": {
+            "medida": "15x21"
+          },
+          "precio": 6500,
+          "costo": null,
+          "activo": true
+        }
+      ]
+    },
+    {
+      "id": "foto_tarjeta",
+      "nombre": "Foto tarjeta",
+      "categoria": "souvenir",
+      "modificadores": [],
+      "variantes": [
+        {
+          "sku": "TARJ-5X7",
+          "nombre": "5x7 cm",
+          "atributos": {
+            "medida": "5x7"
+          },
+          "precio": 1500,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "TARJ-7X10",
+          "nombre": "7x10 cm",
+          "atributos": {
+            "medida": "7x10"
+          },
+          "precio": 1500,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "TARJ-10X15",
+          "nombre": "10x15 cm",
+          "atributos": {
+            "medida": "10x15"
+          },
+          "precio": 2000,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "TARJ-13X18",
+          "nombre": "13x18 cm",
+          "atributos": {
+            "medida": "13x18"
+          },
+          "precio": 2900,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "TARJ-15X21",
+          "nombre": "15x21 cm",
+          "atributos": {
+            "medida": "15x21"
+          },
+          "precio": 3500,
+          "costo": null,
+          "activo": true
+        }
+      ]
+    },
+    {
+      "id": "llaveros",
+      "nombre": "Llaveros",
+      "categoria": "souvenir",
+      "modificadores": [],
+      "variantes": [
+        {
+          "sku": "LLAV-ACR-RECT",
+          "nombre": "Acrílico rectangular",
+          "atributos": {
+            "modelo": "acrilico_rectangular"
+          },
+          "precio": 3000,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "LLAV-ACR-RED",
+          "nombre": "Acrílico redondo",
+          "atributos": {
+            "modelo": "acrilico_redondo"
+          },
+          "precio": 2700,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "LLAV-RED",
+          "nombre": "Redondo",
+          "atributos": {
+            "modelo": "redondo"
+          },
+          "precio": 3400,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "LLAV-IMAN",
+          "nombre": "Con imán",
+          "atributos": {
+            "modelo": "iman"
+          },
+          "precio": 3400,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "LLAV-DEST",
+          "nombre": "Destapador",
+          "atributos": {
+            "modelo": "destapador"
+          },
+          "precio": 3600,
+          "costo": null,
+          "activo": true
+        }
+      ]
+    },
+    {
+      "id": "pines",
+      "nombre": "Pines",
+      "categoria": "souvenir",
+      "modificadores": [],
+      "variantes": [
+        {
+          "sku": "PIN-GDE",
+          "nombre": "Redondo grande",
+          "atributos": {
+            "tamano": "grande"
+          },
+          "precio": 2300,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "PIN-CHI",
+          "nombre": "Redondo chico",
+          "atributos": {
+            "tamano": "chico"
+          },
+          "precio": 1800,
+          "costo": null,
+          "activo": true
+        }
+      ]
+    },
+    {
+      "id": "tazas",
+      "nombre": "Taza sublimada",
+      "categoria": "sublimado",
+      "modificadores": [],
+      "variantes": [
+        {
+          "sku": "TAZA-MAG",
+          "nombre": "Mágica",
+          "atributos": {
+            "tipo": "magica"
+          },
+          "precio": 17000,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "TAZA-CER",
+          "nombre": "Cerámica",
+          "atributos": {
+            "tipo": "ceramica"
+          },
+          "precio": 14000,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "TAZA-POL",
+          "nombre": "Polietileno",
+          "atributos": {
+            "tipo": "polietileno"
+          },
+          "precio": 9500,
+          "costo": null,
+          "activo": true
+        }
+      ]
+    },
+    {
+      "id": "copa_polimero",
+      "nombre": "Copa de polímero",
+      "categoria": "sublimado",
+      "visible_web": false,
+      "modificadores": [],
+      "variantes": [
+        {
+          "sku": "COPA-POL",
+          "nombre": "Copa de polímero",
+          "atributos": {},
+          "precio": 12000,
+          "costo": null,
+          "activo": true
+        }
+      ]
+    },
+    {
+      "id": "kit_escolar",
+      "nombre": "Kit escolar sublimado",
+      "categoria": "sublimado",
+      "visible_web": false,
+      "modificadores": [],
+      "variantes": [
+        {
+          "sku": "KIT-TAZA-CHI",
+          "nombre": "Taza de polímero chica",
+          "atributos": {},
+          "precio": 9500,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "KIT-SET-TELA",
+          "nombre": "Set de tela (toalla, servilleta, mantel)",
+          "atributos": {},
+          "precio": 20000,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "KIT-PLATO",
+          "nombre": "Plato",
+          "atributos": {},
+          "precio": 12000,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "KIT-MOCHILA",
+          "nombre": "Mochila",
+          "atributos": {},
+          "precio": 38000,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "KIT-CUCHARA",
+          "nombre": "Cuchara",
+          "atributos": {},
+          "precio": 2900,
+          "costo": null,
+          "activo": true
+        }
+      ]
+    },
+    {
+      "id": "cantimplora",
+      "nombre": "Cantimplora sublimada",
+      "categoria": "sublimado",
+      "visible_web": false,
+      "modificadores": [],
+      "variantes": [
+        {
+          "sku": "CANT-STD",
+          "nombre": "Cantimplora",
+          "atributos": {},
+          "precio": null,
+          "costo": null,
+          "activo": false,
+          "a_cotizar": true
+        }
+      ]
+    },
+    {
+      "id": "fotos_profesionales",
+      "nombre": "Fotos profesionales",
+      "categoria": "servicio",
+      "visible_web": false,
+      "modificadores": [],
+      "variantes": [
+        {
+          "sku": "PROF-PAPEL-15X21",
+          "nombre": "En papel 15x21",
+          "atributos": {
+            "formato": "papel",
+            "medida": "15x21"
+          },
+          "precio": 4000,
+          "costo": null,
+          "activo": true
+        },
+        {
+          "sku": "PROF-DIG",
+          "nombre": "Digital",
+          "atributos": {
+            "formato": "digital"
+          },
+          "precio": 3500,
+          "costo": null,
+          "activo": true
+        }
+      ]
+    },
+    {
+      "id": "restauracion",
+      "nombre": "Restauración de fotos",
+      "categoria": "servicio",
+      "visible_web": false,
+      "modificadores": [],
+      "variantes": [
+        {
+          "sku": "SERV-REST",
+          "nombre": "Restauración",
+          "atributos": {},
+          "precio": 14000,
+          "costo": null,
+          "activo": true
+        }
+      ]
+    },
+    {
+      "id": "presentes_combos",
+      "nombre": "Presentes y combos",
+      "categoria": "combo",
+      "visible_web": false,
+      "modificadores": [],
+      "variantes": [
+        {
+          "sku": "COMBO-CUADRO-FOTO",
+          "nombre": "Cuadro + foto con diseño personalizado",
+          "atributos": {},
+          "precio": null,
+          "costo": null,
+          "activo": false,
+          "a_cotizar": true
+        },
+        {
+          "sku": "COMBO-CUADRO-FOTO-LLAV",
+          "nombre": "Cuadro + foto + llavero",
+          "atributos": {},
+          "precio": null,
+          "costo": null,
+          "activo": false,
+          "a_cotizar": true
+        }
+      ]
+    }
+  ]
+};
+
+let CAT = CATALOGO_V2; // catálogo activo (embebido o remoto)
+
+/* --- Acceso al catálogo --- */
+function producto(id) { return (CAT.productos || []).find(p => p.id === id) || null; }
+function mod(id) { return (CAT.modificadores || []).find(m => m.id === id) || null; }
+function modValor(id) { const m = mod(id); return m ? m.valor : 0; }
+function modDeProducto(prodId, modId) {
+    const base = mod(modId);
+    if (!base) return null;
+    const p = producto(prodId);
+    let override = null;
+    if (p && Array.isArray(p.modificadores)) {
+        override = p.modificadores.find(x => (typeof x === "object" ? x.id : x) === modId) || null;
+    }
+    const ambito = (override && typeof override === "object" && override.ambito) ? override.ambito : base.ambito;
+    return { id: base.id, nombre: base.nombre, tipo: base.tipo, ambito: ambito, valor: base.valor, incluidas: base.incluidas };
+}
+function varianteIman(medida) {
+    const p = producto("foto_iman");
+    if (!p) return null;
+    return p.variantes.find(v => v.activo !== false && v.atributos && v.atributos.medida === medida) || null;
+}
+function montoMods(mods) { return (mods || []).reduce((s, m) => s + (m.monto || 0), 0); }
+
+/* Montos espejo (se sincronizan desde el catálogo; no editar acá) */
+let COSTO_RETOQUE = 0, COSTO_COLLAGE = 0, COSTO_FOTO_EXTRA = 0, COSTO_TEXTO_FOTO = 0, FOTOS_COLLAGE_INCLUIDAS = 5;
+function sincronizarMontos() {
+    COSTO_RETOQUE = modValor("retoque");
+    COSTO_COLLAGE = modValor("armado_collage");
+    COSTO_FOTO_EXTRA = modValor("foto_extra_collage");
+    COSTO_TEXTO_FOTO = modValor("texto_impreso");
+    const fe = mod("foto_extra_collage");
+    FOTOS_COLLAGE_INCLUIDAS = (fe && fe.incluidas) || 5;
+}
 const FUENTES = [
     { nombre: "Clásica",    css: "system-ui, sans-serif" },
     { nombre: "Elegante",   css: "'Playfair Display', serif" },
@@ -515,60 +1364,98 @@ const PLANTILLAS_COLLAGE = {
     6: [[.03,.03,.455,.29],[.515,.03,.455,.29],[.03,.355,.455,.29],[.515,.355,.455,.29],[.03,.68,.455,.29],[.515,.68,.455,.29]]
 };
 
-const CATALOGO_FOTOS = {
-    chicos: { titulo: "Tamaños chicos", escena: "celular", items: [
-        { nombre: "5x7 cm",  precio: 1100, w: 50, h: 70,  estilo: "sin-borde" },
-        { nombre: "7x10 cm", precio: 1100, w: 63, h: 90,  estilo: "sin-borde" },
-        { nombre: "9x13 cm", precio: 1300, w: 72, h: 104, estilo: "sin-borde" }
-    ]},
-    medianos: { titulo: "Tamaños medianos", escena: "escritorio", items: [
-        { nombre: "10x15 cm", precio: 1400, w: 80, h: 120, estilo: "sin-borde" },
-        { nombre: "13x18 cm", precio: 1500, w: 91, h: 126, estilo: "sin-borde" },
-        { nombre: "15x21 cm", precio: 1800, w: 98, h: 137, estilo: "sin-borde" }
-    ]},
-    grandes: { titulo: "Tamaños grandes", escena: "living", items: [
-        { nombre: "20x30 cm", precio: 7000,  w: 120, h: 180, estilo: "sin-borde" },
-        { nombre: "30x40 cm", precio: 14500, w: 150, h: 200, estilo: "sin-borde" }
-    ]},
-    polaroid: { titulo: "Estilo Polaroid", escena: "celular", esPolaroid: true, items: [
-        { nombre: "5x7 cm",   precio: 1100, w: 50, h: 70,  estilo: "polaroid" },
-        { nombre: "7x10 cm",  precio: 1100, w: 63, h: 90,  estilo: "polaroid" },
-        { nombre: "9x13 cm",  precio: 1300, w: 72, h: 104, estilo: "polaroid" },
-        { nombre: "10x15 cm", precio: 1400, w: 80, h: 120, estilo: "polaroid" }
-    ]},
-    // Collage: precio = SOLO impresión por copia. El armado ($11.500) y las fotos
-    // extra se suman aparte, UNA sola vez por diseño (ver precioConocidoFoto).
-    collage: { titulo: "Foto collage", escena: "living", esCollage: true, items: [
-        { nombre: "10x15 cm", precio: 1400,  w: 80,  h: 120, estilo: "sin-borde" },
-        { nombre: "13x18 cm", precio: 1500,  w: 91,  h: 126, estilo: "sin-borde" },
-        { nombre: "15x21 cm", precio: 1800,  w: 98,  h: 137, estilo: "sin-borde" },
-        { nombre: "20x30 cm", precio: 7000,  w: 120, h: 180, estilo: "sin-borde" },
-        { nombre: "30x40 cm", precio: 14500, w: 150, h: 200, estilo: "sin-borde" },
-        { nombre: "Medida especial", precio: 0, especial: true, estilo: "sin-borde" }
-    ]}
-};
+/* Estructuras de UI derivadas del catálogo (cada ítem lleva su SKU).
+   Collage: el precio de la variante es SOLO impresión por copia; el armado,
+   las fotos extra y el retoque se cobran como modificadores (una vez por
+   diseño, ver precioConocidoFoto). */
+let CATALOGO_FOTOS = {}, CATALOGO_SOUVENIRS = {}, TIPOS_TAZA = [];
 
-const CATALOGO_SOUVENIRS = {
-    tarjeta: { titulo: "Foto tarjeta", items: [
-        { nombre: "5x7 cm", precio: 1500 }, { nombre: "7x10 cm", precio: 1500 },
-        { nombre: "10x15 cm", precio: 2000 }, { nombre: "13x18 cm", precio: 2900 },
-        { nombre: "15x21 cm", precio: 3500 }
-    ]},
-    iman: { titulo: "Foto imán", items: [
-        { nombre: "5x7 cm", precio: 2900 }, { nombre: "7x10 cm", precio: 2900 },
-        { nombre: "10x15 cm", precio: 4000 }, { nombre: "13x18 cm", precio: 5500 },
-        { nombre: "15x21 cm", precio: 6500 }
-    ]},
-    llaveros: { titulo: "Llaveros", items: [
-        { nombre: "Acrílico rectangular", precio: 3000 }, { nombre: "Acrílico redondo", precio: 2700 },
-        { nombre: "Redondo", precio: 3400 }, { nombre: "Con imán", precio: 3400 },
-        { nombre: "Destapador", precio: 3600 }
-    ]}
-};
+function construirCatalogosUI() {
+    sincronizarMontos();
 
-const TIPOS_TAZA = [
-    { nombre: "Mágica", precio: 17000 }, { nombre: "Cerámica", precio: 14000 }, { nombre: "Polietileno", precio: 9500 }
-];
+    // --- Fotos (revelado + collage), agrupadas para el simulador ---
+    const gruposDef = (CAT.ui && CAT.ui.grupos_fotos) || {};
+    const fotos = {};
+    Object.keys(gruposDef).forEach(k => {
+        const g = gruposDef[k];
+        fotos[k] = { titulo: g.titulo, escena: g.escena, esPolaroid: !!g.esPolaroid, esCollage: !!g.esCollage, items: [] };
+    });
+    const meterVariante = (v) => {
+        const g = v.render && v.render.grupo;
+        if (!g || !fotos[g] || v.activo === false) return;
+        if (v.especial) {
+            fotos[g].items.push({ sku: v.sku, nombre: v.nombre, precio: 0, especial: true, estilo: "sin-borde" });
+        } else {
+            const estilo = (v.atributos && v.atributos.estilo === "polaroid") ? "polaroid" : "sin-borde";
+            fotos[g].items.push({ sku: v.sku, nombre: v.nombre, precio: v.precio, w: v.render.w, h: v.render.h, estilo: estilo });
+        }
+    };
+    const rev = producto("revelado");
+    if (rev) rev.variantes.forEach(meterVariante);
+    const coll = producto("collage");
+    if (coll) coll.variantes.forEach(meterVariante);
+    CATALOGO_FOTOS = fotos;
+    // La preview en celular no debe depender del catálogo remoto (que trae escena 'escritorio'):
+    if (CATALOGO_FOTOS.chicos) CATALOGO_FOTOS.chicos.escena = "celular";
+    if (CATALOGO_FOTOS.polaroid) CATALOGO_FOTOS.polaroid.escena = "celular";
+
+    // --- Souvenirs ---
+    const souv = {};
+    [["foto_tarjeta", "tarjeta"], ["foto_iman", "iman"], ["llaveros", "llaveros"], ["pines", "pines"]].forEach(par => {
+        const p = producto(par[0]);
+        if (!p || p.visible_web === false) return;
+        const items = p.variantes
+            .filter(v => v.activo !== false && v.precio != null)
+            .map(v => ({ sku: v.sku, nombre: v.nombre, precio: v.precio }));
+        if (items.length) souv[par[1]] = { titulo: p.nombre, items: items };
+    });
+    CATALOGO_SOUVENIRS = souv;
+
+    // --- Tazas ---
+    const taz = producto("tazas");
+    TIPOS_TAZA = taz ? taz.variantes.filter(v => v.activo !== false).map(v => ({ sku: v.sku, nombre: v.nombre, precio: v.precio })) : [];
+}
+construirCatalogosUI();
+
+/* Refresco remoto del catálogo (pestaña "Catalogo" de la hoja, vía Apps Script).
+   Si falla o no valida, se sigue usando el embebido sin molestar al usuario. */
+function cargarCatalogoRemoto() {
+    if (!PEDIDOS_URL) return;
+    const ctrl = ("AbortController" in window) ? new AbortController() : null;
+    const timer = ctrl ? setTimeout(() => ctrl.abort(), 5000) : null;
+    fetch(PEDIDOS_URL + "?accion=catalogo", ctrl ? { signal: ctrl.signal } : {})
+        .then(r => r.json())
+        .then(data => {
+            if (data && Array.isArray(data.productos) && Array.isArray(data.modificadores)) {
+                CAT = data;
+                // La hoja no puede representar overrides por producto (ej. retoque
+                // por_diseño en collage): el ida y vuelta los aplana a "[object Object]".
+                // Restauramos la config estructural de modificadores desde el embebido;
+                // los PRECIOS igual siguen viniendo de la hoja.
+                (CATALOGO_V2.productos || []).forEach(pe => {
+                    const pr = (CAT.productos || []).find(p => p.id === pe.id);
+                    if (pr && Array.isArray(pe.modificadores)) pr.modificadores = pe.modificadores;
+                });
+                construirCatalogosUI();
+                if (typeof taza !== "undefined" && taza && TIPOS_TAZA.length) taza.tipo = TIPOS_TAZA[1] || TIPOS_TAZA[0];
+                actualizarEtiquetasPrecios();
+                console.log("Catálogo remoto cargado (v" + ((data.meta && data.meta.version) || "?") + ").");
+            }
+        })
+        .catch(() => console.log("Catálogo remoto no disponible; se usa el embebido v" + ((CATALOGO_V2.meta && CATALOGO_V2.meta.version) || "?") + "."))
+        .finally(() => { if (timer) clearTimeout(timer); });
+}
+
+/* Etiquetas de precio del HTML que dependen del catálogo */
+function actualizarEtiquetasPrecios() {
+    const set = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
+    set("lbl-monto-retoque", formatear(COSTO_RETOQUE));
+    set("lbl-monto-texto", formatear(COSTO_TEXTO_FOTO));
+    set("lbl-monto-texto-modal", formatear(COSTO_TEXTO_FOTO));
+    set("lbl-monto-armado", formatear(COSTO_COLLAGE));
+    set("lbl-monto-foto-extra", formatear(COSTO_FOTO_EXTRA));
+    set("lbl-fotos-incluidas", String(FOTOS_COLLAGE_INCLUIDAS));
+}
 
 const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
@@ -602,9 +1489,9 @@ let flujo = "pedido";
 let cliente = { nombre: "", telefono: "", email: "" };
 let carrito = [];
 let grupoActual = null;
-let selFoto = { nombre: "", precio: 0, estilo: "sin-borde", especial: false };
+let selFoto = { sku: "", nombre: "", precio: 0, estilo: "sin-borde", especial: false };
 let adjuntosSim = [];
-let selSouv = { nombre: "", precio: 0, subtitulo: "" };
+let selSouv = { sku: "", nombre: "", precio: 0, subtitulo: "" };
 let adjuntosSouv = [];
 let taza = { tipo: TIPOS_TAZA[1], tieneFondo: false };
 let fotoTazaSel = null;
@@ -676,19 +1563,12 @@ function renderCuadro(wcm, hcm, estilo, label) {
     const cuadro = document.getElementById("cuadro");
     cuadro.className = "cuadro " + estilo;
     const et = document.getElementById("etiqueta");
-
-    // Medida del cuadro. En polaroid el marco va a escala real:
-    // lados 1,5 cm, borde superior 1,5 cm y borde inferior 3 cm.
     let wcmBox = wcm, hcmBox = hcm;
     let inner = document.getElementById("cuadro-foto");
     if (estilo === "polaroid") {
-        // Marco PROPORCIONAL (a escala), calibrado con la 10x15 que se ve perfecta:
-        // en 10x15 son 1 cm a los lados/arriba y 3 cm abajo; en medidas menores el
-        // marco se achica en proporción para que no quede desmedido. Va HACIA ADENTRO,
-        // así el tamaño exterior sigue siendo la medida nominal (wcm x hcm).
         const REFW = 10, REFH = 15;
         const LADO = 1 * (wcm / REFW), SUP = 1 * (hcm / REFH), INF = 3 * (hcm / REFH);
-        const uPct = cfg.pxcm / cfg.cropW * 100; // % de la escena por cm (isotrópico)
+        const uPct = cfg.pxcm / cfg.cropW * 100;
         cuadro.style.boxSizing = "border-box";
         cuadro.style.background = "#fff";
         cuadro.style.borderWidth = "0";
@@ -704,7 +1584,6 @@ function renderCuadro(wcm, hcm, estilo, label) {
         if (inner) inner.remove();
         et.style.cssText = "";
     }
-
     const wFrac = wcmBox * cfg.pxcm / cfg.cropW;
     const hFrac = hcmBox * cfg.pxcm / cfg.cropH;
     cuadro.style.width = (wFrac * 100) + "%";
@@ -753,7 +1632,7 @@ function cargarSimulador(categoria) {
 }
 
 function elegirMedida(item, botonEl) {
-    selFoto = { nombre: item.nombre, precio: item.precio, estilo: item.estilo, especial: !!item.especial };
+    selFoto = { sku: item.sku || "", nombre: item.nombre, precio: item.precio, estilo: item.estilo, especial: !!item.especial };
     if (item.especial) {
         document.getElementById("fila-especial").classList.remove("oculto");
         actualizarEspecial();
@@ -782,9 +1661,21 @@ function fotosExtraCollage() {
     if (!grupoActual || !grupoActual.esCollage) return 0;
     return Math.max(0, adjuntosSim.length - FOTOS_COLLAGE_INCLUIDAS);
 }
-function precioImanMedida() { return PRECIOS_IMAN[selFoto.nombre.replace(" cm", "")] || null; }
+function medidaSel() { return selFoto.nombre.replace(" cm", ""); }
+function precioImanMedida() { const v = varianteIman(medidaSel()); return v ? v.precio : null; }
 function imanActivo() {
     return !!(grupoActual && grupoActual.esPolaroid && document.getElementById("chk-iman").checked);
+}
+/* Cuántos retoques se facturan según el ámbito definido en el catálogo:
+   por_foto  → una vez por foto adjunta (mín. 1 por ítem)
+   por_diseno→ una vez por ítem/diseño
+   por_copia → una vez por copia (comportamiento previo a v4.3) */
+function retoquesFacturables(copias, nFotos, enCollage) {
+    const m = modDeProducto(enCollage ? "collage" : "revelado", "retoque");
+    const ambito = (m && m.ambito) || "por_foto";
+    if (ambito === "por_diseno") return 1;
+    if (ambito === "por_copia") return Math.max(1, copias);
+    return Math.max(1, nFotos || 0);
 }
 function precioConocidoFoto() {
     const copias = Math.max(1, parseInt(document.getElementById("in-cantidad").value) || 1);
@@ -797,12 +1688,12 @@ function precioConocidoFoto() {
         // (trabajo de diseño) se cobran UNA sola vez por diseño.
         const armado = COSTO_COLLAGE;
         const extras = fotosExtraCollage() * COSTO_FOTO_EXTRA;
-        const retoque = retoqueOn ? COSTO_RETOQUE : 0;
+        const retoque = retoqueOn ? COSTO_RETOQUE * retoquesFacturables(copias, adjuntosSim.length, true) : 0;
         return base * copias + armado + extras + retoque + textos;
     }
     if (imanActivo()) base = precioImanMedida() || base;
-    const retoque = retoqueOn ? COSTO_RETOQUE : 0;
-    return (base + retoque) * copias + textos;
+    const retoque = retoqueOn ? COSTO_RETOQUE * retoquesFacturables(copias, adjuntosSim.length, false) : 0;
+    return base * copias + retoque + textos;
 }
 
 function recalcularSim() {
@@ -826,8 +1717,8 @@ function recalcularSim() {
     if (grupoActual && grupoActual.esCollage) {
         nota.classList.remove("oculto");
         const n = adjuntosSim.length, extra = fotosExtraCollage();
-        if (n === 0) nota.innerText = "Subí hasta 5 fotos incluidas en el precio.";
-        else if (extra === 0) nota.innerText = n + " de 5 fotos incluidas.";
+        if (n === 0) nota.innerText = "Subí hasta " + FOTOS_COLLAGE_INCLUIDAS + " fotos incluidas en el precio.";
+        else if (extra === 0) nota.innerText = n + " de " + FOTOS_COLLAGE_INCLUIDAS + " fotos incluidas.";
         else nota.innerText = n + " fotos · " + extra + " extra (+" + formatear(extra * COSTO_FOTO_EXTRA) + ").";
     } else {
         nota.classList.add("oculto");
@@ -842,6 +1733,18 @@ function detalleFotoItem(it) {
     if (nTxt) partes.push(nTxt + " con texto impreso");
     if (it.retoque) partes.push("retoque digital");
     return partes.join(" · ");
+}
+
+/* Modificadores facturados de un ítem de revelado (retoque + textos), según catálogo */
+function modsFotoItem(it) {
+    const mods = [];
+    if (it.retoque) {
+        const n = retoquesFacturables(it.cant, (it.fotos || []).length, false);
+        mods.push({ id: "retoque", nombre: "Retoque digital", cantidad: n, valor_unit: COSTO_RETOQUE, monto: n * COSTO_RETOQUE });
+    }
+    const nTxt = (it.fotos || []).filter(f => f.texto).length;
+    if (nTxt) mods.push({ id: "texto_impreso", nombre: "Texto impreso", cantidad: nTxt, valor_unit: COSTO_TEXTO_FOTO, monto: nTxt * COSTO_TEXTO_FOTO });
+    return mods;
 }
 
 function agregarFotoAlCarrito() {
@@ -865,41 +1768,58 @@ function agregarFotoAlCarrito() {
         if (retoque) partes.push("retoque digital");
         const snap = snapshotCollage();
         if (snap) { fotosItem.unshift({ name: "diseño-collage.jpg", url: snap }); partes.push("con diseño propio"); }
+        const nTxt = adjuntosSim.filter(f => f.texto).length;
+        const mods = [{ id: "armado_collage", nombre: "Armado de collage", cantidad: 1, valor_unit: COSTO_COLLAGE, monto: COSTO_COLLAGE }];
+        if (extra) mods.push({ id: "foto_extra_collage", nombre: "Foto extra", cantidad: extra, valor_unit: COSTO_FOTO_EXTRA, monto: extra * COSTO_FOTO_EXTRA });
+        if (retoque) mods.push({ id: "retoque", nombre: "Retoque digital", cantidad: 1, valor_unit: COSTO_RETOQUE, monto: COSTO_RETOQUE });
+        if (nTxt) mods.push({ id: "texto_impreso", nombre: "Texto impreso", cantidad: nTxt, valor_unit: COSTO_TEXTO_FOTO, monto: nTxt * COSTO_TEXTO_FOTO });
+        const base = selFoto.especial ? 0 : selFoto.precio;
         carrito.push({
             id: Date.now() + Math.random(),
             tipo: "Foto collage",
+            sku: selFoto.sku || "COLL-ESP", producto: "Foto collage", variante: nombreItem, esCollage: true,
+            cant: cant, precioUnit: base, mods: mods,
             desc: nombreItem + " × " + cant,
             detalle: partes.join(" · "),
-            subtotal: precioConocidoFoto(),
+            subtotal: base * cant + montoMods(mods),
             aCotizar: selFoto.especial,
             fotos: fotosItem
         });
     } else {
         const imanOn = imanActivo();
-        // Si ya hay un ítem con la misma medida, estilo, retoque e imán, se agrupa.
+        // El imán resuelve a otro SKU (producto Foto imán): su precio depende de la medida.
+        let unit = selFoto.especial ? 0 : selFoto.precio;
+        let sku = selFoto.sku || "";
+        let prodNombre = "Revelado de fotos";
+        let varianteNombre = nombreItem + (selFoto.estilo === "polaroid" ? " polaroid" : " estándar");
+        if (imanOn) {
+            const vi = varianteIman(medidaSel());
+            if (vi) { unit = vi.precio; sku = vi.sku; prodNombre = "Foto imán"; varianteNombre = nombreItem + " con imán (polaroid)"; }
+        }
+        // Si ya hay un ítem con el mismo SKU y retoque, se agrupa.
         const existente = carrito.find(it => it.tipo === "Revelado de foto" &&
-            it.medida === nombreItem && it.estilo === selFoto.estilo && it.retoque === retoque && it.iman === imanOn);
+            it.sku === sku && it.retoque === retoque && it.iman === imanOn);
         if (existente) {
             existente.cant += cant;
             existente.fotos = existente.fotos.concat(fotosItem);
-            const nTxt = existente.fotos.filter(f => f.texto).length;
-            existente.subtotal = (existente.precioUnit + (existente.retoque ? COSTO_RETOQUE : 0)) * existente.cant + nTxt * COSTO_TEXTO_FOTO;
+            existente.mods = modsFotoItem(existente);
+            existente.subtotal = existente.precioUnit * existente.cant + montoMods(existente.mods);
             existente.desc = nombreItem + " × " + existente.cant;
             existente.detalle = detalleFotoItem(existente);
         } else {
-            let unit = selFoto.especial ? 0 : selFoto.precio;
-            if (imanOn) unit = precioImanMedida() || unit;
             const nuevo = {
                 id: Date.now() + Math.random(),
                 tipo: "Revelado de foto",
+                sku: sku, producto: prodNombre, variante: varianteNombre, esCollage: false,
                 medida: nombreItem, estilo: selFoto.estilo, retoque: retoque, iman: imanOn,
                 cant: cant, precioUnit: unit,
                 desc: nombreItem + " × " + cant,
                 detalle: "",
-                subtotal: precioConocidoFoto(),
                 aCotizar: selFoto.especial,
                 fotos: fotosItem
             };
+            nuevo.mods = modsFotoItem(nuevo);
+            nuevo.subtotal = nuevo.precioUnit * nuevo.cant + montoMods(nuevo.mods);
             nuevo.detalle = detalleFotoItem(nuevo);
             carrito.push(nuevo);
         }
@@ -1142,7 +2062,7 @@ function cargarSouvSub(key, botonEl) {
     elegirSouv(grupo.items[0], grupo.titulo, null);
 }
 function elegirSouv(item, subtitulo, botonEl) {
-    selSouv = { nombre: item.nombre, precio: item.precio, subtitulo: subtitulo };
+    selSouv = { sku: item.sku || "", nombre: item.nombre, precio: item.precio, subtitulo: subtitulo };
     if (botonEl) {
         document.querySelectorAll("#souv-items .btn-medida").forEach(b => b.classList.remove("activo"));
         botonEl.classList.add("activo");
@@ -1161,6 +2081,8 @@ function agregarSouvAlCarrito() {
     carrito.push({
         id: Date.now() + Math.random(),
         tipo: "Souvenir",
+        sku: selSouv.sku || "", producto: selSouv.subtitulo, variante: selSouv.nombre,
+        cant: cant, precioUnit: selSouv.precio, mods: [],
         desc: selSouv.subtitulo + " " + selSouv.nombre + " × " + cant,
         detalle: partes.length ? partes.join(" · ") : "Sin imágenes adjuntas",
         subtotal: precioSouvActual(),
@@ -1363,6 +2285,8 @@ function agregarTazaAlCarrito() {
     carrito.push({
         id: Date.now() + Math.random(),
         tipo: "Taza personalizada",
+        sku: taza.tipo.sku || "", producto: "Taza sublimada", variante: "Taza " + taza.tipo.nombre,
+        cant: cant, precioUnit: taza.tipo.precio, mods: [],
         desc: "Taza " + taza.tipo.nombre + " × " + cant,
         detalle: partes.join(" · "),
         subtotal: precioTazaActual(),
@@ -1556,7 +2480,13 @@ async function enviarPedido() {
     const txtOrig = btn.textContent;
     btn.disabled = true; btn.textContent = "⏳ Registrando pedido…";
 
+    /* Contrato del pedido (v4.3): mismo formato que recibirá el futuro
+       POST /pedidos de FastAPI. Los precios viajan como snapshot: el pedido
+       nunca vuelve a mirar el catálogo vivo. */
     const payload = {
+        version: APP_VERSION,
+        moneda: "ARS",
+        catalogo_version: (CAT.meta && CAT.meta.version) || null,
         fecha: new Date().toISOString(),
         cliente: cliente,
         total: totalCarrito(),
@@ -1564,6 +2494,13 @@ async function enviarPedido() {
         items: carrito.map(it => ({
             tipo: it.tipo, desc: it.desc, detalle: it.detalle,
             subtotal: it.subtotal, aCotizar: !!it.aCotizar,
+            sku: it.sku || "",
+            producto: it.producto || it.tipo,
+            variante: it.variante || "",
+            cantidad: it.cant || 1,
+            precio_unit: (it.precioUnit != null ? it.precioUnit : it.subtotal),
+            modificadores: it.mods || [],
+            monto_modificadores: montoMods(it.mods),
             imagenes: (it.fotos || []).map((f, k) => ({ name: f.name || ("foto-" + (k + 1) + ".jpg"), url: f.url }))
         }))
     };
@@ -1708,48 +2645,30 @@ function avisoAgregado() {
     t._timer = setTimeout(() => t.classList.remove("visible"), 4000);
 }
 
-/* ============================================================
-   STICKERS Y EMOJIS  (OpenMoji 618px – libres, CC BY-SA 4.0)
-   Se insertan como <img class="foto-taza/foto-collage"> para
-   heredar arrastre, sliders (tamaño/giro/borde) y captura.
-   crossOrigin="anonymous" es OBLIGATORIO: sin él, el canvas de
-   snapshotTaza/snapshotCollage se "contamina" y el guardado
-   (toDataURL) devuelve null -> el pedido no se podría comprar.
-   jsDelivr envía Access-Control-Allow-Origin:* así que carga OK.
-   ============================================================ */
+/* ── v4.3: arranque ──
+   1) pinta las etiquetas de precios con el catálogo embebido
+   2) intenta refrescar el catálogo desde la hoja (Apps Script) */
+actualizarEtiquetasPrecios();
+cargarCatalogoRemoto();
+
+/* ===== STICKERS Y EMOJIS (OpenMoji 618px, CC BY-SA 4.0) =====
+   crossOrigin="anonymous" es obligatorio: sin eso el canvas de snapshotTaza/
+   snapshotCollage se contamina y toDataURL falla (no se podrÃ­a guardar).
+   jsDelivr envÃ­a Access-Control-Allow-Origin:* -> carga y guarda OK. ===== */
 let destinoStickerActual = 'taza';
 const OPENMOJI_BASE = "https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji@master/color/618x618/";
 const STICKERS_Y_EMOJIS = [
-    { n: "Sonrisa",     c: "1F600" },
-    { n: "Risa",        c: "1F602" },
-    { n: "Enamorado",   c: "1F60D" },
-    { n: "Lentes",      c: "1F60E" },
-    { n: "Beso",        c: "1F618" },
-    { n: "Estrellado",  c: "1F929" },
-    { n: "Festejo",     c: "1F973" },
-    { n: "Guiño",       c: "1F609" },
-    { n: "Corazón",     c: "2764" },
-    { n: "Dos corazones", c: "1F495" },
-    { n: "Destellos",   c: "2728" },
-    { n: "Estrella",    c: "2B50" },
-    { n: "Estrella brillante", c: "1F31F" },
-    { n: "Fuego",       c: "1F525" },
-    { n: "Fiesta",      c: "1F389" },
-    { n: "Confeti",     c: "1F38A" },
-    { n: "Torta",       c: "1F382" },
-    { n: "Regalo",      c: "1F381" },
-    { n: "Globos",      c: "1F388" },
-    { n: "Corona",      c: "1F451" },
-    { n: "Rosa",        c: "1F339" },
-    { n: "Flor",        c: "1F338" },
-    { n: "Arcoíris",    c: "1F308" },
-    { n: "Unicornio",   c: "1F984" },
-    { n: "Pulgar arriba", c: "1F44D" },
-    { n: "Aplausos",    c: "1F44F" },
-    { n: "Música",      c: "1F3B6" },
-    { n: "Trofeo",      c: "1F3C6" }
+    { n: "Sonrisa", c: "1F600" }, { n: "Risa", c: "1F602" }, { n: "Enamorado", c: "1F60D" },
+    { n: "Lentes", c: "1F60E" }, { n: "Beso", c: "1F618" }, { n: "Estrellado", c: "1F929" },
+    { n: "Festejo", c: "1F973" }, { n: "Guiño", c: "1F609" }, { n: "Corazón", c: "2764" },
+    { n: "Dos corazones", c: "1F495" }, { n: "Destellos", c: "2728" }, { n: "Estrella", c: "2B50" },
+    { n: "Estrella brillante", c: "1F31F" }, { n: "Fuego", c: "1F525" }, { n: "Fiesta", c: "1F389" },
+    { n: "Confeti", c: "1F38A" }, { n: "Torta", c: "1F382" }, { n: "Regalo", c: "1F381" },
+    { n: "Globos", c: "1F388" }, { n: "Corona", c: "1F451" }, { n: "Rosa", c: "1F339" },
+    { n: "Flor", c: "1F338" }, { n: "Arcoíris", c: "1F308" }, { n: "Unicornio", c: "1F984" },
+    { n: "Pulgar arriba", c: "1F44D" }, { n: "Aplausos", c: "1F44F" }, { n: "Música", c: "1F3B6" },
+    { n: "Trofeo", c: "1F3C6" }
 ];
-
 function abrirStickers(destino) {
     destinoStickerActual = destino;
     document.getElementById('modal-stickers').classList.remove('oculto');
@@ -1761,20 +2680,16 @@ function abrirStickers(destino) {
         box.title = item.n;
         box.style.cssText = "display:flex;align-items:center;justify-content:center;padding:8px;background:#fff;border:1px solid #e2e8f0;border-radius:6px;cursor:pointer;";
         const img = document.createElement('img');
-        img.src = url;
-        img.alt = item.n;
-        img.loading = "lazy";
+        img.src = url; img.alt = item.n; img.loading = "lazy";
         img.style.cssText = "width:46px;height:46px;object-fit:contain;";
         box.onclick = () => inyectarSticker(url);
         box.appendChild(img);
         grid.appendChild(box);
     });
 }
-
 function cerrarStickers() {
     document.getElementById('modal-stickers').classList.add('oculto');
 }
-
 function inyectarSticker(url) {
     if (destinoStickerActual === 'taza') {
         const lienzo = document.getElementById("lienzo-taza");
@@ -1782,9 +2697,7 @@ function inyectarSticker(url) {
         img.crossOrigin = "anonymous";
         img.src = url;
         img.className = "foto-taza";
-        img.style.left = "60px";
-        img.style.top = "60px";
-        img.style.width = "65px";
+        img.style.left = "60px"; img.style.top = "60px"; img.style.width = "65px";
         img.style.zIndex = ++zTop;
         hacerArrastrable(img);
         lienzo.appendChild(img);
@@ -1800,9 +2713,7 @@ function inyectarSticker(url) {
         img.crossOrigin = "anonymous";
         img.src = url;
         img.className = "foto-collage";
-        img.style.left = "70px";
-        img.style.top = "70px";
-        img.style.width = "75px";
+        img.style.left = "70px"; img.style.top = "70px"; img.style.width = "75px";
         img.style.zIndex = ++zTop;
         arrastrableCol(img);
         lienzo.appendChild(img);
@@ -1810,8 +2721,11 @@ function inyectarSticker(url) {
     }
     cerrarStickers();
 }
+
 </script>
 <!-- pedidos: integración con hoja de cálculo + captura de diseños -->
+
+
 
 <!-- ===== Modal de Stickers y Emojis (OpenMoji HD) ===== -->
 <div id="modal-stickers" class="modal-flotante oculto">
@@ -1824,5 +2738,4 @@ function inyectarSticker(url) {
         </div>
     </div>
 </div>
-</body>
-</html>
+</body></html>

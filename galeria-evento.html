@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fotos del evento · Foto Trelew Flash</title>
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+  /* ---- Específico de la galería de evento (cliente) ---- */
+  .ev-top { background: var(--papel); border-bottom:1px solid var(--linea); position:sticky; top:0; z-index:30; }
+  .ev-top .in { max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .ev-title { font-family:var(--serif); color:var(--bordo); font-size:19px; font-weight:700; line-height:1.1; }
+  .ev-title small { display:block; font-family:var(--sans); font-weight:400; color:var(--tinta-suave); font-size:12px; margin-top:2px; }
+
+  .cover { max-width:1200px; margin:0 auto; padding:18px 20px 0; }
+  .cover .banner { border-radius:16px; overflow:hidden; position:relative; height:150px;
+    background:linear-gradient(120deg,#8B1A1A 0%, #b8863f 55%, #E0A82E 100%); display:flex; align-items:center; padding:0 26px; }
+  .cover .banner h1 { color:#fff; font-size:26px; margin:0; text-shadow:0 2px 8px rgba(0,0,0,.3); }
+  .cover .banner .film { position:absolute; inset:0; opacity:.14; background-image:repeating-linear-gradient(90deg,#000 0 6px,transparent 6px 26px); }
+
+  .wrap { max-width:1200px; margin:0 auto; padding: 16px 20px 120px; }
+
+  /* Toolbar */
+  .toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:16px 0; }
+  .tandas { display:flex; gap:8px; overflow-x:auto; flex:1; padding-bottom:4px; }
+  .tanda-chip { white-space:nowrap; cursor:pointer; border:1px solid var(--linea); background:var(--papel); color:var(--tinta);
+    padding:7px 13px; border-radius:20px; font-size:13px; font-weight:600; }
+  .tanda-chip .c { color:var(--tinta-suave); font-weight:400; }
+  .tanda-chip.on { background:var(--bordo); color:#fff; border-color:var(--bordo); }
+  .tanda-chip.on .c { color:rgba(255,255,255,.8); }
+  .tool-r { display:flex; gap:8px; align-items:center; }
+  .num-search { width:130px; }
+
+  /* Grid */
+  .grid-g { display:grid; grid-template-columns:repeat(auto-fill,minmax(var(--tile),1fr)); gap:12px; --tile:170px; }
+  .grid-g.dense { --tile:120px; }
+  .ph-card { position:relative; border-radius:10px; overflow:hidden; border:1px solid var(--linea); background:#ddd;
+    aspect-ratio:3/4; cursor:pointer; box-shadow:var(--sombra-sm); }
+  .ph-card .img { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:42px;
+    filter:blur(.4px) saturate(.9); }
+  .ph-card .wm { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-weight:700; color:rgba(255,255,255,.55); font-size:12px; letter-spacing:1px;
+    transform:rotate(-24deg); text-shadow:0 1px 2px rgba(0,0,0,.25); pointer-events:none;
+    background:repeating-linear-gradient(-24deg,transparent 0 46px, rgba(255,255,255,.06) 46px 47px); }
+  .ph-card .num { position:absolute; left:6px; top:6px; background:rgba(58,50,42,.6); color:#fff; font-size:11px;
+    font-weight:700; padding:2px 7px; border-radius:20px; backdrop-filter:blur(2px); }
+  .ph-card .pick { position:absolute; right:6px; top:6px; width:26px; height:26px; border-radius:50%;
+    background:rgba(255,255,255,.85); border:1px solid var(--linea); display:flex; align-items:center; justify-content:center;
+    font-size:14px; color:var(--tinta-suave); }
+  .ph-card.sel { outline:3px solid var(--verde); }
+  .ph-card.sel .pick { background:var(--verde); color:#fff; border-color:var(--verde); }
+  .ph-card .low { position:absolute; left:0; right:0; bottom:0; text-align:center; font-size:9px; color:rgba(255,255,255,.7);
+    padding:2px; background:linear-gradient(transparent,rgba(0,0,0,.35)); }
+
+  .sentinel { height:1px; }
+  .cargando { text-align:center; color:var(--tinta-suave); font-size:13px; padding:22px; }
+  .vacio { text-align:center; color:var(--tinta-suave); padding:50px 20px; }
+
+  /* Bandeja de selección */
+  .tray { position:fixed; left:0; right:0; bottom:0; background:var(--papel); border-top:2px solid var(--dorado-borde);
+    box-shadow:0 -6px 20px rgba(58,50,42,.12); z-index:40; transform:translateY(110%); transition:transform .2s; }
+  .tray.show { transform:none; }
+  .tray .in { max-width:1200px; margin:0 auto; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .tray .info b { color:var(--bordo); font-family:var(--serif); font-size:18px; }
+
+  /* Lightbox */
+  .lb-bg { position:fixed; inset:0; background:rgba(30,26,22,.86); z-index:60; display:none; align-items:center; justify-content:center; padding:16px; }
+  .lb-bg.open { display:flex; }
+  .lb { background:var(--papel); border-radius:16px; max-width:820px; width:100%; max-height:92vh; overflow:hidden; display:grid; grid-template-columns:1.3fr 1fr; }
+  @media(max-width:680px){ .lb{ grid-template-columns:1fr; max-height:94vh; overflow-y:auto; } }
+  .lb .stage { position:relative; background:#2a2622; display:flex; align-items:center; justify-content:center; min-height:320px; }
+  .lb .stage .big { font-size:120px; filter:blur(.6px); }
+  .lb .stage .wm { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif); font-weight:700; color:rgba(255,255,255,.4); font-size:26px; letter-spacing:3px; transform:rotate(-24deg);
+    background:repeating-linear-gradient(-24deg,transparent 0 90px, rgba(255,255,255,.05) 90px 92px); }
+  .lb .stage .arw { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.9); border:none;
+    width:40px; height:40px; border-radius:50%; font-size:18px; cursor:pointer; color:var(--tinta); }
+  .lb .stage .arw.l { left:10px; } .lb .stage .arw.r { right:10px; }
+  .lb .stage .num { position:absolute; left:12px; top:12px; background:rgba(58,50,42,.6); color:#fff; font-size:12px; font-weight:700; padding:3px 10px; border-radius:20px; }
+  .lb .side { padding:20px; display:flex; flex-direction:column; }
+  .lb .side h3 { margin:0 0 4px; color:var(--bordo); }
+  .fmt { border:1px solid var(--linea); border-radius:10px; padding:11px 13px; margin-top:10px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+  .fmt.on { border-color:var(--verde); background:var(--verde-bg); }
+  .fmt .p { font-weight:700; color:var(--bordo); }
+  .lb .side .cierre { margin-top:auto; }
+  .x { cursor:pointer; font-size:24px; color:var(--tinta-suave); border:none; background:none; }
+
+  /* Puerta de código */
+  .gate { position:fixed; inset:0; background:var(--crema); z-index:80; display:flex; align-items:center; justify-content:center; padding:22px; }
+  .gate .box { background:var(--papel); border:1px solid var(--linea); border-top:5px solid var(--dorado); border-radius:16px; max-width:420px; width:100%; padding:30px 26px; text-align:center; box-shadow:var(--sombra); }
+  .gate .box .lg { font-family:var(--serif); font-size:24px; color:var(--bordo); font-weight:700; }
+  .gate .box .lg span { display:block; font-size:12px; letter-spacing:2px; color:var(--dorado); text-transform:uppercase; margin-top:4px; font-family:var(--sans); }
+  .gate .code-in { text-align:center; font-size:22px; letter-spacing:6px; text-transform:uppercase; font-weight:700; margin-top:18px; }
+  .gate .err { color:var(--rojo); font-size:13px; margin-top:8px; min-height:18px; }
+</style>
+</head>
+<body>
+
+<!-- ============ PUERTA DE CÓDIGO ============ -->
+<div class="gate" id="gate">
+  <div class="box">
+    <div class="lg">Foto Trelew Flash<span>Fotos de eventos</span></div>
+    <p class="muted" style="margin-top:16px">Esta galería es <b>privada</b>. Ingresá el código que te dieron en el evento (en la tarjeta o el QR).</p>
+    <input class="f code-in" id="codeInput" maxlength="10" placeholder="· · · · · ·" autocomplete="off">
+    <div class="err" id="codeErr"></div>
+    <button class="btn pri" style="width:100%;justify-content:center" onclick="probarCodigo()">Ver mis fotos</button>
+    <p class="hint" style="margin-top:14px">Demo: el código de este evento es <span class="pill-code">DANZA28</span></p>
+  </div>
+</div>
+
+<!-- ============ BARRA SUPERIOR ============ -->
+<div class="ev-top">
+  <div class="in">
+    <div class="ev-title">Muestra Anual · Academia Danzas del Valle
+      <small>28/06/2026 · <span id="totalFotos">0</span> fotos · <span class="chip mut" style="font-size:10px">🔒 privado</span></small></div>
+    <div class="usuario"><span class="muted" style="font-size:12px">Código</span> <span class="pill-code">DANZA28</span></div>
+  </div>
+</div>
+
+<div class="cover">
+  <div class="banner"><div class="film"></div><h1>Encontrá tus fotos 💃</h1></div>
+</div>
+
+<div class="wrap">
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="tandas" id="tandas"></div>
+    <div class="tool-r">
+      <input class="f num-search" id="numSearch" type="number" placeholder="N.º de foto" oninput="onSearch()">
+      <button class="btn ghost sm" id="densBtn" onclick="toggleDens()">▦ Densidad</button>
+    </div>
+  </div>
+  <p class="hint" id="ayuda" style="margin-top:-6px">💡 Tocá tu tanda (ej: el grupo en que bailaste) para achicar la búsqueda. Cada foto tiene su número. Tocá una para verla más grande y elegir formato.</p>
+
+  <div class="grid-g" id="grid"></div>
+  <div class="sentinel" id="sentinel"></div>
+  <div class="cargando" id="cargando" style="display:none">Cargando más fotos…</div>
+  <div class="vacio" id="vacio" style="display:none">No hay fotos con ese filtro.</div>
+</div>
+
+<!-- ============ BANDEJA DE SELECCIÓN ============ -->
+<div class="tray" id="tray">
+  <div class="in">
+    <div class="info"><b id="trayCount">0 fotos</b> <span class="muted">seleccionadas</span> · <b id="trayTotal">$0</b></div>
+    <div class="acciones">
+      <button class="btn ghost" onclick="vaciarSel()">Vaciar</button>
+      <button class="btn pri" onclick="abrirCheckout()">Continuar la compra →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VISOR (LIGHTBOX) ============ -->
+<div class="lb-bg" id="lbBg">
+  <div class="lb">
+    <div class="stage">
+      <button class="arw l" onclick="lbNav(-1)">‹</button>
+      <div class="num" id="lbNum">#0</div>
+      <div class="big" id="lbBig">💃</div>
+      <div class="wm">TRELEW FLASH</div>
+      <button class="arw r" onclick="lbNav(1)">›</button>
+    </div>
+    <div class="side">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><h3 id="lbTitle">Foto #0</h3><p class="muted" style="margin:0;font-size:12.5px" id="lbTanda">Tanda</p></div>
+        <button class="x" onclick="cerrarLb()">×</button>
+      </div>
+      <p class="hint">Vista previa con marca de agua. Al comprar recibís la foto original sin marca.</p>
+      <div class="fmt" id="fmtDig" onclick="setFmt('digital')"><span>📱 Digital (alta resolución)</span><span class="p" id="pDig">$0</span></div>
+      <div class="fmt" id="fmtPap" onclick="setFmt('papel')"><span>🖼️ Impresa 15×21</span><span class="p" id="pPap">$0</span></div>
+      <div class="cierre">
+        <button class="btn ok" style="width:100%;justify-content:center" id="lbAdd" onclick="toggleFromLb()">Agregar a mi selección</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="demo-tag">MODO DEMO · fotos de ejemplo</div>
+
+<script src="assets/data.js"></script>
+<script>
+const $ = (s,r=document)=>r.querySelector(s);
+
+/* ---------- Datos demo: ~940 fotos en tandas ---------- */
+const TANDAS = [
+  {n:"Entrada", c:70}, {n:"Baile Grupo A", c:150}, {n:"Baile Grupo B", c:150},
+  {n:"Baile Grupo C", c:150}, {n:"Cuadro Central", c:130}, {n:"Solistas", c:110},
+  {n:"Premiación", c:100}, {n:"Saludo Final", c:80}
+];
+const EMOJIS = ["💃","🕺","👯","🩰","👧","🧒","👦","👏","🌟","🎭"];
+const PHOTOS = [];
+(function(){ let num=1; TANDAS.forEach(t=>{ for(let i=0;i<t.c;i++){
+  PHOTOS.push({ num, tanda:t.n, hue:(num*53)%360, emo:EMOJIS[num%EMOJIS.length] }); num++; }});})();
+
+/* precio desde el catálogo canónico (assets/data.js) */
+const PRECIO = { digital: TARIFAS_EVENTO.digital, papel: TARIFAS_EVENTO.papel_15x21 };
+
+/* ---------- Estado ---------- */
+let filtro = "todas";
+let busqueda = "";
+const sel = new Map();          // num -> {fmt}
+const BATCH = 60;
+let rendered = 0;
+let lista = [];                 // fotos filtradas actuales
+let lbActual = null;            // num en el visor
+
+/* ---------- Puerta de código ---------- */
+function probarCodigo(){
+  const v = $('#codeInput').value.trim().toUpperCase();
+  if(v === "DANZA28" || v === ""){ $('#gate').style.display='none'; }
+  else { $('#codeErr').textContent = "Código incorrecto. Fijate en tu tarjeta o QR."; }
+}
+$('#codeInput').addEventListener('keydown',e=>{ if(e.key==='Enter') probarCodigo(); });
+
+/* ---------- Filtros / tandas ---------- */
+function pintarTandas(){
+  const cont = $('#tandas');
+  const chips = [`<div class="tanda-chip on" data-t="todas" onclick="setFiltro('todas',this)">Todas <span class="c">${PHOTOS.length}</span></div>`];
+  TANDAS.forEach(t=> chips.push(`<div class="tanda-chip" data-t="${t.n}" onclick="setFiltro('${t.n}',this)">${t.n} <span class="c">${t.c}</span></div>`));
+  cont.innerHTML = chips.join('');
+}
+function setFiltro(t, el){
+  filtro = t;
+  document.querySelectorAll('.tanda-chip').forEach(c=>c.classList.toggle('on', c===el));
+  aplicar();
+}
+function onSearch(){ busqueda = $('#numSearch').value.trim(); aplicar(); }
+
+function aplicar(){
+  lista = PHOTOS.filter(p=>{
+    const okT = filtro==="todas" || p.tanda===filtro;
+    const okN = !busqueda || String(p.num).includes(busqueda);
+    return okT && okN;
+  });
+  $('#grid').innerHTML = "";
+  rendered = 0;
+  $('#vacio').style.display = lista.length ? "none" : "block";
+  renderMore();
+}
+
+/* ---------- Render por lotes (carga diferida) ---------- */
+function tileHTML(p){
+  const s = sel.has(p.num);
+  return `<div class="ph-card ${s?'sel':''}" data-n="${p.num}" onclick="abrirLb(${p.num})">
+    <div class="img" style="background:linear-gradient(135deg,hsl(${p.hue},45%,62%),hsl(${(p.hue+40)%360},50%,45%))">${p.emo}</div>
+    <div class="wm">TRELEW FLASH</div>
+    <div class="num">#${p.num}</div>
+    <div class="pick" onclick="event.stopPropagation();toggleSel(${p.num})">${s?'✓':'+'}</div>
+    <div class="low">baja resolución · marca de agua</div>
+  </div>`;
+}
+function renderMore(){
+  if(rendered >= lista.length) return;
+  const next = lista.slice(rendered, rendered+BATCH);
+  $('#grid').insertAdjacentHTML('beforeend', next.map(tileHTML).join(''));
+  rendered += next.length;
+  $('#cargando').style.display = rendered < lista.length ? "block" : "none";
+}
+/* IntersectionObserver: cuando el sentinel entra en pantalla, cargar más */
+const io = new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting) renderMore(); }); }, {rootMargin:"600px"});
+io.observe($('#sentinel'));
+
+/* ---------- Selección ---------- */
+function toggleSel(num){
+  if(sel.has(num)) sel.delete(num); else sel.set(num,{fmt:"digital"});
+  const card = document.querySelector(`.ph-card[data-n="${num}"]`);
+  if(card){ card.classList.toggle('sel', sel.has(num)); card.querySelector('.pick').textContent = sel.has(num)?'✓':'+'; }
+  actualizarBandeja();
+  if(lbActual===num) pintarLbBoton();
+}
+function vaciarSel(){ sel.clear(); document.querySelectorAll('.ph-card.sel').forEach(c=>{c.classList.remove('sel');c.querySelector('.pick').textContent='+';}); actualizarBandeja(); }
+function totalSel(){ let t=0; sel.forEach(v=> t+= PRECIO[v.fmt]); return t; }
+function actualizarBandeja(){
+  const n = sel.size;
+  $('#tray').classList.toggle('show', n>0);
+  $('#trayCount').textContent = n===1 ? "1 foto" : n+" fotos";
+  $('#trayTotal').textContent = ars(totalSel());
+}
+
+/* ---------- Visor ---------- */
+function abrirLb(num){
+  lbActual = num;
+  const p = PHOTOS.find(x=>x.num===num);
+  $('#lbBig').textContent = p.emo;
+  $('#lbBig').style.filter = "blur(.6px)";
+  $('#lbNum').textContent = "#"+p.num;
+  $('#lbTitle').textContent = "Foto #"+p.num;
+  $('#lbTanda').textContent = p.tanda;
+  $('#pDig').textContent = ars(PRECIO.digital);
+  $('#pPap').textContent = ars(PRECIO.papel);
+  const stage = document.querySelector('.lb .stage');
+  stage.style.background = `linear-gradient(135deg,hsl(${p.hue},45%,55%),hsl(${(p.hue+40)%360},50%,38%))`;
+  const fmt = sel.get(num)?.fmt || "digital";
+  setFmt(fmt, true);
+  pintarLbBoton();
+  $('#lbBg').classList.add('open');
+}
+function cerrarLb(){ $('#lbBg').classList.remove('open'); lbActual=null; }
+function lbNav(d){
+  const idx = lista.findIndex(p=>p.num===lbActual);
+  let ni = idx + d;
+  if(ni<0) ni=0; if(ni>=lista.length) ni=lista.length-1;
+  abrirLb(lista[ni].num);
+}
+function setFmt(f, soloVisual){
+  $('#fmtDig').classList.toggle('on', f==="digital");
+  $('#fmtPap').classList.toggle('on', f==="papel");
+  if(!soloVisual && sel.has(lbActual)){ sel.get(lbActual).fmt = f; actualizarBandeja(); }
+  $('#lbBg').dataset.fmt = f;
+}
+function toggleFromLb(){
+  if(!sel.has(lbActual)){ sel.set(lbActual,{fmt: $('#lbBg').dataset.fmt || "digital"}); }
+  else { sel.delete(lbActual); }
+  // reflejar en la grilla
+  const card = document.querySelector(`.ph-card[data-n="${lbActual}"]`);
+  if(card){ card.classList.toggle('sel', sel.has(lbActual)); card.querySelector('.pick').textContent = sel.has(lbActual)?'✓':'+'; }
+  actualizarBandeja(); pintarLbBoton();
+}
+function pintarLbBoton(){
+  const b = $('#lbAdd');
+  if(sel.has(lbActual)){ b.textContent="Quitar de mi selección"; b.className="btn ghost"; b.style.width="100%"; b.style.justifyContent="center"; }
+  else { b.textContent="Agregar a mi selección"; b.className="btn ok"; b.style.width="100%"; b.style.justifyContent="center"; }
+}
+document.addEventListener('keydown',e=>{
+  if(!$('#lbBg').classList.contains('open')) return;
+  if(e.key==='ArrowLeft') lbNav(-1);
+  if(e.key==='ArrowRight') lbNav(1);
+  if(e.key==='Escape') cerrarLb();
+});
+$('#lbBg').addEventListener('click',e=>{ if(e.target.id==='lbBg') cerrarLb(); });
+
+/* ---------- Checkout (demo) ---------- */
+function abrirCheckout(){
+  if(!sel.size) return;
+  let dig=0, pap=0; sel.forEach(v=> v.fmt==="digital"?dig++:pap++);
+  const total = totalSel();
+  alert(
+`Checkout (demo) — Fotos de: Lucía Fernández (una sola fotógrafa por compra, por el split 70/30)
+
+${sel.size} fotos seleccionadas
+  · ${dig} digitales × ${ars(PRECIO.digital)}
+  · ${pap} impresas 15×21 × ${ars(PRECIO.papel)}
+TOTAL: ${ars(total)}
+
+Al pagar con Mercado Pago:
+  · El 70% va a la fotógrafa, 30% a la casa (automático).
+  · Las digitales llegan por link seguro (original sin marca de agua).
+  · Las impresas quedan como orden para retirar en el local.`);
+}
+
+/* ---------- Init ---------- */
+$('#totalFotos').textContent = PHOTOS.length;
+pintarTandas();
+aplicar();
+</script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Administración · Foto Trelew Flash v4.3</title>
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<div class="app">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">Foto Trelew Flash<span>Administración · v4.3</span></div>
+      <span class="rol">Superadmin</span>
+    </div>
+    <nav class="nav" id="nav">
+      <div class="grupo">Paneles</div>
+      <a class="cross" href="index.html"><span class="ic">🧭</span> Menú principal</a>
+      <a class="cross" href="fotografos.html"><span class="ic">📷</span> Panel de fotógrafos</a>
+      <div class="grupo">Inicio</div>
+      <a data-v="inicio" class="active"><span class="ic">🏠</span> Inicio</a>
+      <div class="grupo">Operación</div>
+      <a data-v="pedidos"><span class="ic">📦</span> Pedidos</a>
+      <a data-v="eventos"><span class="ic">🖼️</span> Moderación de eventos</a>
+      <a data-v="fotografos"><span class="ic">📷</span> Fotógrafos</a>
+      <a data-v="clientes"><span class="ic">👥</span> Clientes</a>
+      <div class="grupo">Configuración</div>
+      <a data-v="precios"><span class="ic">🏷️</span> Precios y tarifas</a>
+      <a data-v="usuarios"><span class="ic">🔑</span> Usuarios y admins</a>
+      <a data-v="config"><span class="ic">⚙️</span> Integraciones</a>
+      <a data-v="marca"><span class="ic">🎨</span> Personalización</a>
+      <div class="grupo">Análisis</div>
+      <a data-v="reportes"><span class="ic">📊</span> Reportes y caja</a>
+      <a data-v="auditoria"><span class="ic">📜</span> Auditoría</a>
+    </nav>
+    <div class="pie">Único tenant activo:<br><b>Trelew Flash S.R.L.</b><br><span class="muted">multi-tenant listo</span></div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+    <div class="topbar">
+      <div class="titulo" id="topTitulo">Inicio</div>
+      <div class="der">
+        <a class="btn ghost sm" href="index.html">🧭 Menú</a>
+        <div class="usuario"><div class="avatar">M</div><div><b>Marcelo</b><br><span class="muted" style="font-size:11.5px">Superadmin</span></div></div>
+      </div>
+    </div>
+    <div class="content" id="content"><!-- vistas inyectadas por JS --></div>
+  </div>
+</div>
+
+<!-- ============ MODAL ============ -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="m-h"><h3 id="mTit">Título</h3><button class="x" onclick="cerrarModal()">×</button></div>
+    <div class="m-b" id="mBody"></div>
+    <div class="m-f" id="mFoot"></div>
+  </div>
+</div>
+
+<div class="demo-tag">MODO DEMO · datos de ejemplo</div>
+
+<script src="assets/data.js"></script>
+<script>
+/* ================= Helpers de render ================= */
+const $ = (s,r=document)=>r.querySelector(s);
+function chip(estado){ return `<span class="chip ${estadoChip(estado)}"><span class="dot"></span>${estado}</span>`; }
+function abrirModal(tit, body, foot=''){ $('#mTit').innerHTML=tit; $('#mBody').innerHTML=body; $('#mFoot').innerHTML=foot||`<button class="btn ghost" onclick="cerrarModal()">Cerrar</button>`; $('#modalBg').classList.add('open'); }
+function cerrarModal(){ $('#modalBg').classList.remove('open'); }
+$('#modalBg').addEventListener('click', e=>{ if(e.target.id==='modalBg') cerrarModal(); });
+
+/* ================= VISTAS ================= */
+const vistas = {};
+
+/* ---- Inicio / Dashboard ---- */
+vistas.inicio = () => {
+  const pendEv = EVENTOS.filter(e=>e.estado==='pendiente').length;
+  const pendFot = FOTOGRAFOS.filter(f=>f.estado==='pendiente').length;
+  const enCola = PEDIDOS.filter(p=>p.estado==='en cola').length;
+  const comision = VENTAS_FOTO.reduce((a,v)=>a+v.precio*COMISION_CASA,0);
+  return `
+  <div class="page-h"><div><h2>Buen día, Marcelo</h2><p class="sub">Resumen operativo de hoy · lunes 6 de julio de 2026</p></div>
+    <div class="acciones"><button class="btn gold" onclick="go('eventos')">Revisar ${pendEv} evento(s)</button></div></div>
+  <div class="grid c4" style="margin-bottom:18px">
+    <div class="kpi acento"><div class="l">Ventas del día</div><div class="v">${ars(212300)}</div><div class="d up">▲ 8% vs. ayer</div></div>
+    <div class="kpi"><div class="l">Pedidos en cola</div><div class="v">${enCola}</div><div class="d">de ${PEDIDOS.length} activos</div></div>
+    <div class="kpi"><div class="l">Comisión 30% (hoy)</div><div class="v">${ars(comision)}</div><div class="d">de ventas de fotos</div></div>
+    <div class="kpi"><div class="l">Pendientes de aprobar</div><div class="v">${pendEv+pendFot}</div><div class="d">${pendEv} eventos · ${pendFot} fotógrafo</div></div>
+  </div>
+  <div class="grid c2">
+    <div class="card"><h3>⏳ Requiere tu atención</h3>
+      <table class="tbl"><tbody>
+        <tr><td>${pendEv} eventos pendientes de moderación</td><td class="right"><button class="btn sm ghost" onclick="go('eventos')">Ver</button></td></tr>
+        <tr><td>${pendFot} fotógrafo pendiente de aprobación</td><td class="right"><button class="btn sm ghost" onclick="go('fotografos')">Ver</button></td></tr>
+        <tr><td>1 evento observado sin corregir (E-115)</td><td class="right"><button class="btn sm ghost" onclick="go('eventos')">Ver</button></td></tr>
+        <tr><td>2 fotógrafos sin Mercado Pago (modo respaldo)</td><td class="right"><button class="btn sm ghost" onclick="go('fotografos')">Ver</button></td></tr>
+      </tbody></table>
+    </div>
+    <div class="card"><h3>📦 Pedidos por etapa</h3>
+      ${ETAPAS_PEDIDO.map(et=>{const n=PEDIDOS.filter(p=>p.estado===et).length; const pct=Math.round(n/PEDIDOS.length*100);
+        return `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>${nombreBonito(et)}</span><b>${n}</b></div><div class="bar"><span style="width:${pct||4}%"></span></div></div>`}).join('')}
+    </div>
+  </div>`;
+};
+
+/* ---- Pedidos (tablero por etapa) ---- */
+vistas.pedidos = () => `
+  <div class="page-h"><div><h2>Pedidos de laboratorio</h2><p class="sub">Tablero por etapa · etiquetas, cancelaciones y reembolsos</p></div>
+    <div class="acciones"><button class="btn ghost" onclick="alert('Demo: imprimir etiquetas de la cola')">🖨️ Etiquetas</button><button class="btn pri" onclick="alert('Demo: nuevo pedido manual')">+ Pedido</button></div></div>
+  <div class="pipeline">
+    ${ETAPAS_PEDIDO.map(et=>{ const items=PEDIDOS.filter(p=>p.estado===et);
+      return `<div class="col-pl"><h4>${nombreBonito(et)} <b>${items.length}</b></h4>
+        ${items.map(p=>`<div class="pl-card"><div class="cli">${p.id} · ${p.cliente}</div><div class="meta">${p.items}</div><div class="meta mono">${ars(p.total)} · ${p.fecha}</div></div>`).join('') || '<div class="muted" style="font-size:12px;padding:6px">—</div>'}
+      </div>`}).join('')}
+  </div>
+  <div class="card" style="margin-top:18px"><h3>Detalle de pedidos</h3>
+    <table class="tbl"><thead><tr><th>Pedido</th><th>Cliente</th><th>Ítems</th><th class="num">Total</th><th>Estado</th><th></th></tr></thead>
+    <tbody>${PEDIDOS.map(p=>`<tr><td><b>${p.id}</b></td><td>${p.cliente}</td><td class="muted">${p.items}</td><td class="num mono">${ars(p.total)}</td><td>${chip(p.estado)}</td>
+      <td class="acciones"><button class="btn sm ghost" onclick="alert('Demo: avanzar etapa / reembolso de ${p.id}')">Gestionar</button></td></tr>`).join('')}</tbody></table>
+  </div>`;
+
+/* ---- Moderación de eventos ---- */
+vistas.eventos = () => `
+  <div class="page-h"><div><h2>Moderación de eventos</h2><p class="sub">Nada llega a la tienda sin pasar por acá · galerías privadas por defecto (D4)</p></div></div>
+  <div class="aviso info"><span class="ai">🔒</span><div>Los eventos con menores se publican <b>privados con código de acceso</b>. Revisá el checklist de consentimiento antes de aprobar. Publicación abierta solo con consentimiento del organizador.</div></div>
+  <div class="card">
+    <table class="tbl"><thead><tr><th>Evento</th><th>Tipo</th><th>Fotógrafo</th><th>Fecha</th><th class="num">Fotos</th><th>Visibilidad</th><th>Consent.</th><th>Estado</th><th></th></tr></thead>
+    <tbody>${EVENTOS.map(e=>`<tr>
+      <td><b>${e.titulo}</b><br><span class="muted" style="font-size:11.5px">${e.id} · <span class="pill-code">${e.codigo}</span></span></td>
+      <td>${e.tipo}</td><td>${e.fotografo}</td><td>${e.fecha}</td><td class="num">${e.fotos}</td>
+      <td>${e.visibilidad==='privado'?'<span class="chip mut">🔒 privado</span>':'<span class="chip info">🌐 público</span>'}</td>
+      <td>${e.consent?'<span class="chip ok">sí</span>':'<span class="chip dang">falta</span>'}</td>
+      <td>${chip(e.estado)}</td>
+      <td class="acciones">${e.estado==='pendiente'
+        ? `<button class="btn sm ok" onclick="moderar('${e.id}','publicar')" ${!e.consent?'disabled title="Falta consentimiento"':''}>Publicar</button><button class="btn sm ghost" onclick="moderar('${e.id}','observar')">Observar</button>`
+        : `<button class="btn sm ghost" onclick="verEvento('${e.id}')">Ver</button>`}</td>
+    </tr>`).join('')}</tbody></table>
+  </div>`;
+function moderar(id,acc){ const e=EVENTOS.find(x=>x.id===id);
+  if(acc==='publicar' && !e.consent){ alert('No se puede publicar: falta el consentimiento del organizador.'); return; }
+  abrirModal(acc==='publicar'?'Publicar evento':'Devolver con observaciones',
+    `<p><b>${e.titulo}</b> — ${e.fotografo}</p>${acc==='observar'?'<label class="f">Observaciones para el fotógrafo</label><textarea class="f" rows="3" placeholder="Ej: hay 4 fotos fuera de foco al final del set..."></textarea>':`<p class="muted">Se publicará como <b>${e.visibilidad}</b> con código <span class="pill-code">${e.codigo}</span> en la sección “Fotos de eventos sociales”.</p>`}`,
+    `<button class="btn ghost" onclick="cerrarModal()">Cancelar</button><button class="btn ${acc==='publicar'?'ok':'pri'}" onclick="cerrarModal();alert('Demo: evento ${acc==='publicar'?'publicado':'devuelto'} · queda en auditoría')">Confirmar</button>`);
+}
+function verEvento(id){ const e=EVENTOS.find(x=>x.id===id);
+  abrirModal(e.titulo, `<div class="grid c2"><div><label class="f">Tipo</label>${e.tipo}<label class="f">Fecha</label>${e.fecha}<label class="f">Código de acceso</label><span class="pill-code">${e.codigo}</span></div>
+    <div><label class="f">Fotos</label>${e.fotos}<label class="f">Ventas</label>${e.ventas}<label class="f">Visibilidad</label>${e.visibilidad}</div></div>
+    <hr class="sep"><div class="thumbs">${Array.from({length:6}).map((_,i)=>`<div class="thumb"><div class="ph">🖼️<div class="wm">TRELEW FLASH</div></div><div class="cap">IMG_0${400+i}</div></div>`).join('')}</div>`,
+    `<button class="btn ghost" onclick="cerrarModal()">Cerrar</button><button class="btn dang" onclick="cerrarModal();alert('Demo: evento despublicado')">Despublicar</button>`);
+}
+
+/* ---- Fotógrafos ---- */
+vistas.fotografos = () => `
+  <div class="page-h"><div><h2>Fotógrafos</h2><p class="sub">Aprobar registros, ajustar comisión y ver ranking de ventas</p></div></div>
+  <div class="card">
+    <table class="tbl"><thead><tr><th>Fotógrafo</th><th>Contacto</th><th>Estado</th><th>Mercado Pago</th><th class="num">Comisión casa</th><th class="num">Ventas</th><th class="num">Facturado</th><th></th></tr></thead>
+    <tbody>${FOTOGRAFOS.slice().sort((a,b)=>b.monto-a.monto).map(f=>`<tr>
+      <td><b>${f.nombre}</b><br><span class="muted" style="font-size:11.5px">${f.id} · alta ${f.alta}</span></td>
+      <td class="muted" style="font-size:12.5px">${f.email}<br>${f.tel}</td>
+      <td>${chip(f.estado)}</td>
+      <td>${f.mp?'<span class="chip ok">conectado</span>':'<span class="chip warn">respaldo</span>'}</td>
+      <td class="num"><b>${f.comision}%</b></td><td class="num">${f.ventas}</td><td class="num mono">${ars(f.monto)}</td>
+      <td class="acciones">${f.estado==='pendiente'
+        ? `<button class="btn sm ok" onclick="alert('Demo: fotógrafo aprobado · pedirle vincular Mercado Pago por OAuth')">Aprobar</button><button class="btn sm dang" onclick="alert('Demo: registro rechazado')">Rechazar</button>`
+        : `<button class="btn sm ghost" onclick="editarComision('${f.id}')">Comisión</button>`}</td>
+    </tr>`).join('')}</tbody></table>
+  </div>
+  <div class="aviso info"><span class="ai">💡</span><div><b>Modo respaldo (Plan B):</b> los fotógrafos sin Mercado Pago cobran vía la casa (100%) y su 70% se acumula en <b>liquidaciones</b> para pago periódico.</div></div>`;
+function editarComision(id){ const f=FOTOGRAFOS.find(x=>x.id===id);
+  abrirModal('Ajustar reparto — '+f.nombre,
+    `<label class="f">% que retiene la casa (default 30%)</label><input class="f" type="number" value="${f.comision}" min="0" max="100">
+     <div class="hint">El fotógrafo recibe el complemento (actualmente <b>${100-f.comision}%</b>). Se guarda por fotógrafo, sin tocar código, y queda en auditoría.</div>`,
+    `<button class="btn ghost" onclick="cerrarModal()">Cancelar</button><button class="btn pri" onclick="cerrarModal();alert('Demo: comisión actualizada')">Guardar</button>`);
+}
+
+/* ---- Clientes ---- */
+vistas.clientes = () => `
+  <div class="page-h"><div><h2>Clientes</h2><p class="sub">Cartera con historial de compras</p></div></div>
+  <div class="card"><table class="tbl"><thead><tr><th>Cliente</th><th>Teléfono</th><th class="num">Compras</th><th class="num">Total histórico</th><th>Última</th><th></th></tr></thead>
+  <tbody>${CLIENTES.map(c=>`<tr><td><b>${c.nombre}</b></td><td class="muted">${c.tel}</td><td class="num">${c.compras}</td><td class="num mono">${ars(c.total)}</td><td>${c.ultima}</td>
+    <td class="right"><button class="btn sm ghost" onclick="alert('Demo: historial de ${c.nombre}')">Historial</button></td></tr>`).join('')}</tbody></table></div>`;
+
+/* ---- Precios y tarifas (desde catálogo canónico) ---- */
+vistas.precios = () => {
+  const rev = Object.entries(CATALOGO.revelado_fotos);
+  const subl = { ...CATALOGO.sublimados.tazas, copa_polimero:CATALOGO.sublimados.copa_polimero, cantimplora:CATALOGO.sublimados.cantimplora };
+  const fila = (k,v)=>`<tr><td>${nombreBonito(k)}</td><td class="num mono">${ars(v)}</td><td class="right"><button class="btn sm ghost" onclick="alert('Demo: editar precio (queda en auditoría)')">Editar</button></td></tr>`;
+  return `
+  <div class="page-h"><div><h2>Precios y tarifas</h2><p class="sub">Fuente única: catálogo canónico · todo cambio queda en auditoría</p></div>
+    <div class="acciones"><button class="btn ghost" onclick="alert('Demo: exportar catálogo JSON')">⭳ Exportar JSON</button></div></div>
+  <div class="aviso warn"><span class="ai">⚠️</span><div>Catálogo <b>v${CATALOGO.meta.version}</b> · extraído ${CATALOGO.meta.fecha_extraccion} · <b>vigencia sin confirmar</b>. Verificar contra la cartilla PDF vigente antes de operar. Ítems sin precio (cantimplora, foto extra de collage) figuran como <b>—</b>.</div></div>
+  <div class="grid c2">
+    <div class="card"><h3>🖼️ Revelado de fotos</h3><table class="tbl"><tbody>${rev.map(([k,v])=>fila(k,v)).join('')}</tbody></table></div>
+    <div class="card"><h3>☕ Sublimados</h3><table class="tbl"><tbody>${Object.entries(subl).map(([k,v])=>fila(k,v)).join('')}</tbody></table></div>
+    <div class="card"><h3>📷 Tarifas de fotos de eventos</h3><p class="card-desc">Las fija el administrador · base para el split 70/30</p>
+      <table class="tbl"><tbody>${Object.entries(TARIFAS_EVENTO).map(([k,v])=>fila(k,v)).join('')}</tbody></table></div>
+    <div class="card"><h3>🎨 Servicios y reglas</h3><table class="tbl"><tbody>
+      <tr><td>Retoque adicional</td><td class="num mono">${ars(CATALOGO.servicios.retoque_adicional)}</td><td></td></tr>
+      <tr><td>Restauración</td><td class="num mono">${ars(CATALOGO.servicios.restauracion)}</td><td></td></tr>
+      <tr><td>Collage — fee de diseño único</td><td class="num mono">${ars(CATALOGO.servicios.collage.fee_diseno_unico)}</td><td></td></tr>
+      </tbody></table>
+      <div class="hint">Regla del collage: el fee se cobra <b>una vez por diseño único</b>; las copias pagan solo impresión. Incluye ${CATALOGO.servicios.collage.fotos_incluidas} fotos · foto extra: <b>a confirmar</b>.</div>
+    </div>
+  </div>`;
+};
+
+/* ---- Usuarios y admins ---- */
+vistas.usuarios = () => `
+  <div class="page-h"><div><h2>Usuarios y administradores</h2><p class="sub">Designar admins, crear empleados, resetear contraseñas</p></div>
+    <div class="acciones"><button class="btn pri" onclick="alert('Demo: invitar usuario')">+ Invitar</button></div></div>
+  <div class="card"><table class="tbl"><thead><tr><th>Nombre</th><th>Rol</th><th>Estado</th><th></th></tr></thead><tbody>
+    <tr><td><b>Marcelo</b><br><span class="muted" style="font-size:11.5px">marceloriffo81@gmail.com</span></td><td><span class="chip dang">Superadmin</span></td><td>${chip('activo')}</td><td class="right muted">— vos —</td></tr>
+    <tr><td><b>Rita López</b><br><span class="muted" style="font-size:11.5px">rita.local@fototf.com</span></td><td><span class="chip info">Empleado</span></td><td>${chip('activo')}</td><td class="acciones"><button class="btn sm ghost" onclick="alert('Demo: reset contraseña')">Reset</button><button class="btn sm ghost" onclick="alert('Demo: desactivar')">Desactivar</button></td></tr>
+    <tr><td><b>Nahuel Paz</b><br><span class="muted" style="font-size:11.5px">nahuel.mostrador@fototf.com</span></td><td><span class="chip info">Empleado</span></td><td>${chip('suspendido')}</td><td class="acciones"><button class="btn sm ghost" onclick="alert('Demo: reactivar')">Reactivar</button></td></tr>
+  </tbody></table></div>
+  <div class="aviso info"><span class="ai">🛡️</span><div>Matriz de roles v4.3: <b>Superadmin</b> (todo) · <b>Empleado</b> (pedidos y clientes) · <b>Fotógrafo</b> (su panel) · <b>Cliente</b> (tienda). El aislamiento por <code>comercio_id</code> viene del token, nunca del formulario.</div></div>`;
+
+/* ---- Integraciones ---- */
+vistas.config = () => `
+  <div class="page-h"><div><h2>Integraciones</h2><p class="sub">Mercado Pago, envíos y WhatsApp · salud de las conexiones</p></div></div>
+  <div class="grid c2">
+    <div class="card"><h3>💳 Mercado Pago (comercio)</h3><p class="card-desc">Token del comercio para productos de laboratorio (sin split)</p>
+      <span class="chip ok">conectado</span> <span class="muted">· última verificación: hoy 09:00</span><br><br>
+      <button class="btn ghost" onclick="alert('Demo: reconectar OAuth')">Reconectar</button></div>
+    <div class="card"><h3>🚚 Envíos</h3><p class="card-desc">CP de origen, operadores y mensajería local</p>
+      <label class="f">CP de origen</label><input class="f" value="9100 — Trelew, Chubut">
+      <label class="f">Operadores</label><input class="f" value="Correo Argentino · Andreani · Cadete local">
+      <div class="aviso warn" style="margin-top:12px"><span class="ai">⚠️</span><div>Sin cotización de envíos, la pauta minorista nacional queda bloqueada (D1). Completar antes de la etapa 5.</div></div></div>
+    <div class="card"><h3>💬 WhatsApp</h3><p class="card-desc">Número que recibe pedidos y consultas</p>
+      <span class="chip ok">vinculado</span> <span class="muted">+54 9 280 4XX-XXXX</span></div>
+    <div class="card"><h3>🩺 Salud de integraciones</h3>
+      <table class="tbl"><tbody>
+        <tr><td>API</td><td class="right">${chip('activo')}</td></tr>
+        <tr><td>Base de datos</td><td class="right">${chip('activo')}</td></tr>
+        <tr><td>Almacenamiento de imágenes</td><td class="right">${chip('activo')}</td></tr>
+        <tr><td>Cola de miniaturas</td><td class="right"><span class="chip info">2 en proceso</span></td></tr>
+      </tbody></table></div>
+  </div>`;
+
+/* ---- Personalización ---- */
+vistas.marca = () => `
+  <div class="page-h"><div><h2>Personalización de la tienda</h2><p class="sub">Logo, colores, textos y banners de la tienda pública</p></div>
+    <div class="acciones"><button class="btn pri" onclick="alert('Demo: cambios guardados')">Guardar</button></div></div>
+  <div class="grid c2">
+    <div class="card"><h3>🎨 Identidad visual</h3>
+      <label class="f">Nombre comercial</label><input class="f" value="Foto Trelew Flash">
+      <label class="f">Colores de marca</label>
+      <div style="display:flex;gap:10px;margin-top:6px">
+        <div style="flex:1"><div style="height:38px;border-radius:9px;background:var(--bordo)"></div><div class="hint">Bordó #8B1A1A</div></div>
+        <div style="flex:1"><div style="height:38px;border-radius:9px;background:var(--dorado)"></div><div class="hint">Dorado #D4A017</div></div>
+        <div style="flex:1"><div style="height:38px;border-radius:9px;background:var(--crema);border:1px solid var(--linea)"></div><div class="hint">Crema #F5EFDC</div></div>
+      </div>
+      <label class="f">Texto de bienvenida</label><textarea class="f" rows="2">Revelá tus fotos y creá tus recuerdos en Trelew.</textarea></div>
+    <div class="card"><h3>🖼️ Banners (línea vintage)</h3><p class="card-desc">Estética crema/dorado ya definida — mantenerla en toda la tienda (D7). Optimizar a WebP.</p>
+      <div class="thumbs">${['Revelar una foto','Fotos de eventos','Souvenirs','Empresas'].map(t=>`<div class="thumb"><div class="ph" style="font-family:var(--serif);color:var(--bordo);font-size:13px;text-align:center;padding:0 6px">${t}</div><div class="cap">banner.webp</div></div>`).join('')}</div>
+    </div>
+  </div>`;
+
+/* ---- Reportes y caja ---- */
+vistas.reportes = () => {
+  const comisionTotal = FOTOGRAFOS.reduce((a,f)=>a+f.monto*(f.comision/100),0);
+  return `
+  <div class="page-h"><div><h2>Reportes y caja</h2><p class="sub">La versión automática del registro diario · comisiones y liquidaciones</p></div>
+    <div class="acciones"><button class="btn ghost" onclick="alert('Demo: exportar a Excel')">⭳ Exportar</button></div></div>
+  <div class="grid c4" style="margin-bottom:18px">
+    <div class="kpi"><div class="l">Caja del mes</div><div class="v">${ars(3480500)}</div><div class="d up">▲ 12% vs. junio</div></div>
+    <div class="kpi"><div class="l">Comisión 30% acumulada</div><div class="v">${ars(comisionTotal)}</div><div class="d">de ventas de fotos</div></div>
+    <div class="kpi"><div class="l">Ticket promedio</div><div class="v">${ars(9800)}</div><div class="d">laboratorio</div></div>
+    <div class="kpi"><div class="l">Demora media</div><div class="v">1,8 d</div><div class="d">cola → entregado</div></div>
+  </div>
+  <div class="grid c2">
+    <div class="card"><h3>🏆 Ranking de fotógrafos</h3><table class="tbl"><thead><tr><th>Fotógrafo</th><th class="num">Ventas</th><th class="num">Facturado</th><th class="num">Comisión casa</th></tr></thead>
+      <tbody>${FOTOGRAFOS.filter(f=>f.monto>0).sort((a,b)=>b.monto-a.monto).map(f=>`<tr><td>${f.nombre}</td><td class="num">${f.ventas}</td><td class="num mono">${ars(f.monto)}</td><td class="num mono">${ars(f.monto*f.comision/100)}</td></tr>`).join('')}</tbody></table></div>
+    <div class="card"><h3>💰 Liquidaciones pendientes (modo respaldo)</h3><p class="card-desc">70% acumulado de fotógrafos sin Mercado Pago</p>
+      <table class="tbl"><thead><tr><th>Fotógrafo</th><th class="num">A liquidar (70%)</th><th></th></tr></thead>
+      <tbody>${FOTOGRAFOS.filter(f=>!f.mp&&f.monto>0).map(f=>`<tr><td>${f.nombre}</td><td class="num mono">${ars(f.monto*(1-f.comision/100))}</td><td class="right"><button class="btn sm ok" onclick="alert('Demo: marcar liquidado')">Liquidar</button></td></tr>`).join('')||'<tr><td class="muted" colspan="3">Sin pendientes</td></tr>'}</tbody></table></div>
+  </div>`;
+};
+
+/* ---- Auditoría ---- */
+vistas.auditoria = () => `
+  <div class="page-h"><div><h2>Auditoría</h2><p class="sub">Quién cambió qué precio, quién publicó qué evento y cuándo</p></div></div>
+  <div class="card"><table class="tbl"><thead><tr><th>Fecha</th><th>Responsable</th><th>Acción</th></tr></thead>
+  <tbody>${AUDITORIA.map(a=>`<tr><td class="mono muted">${a.fecha}</td><td><b>${a.admin}</b></td><td>${a.accion}</td></tr>`).join('')}</tbody></table></div>`;
+
+/* ================= Router ================= */
+const titulos = { inicio:'Inicio', pedidos:'Pedidos', eventos:'Moderación de eventos', fotografos:'Fotógrafos', clientes:'Clientes', precios:'Precios y tarifas', usuarios:'Usuarios y admins', config:'Integraciones', marca:'Personalización', reportes:'Reportes y caja', auditoria:'Auditoría' };
+function go(v){
+  $('#content').innerHTML = vistas[v]();
+  $('#topTitulo').textContent = titulos[v];
+  document.querySelectorAll('#nav a[data-v]').forEach(a=>a.classList.toggle('active', a.dataset.v===v));
+  document.querySelector('.content').scrollTop=0; window.scrollTo(0,0);
+}
+document.querySelectorAll('#nav a[data-v]').forEach(a=>a.addEventListener('click',()=>go(a.dataset.v)));
+go('inicio');
+</script>
+</body>
+</html>

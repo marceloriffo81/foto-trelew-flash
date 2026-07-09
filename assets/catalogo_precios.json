@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "version": "1.0",
+    "moneda": "ARS",
+    "fuente": "Google Doc 'Foto-Trelew-Flash info' (sincronizado al proyecto)",
+    "fecha_extraccion": "2026-07-06",
+    "vigencia_confirmada": false,
+    "nota": "VERIFICAR contra la cartilla PDF vigente antes de usar en la app. Este archivo pasa a ser la fuente única de precios: la app, el catálogo B2B y el backend deben leer de acá (o de su sucesor en la base de datos).",
+    "pendientes": [
+      "Cantimplora: sin precio en la fuente",
+      "Presentes combos: sin precio en la fuente",
+      "Collage: confirmar cantidad de fotos incluidas (5 según memoria del proyecto) y precio por foto extra",
+      "Costos: no existe dato de costo por producto en ningún documento (bloquea márgenes y descuentos B2B)"
+    ]
+  },
+  "revelado_fotos": {
+    "5x7": 1100,
+    "7x10": 1100,
+    "7x10_polaroid": 1100,
+    "9x13": 1300,
+    "9x13_polaroid": 1300,
+    "10x15": 1400,
+    "13x18": 1500,
+    "15x21": 1800,
+    "20x30": 7000,
+    "30x40": 14500
+  },
+  "fotos_profesionales": {
+    "papel_15x21": 4000,
+    "digital": 3500
+  },
+  "servicios": {
+    "retoque_adicional": 11500,
+    "restauracion": 14000,
+    "reproduccion": "recargo de 30% sobre el precio de la medida (cliente trae foto en papel y se escanea)",
+    "collage": {
+      "fee_diseno_unico": 11500,
+      "regla": "el fee se cobra UNA vez por diseño único, sin importar cantidad de copias; las copias pagan solo el precio de impresión de la medida",
+      "fotos_incluidas": 5,
+      "precio_foto_extra": null,
+      "confirmar": true
+    }
+  },
+  "sublimados": {
+    "tazas": {
+      "magica": 17000,
+      "ceramica_comun": 14000,
+      "polietileno": 9500
+    },
+    "kit_escolar": {
+      "taza_polimero_chica": 9500,
+      "set_tela_toalla_servilleta_mantel": 20000,
+      "plato": 12000,
+      "mochila": 38000,
+      "cuchara": 2900
+    },
+    "copa_polimero": 12000,
+    "cantimplora": null
+  },
+  "souvenirs": {
+    "llaveros": {
+      "acrilico_rectangular": 3000,
+      "acrilico_redondo": 2700,
+      "redondo": 3400,
+      "iman": 3400,
+      "destapador": 3600
+    },
+    "fotos_tarjetas": {
+      "5x7": { "simple": 1500, "con_iman": 2900 },
+      "7x10": { "simple": 1500, "con_iman": 2900 },
+      "10x15": { "simple": 2000, "con_iman": 4000 },
+      "13x18": { "simple": 2900, "con_iman": 5500 },
+      "15x21": { "simple": 3500, "con_iman": 6500 }
+    },
+    "pines": {
+      "redondo_grande": 2300,
+      "redondo_chico": 1800
+    }
+  },
+  "presentes_combos": {
+    "cuadro_mas_foto_diseno_personalizado": null,
+    "cuadro_mas_foto_mas_llavero": null
+  },
+  "costos_por_producto": {
+    "nota": "SIN DATOS. Agregar columna de costo por variante (ver debilidad D8 del análisis). Sin esto no se pueden calcular márgenes, ni validar la tabla de descuentos B2B (regla: descuento máximo <= 60% del margen bruto), ni fijar CAC objetivo para pauta."
+  }
+}

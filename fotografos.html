@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Fotógrafos · Foto Trelew Flash v4.3</title>
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+<div class="app">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">Foto Trelew Flash<span>Fotógrafos · v4.3</span></div>
+      <span class="rol">Fotógrafo profesional</span>
+    </div>
+    <nav class="nav" id="nav">
+      <div class="grupo">Paneles</div>
+      <a class="cross" href="index.html"><span class="ic">🧭</span> Menú principal</a>
+      <a class="cross" href="admin.html"><span class="ic">🛠️</span> Panel de administración</a>
+      <div class="grupo">Inicio</div>
+      <a data-v="inicio" class="active"><span class="ic">🏠</span> Mi resumen</a>
+      <div class="grupo">Mi trabajo</div>
+      <a data-v="eventos"><span class="ic">🗂️</span> Mis eventos</a>
+      <a data-v="nuevo"><span class="ic">➕</span> Nuevo evento</a>
+      <a data-v="ventas"><span class="ic">🧾</span> Ventas</a>
+      <div class="grupo">Cobros</div>
+      <a data-v="cobros"><span class="ic">💳</span> Mercado Pago</a>
+      <a data-v="tarifas"><span class="ic">🏷️</span> Tarifas vigentes</a>
+      <div class="grupo">Cuenta</div>
+      <a data-v="perfil"><span class="ic">👤</span> Mi perfil</a>
+    </nav>
+    <div class="pie">Reparto por venta:<br><b>70% fotógrafo · 30% casa</b><br><span class="muted">split automático MP</span></div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+    <div class="topbar">
+      <div class="titulo" id="topTitulo">Mi resumen</div>
+      <div class="der">
+        <a class="btn ghost sm" href="index.html">🧭 Menú</a>
+        <button class="btn gold sm" onclick="go('nuevo')">➕ Nuevo evento</button>
+        <div class="usuario"><div class="avatar">L</div><div><b>Lucía Fernández</b><br><span class="muted" style="font-size:11.5px">F-01 · activa</span></div></div>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<!-- ============ MODAL ============ -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="m-h"><h3 id="mTit">Título</h3><button class="x" onclick="cerrarModal()">×</button></div>
+    <div class="m-b" id="mBody"></div>
+    <div class="m-f" id="mFoot"></div>
+  </div>
+</div>
+
+<div class="demo-tag">MODO DEMO · datos de ejemplo</div>
+
+<script src="assets/data.js"></script>
+<script>
+const $ = (s,r=document)=>r.querySelector(s);
+function chip(estado){ return `<span class="chip ${estadoChip(estado)}"><span class="dot"></span>${estado}</span>`; }
+function abrirModal(tit, body, foot=''){ $('#mTit').innerHTML=tit; $('#mBody').innerHTML=body; $('#mFoot').innerHTML=foot||`<button class="btn ghost" onclick="cerrarModal()">Cerrar</button>`; $('#modalBg').classList.add('open'); }
+function cerrarModal(){ $('#modalBg').classList.remove('open'); }
+$('#modalBg').addEventListener('click', e=>{ if(e.target.id==='modalBg') cerrarModal(); });
+
+/* Este panel muestra la vista del fotógrafo F-01 (Lucía). */
+const YO = FOTOGRAFOS[0];
+const MIS_EVENTOS = EVENTOS.filter(e=>e.fotografo===YO.nombre);
+const MIS_VENTAS = VENTAS_FOTO.filter(v=>v.fotografo===YO.nombre);
+const vistas = {};
+
+/* ---- Resumen ---- */
+vistas.inicio = () => {
+  const bruto = MIS_VENTAS.reduce((a,v)=>a+v.precio,0);
+  const miParte = bruto*(1-YO.comision/100);
+  const pubs = MIS_EVENTOS.filter(e=>e.estado==='publicado').length;
+  const pend = MIS_EVENTOS.filter(e=>e.estado!=='publicado').length;
+  return `
+  <div class="page-h"><div><h2>Hola, Lucía 📷</h2><p class="sub">Tu actividad en Foto Trelew Flash</p></div></div>
+  ${!YO.mp ? '' : '<div class="aviso ok"><span class="ai">✅</span><div>Tu cuenta de Mercado Pago está <b>conectada</b>: cada venta se divide sola (recibís tu 70% al instante).</div></div>'}
+  <div class="grid c4" style="margin-bottom:18px">
+    <div class="kpi acento"><div class="l">Tu ganancia (mes)</div><div class="v">${ars(miParte)}</div><div class="d">70% de ${ars(bruto)}</div></div>
+    <div class="kpi"><div class="l">Fotos vendidas</div><div class="v">${YO.ventas}</div><div class="d">acumulado</div></div>
+    <div class="kpi"><div class="l">Eventos publicados</div><div class="v">${pubs}</div><div class="d">${pend} en revisión</div></div>
+    <div class="kpi"><div class="l">Comisión de la casa</div><div class="v">${YO.comision}%</div><div class="d">acordado</div></div>
+  </div>
+  <div class="grid c2">
+    <div class="card"><h3>🗂️ Mis eventos recientes</h3>
+      <table class="tbl"><tbody>${MIS_EVENTOS.map(e=>`<tr><td><b>${e.titulo}</b><br><span class="muted" style="font-size:11.5px">${e.fecha} · ${e.fotos} fotos</span></td><td class="right">${chip(e.estado)}</td></tr>`).join('')}</tbody></table>
+      <button class="btn ghost sm" style="margin-top:12px" onclick="go('eventos')">Ver todos</button></div>
+    <div class="card"><h3>🧾 Últimas ventas</h3>
+      <table class="tbl"><tbody>${MIS_VENTAS.map(v=>`<tr><td>${v.foto} · <span class="muted">${nombreBonito(v.tipo)}</span></td><td class="num mono">${ars(v.precio)}</td><td class="num mono" style="color:var(--verde)">+${ars(v.precio*(1-YO.comision/100))}</td></tr>`).join('')}</tbody></table>
+      <div class="hint">La columna verde es tu 70% neto por venta.</div></div>
+  </div>`;
+};
+
+/* ---- Mis eventos ---- */
+vistas.eventos = () => `
+  <div class="page-h"><div><h2>Mis eventos</h2><p class="sub">Ciclo de vida: carga → revisión → publicado → venta</p></div>
+    <div class="acciones"><button class="btn gold" onclick="go('nuevo')">➕ Nuevo evento</button></div></div>
+  <div class="card"><table class="tbl"><thead><tr><th>Evento</th><th>Tipo</th><th>Fecha</th><th class="num">Fotos</th><th>Visibilidad</th><th>Código</th><th class="num">Ventas</th><th>Estado</th><th></th></tr></thead>
+  <tbody>${MIS_EVENTOS.map(e=>`<tr>
+    <td><b>${e.titulo}</b><br><span class="muted" style="font-size:11.5px">${e.id}</span></td>
+    <td>${e.tipo}</td><td>${e.fecha}</td><td class="num">${e.fotos}</td>
+    <td>${e.visibilidad==='privado'?'<span class="chip mut">🔒 privado</span>':'<span class="chip info">🌐 público</span>'}</td>
+    <td><span class="pill-code">${e.codigo}</span></td><td class="num">${e.ventas}</td><td>${chip(e.estado)}</td>
+    <td class="acciones"><button class="btn sm ghost" onclick="verEvento('${e.id}')">Abrir</button></td></tr>`).join('')}</tbody></table></div>
+  <div class="aviso info"><span class="ai">🔒</span><div>Tus galerías son <b>privadas por defecto</b>. Repartí el código en el evento (tarjetita o QR: “buscá tus fotos con el código”). Solo publicá abierto con permiso del organizador.</div></div>`;
+function verEvento(id){ const e=MIS_EVENTOS.find(x=>x.id===id);
+  abrirModal(e.titulo,
+    `<div class="grid c2"><div><label class="f">Estado</label>${chip(e.estado)}<label class="f">Código de acceso</label><span class="pill-code">${e.codigo}</span><label class="f">Visibilidad</label>${e.visibilidad}</div>
+     <div><label class="f">Fotos subidas</label>${e.fotos}<label class="f">Ventas</label>${e.ventas}<label class="f">Fecha</label>${e.fecha}</div></div>
+     <hr class="sep"><label class="f">Miniaturas (con marca de agua — el original nunca se expone)</label>
+     <div class="thumbs">${Array.from({length:8}).map((_,i)=>`<div class="thumb"><div class="ph">🖼️<div class="wm">TRELEW FLASH</div></div><div class="cap">IMG_0${400+i}<span class="chip ${i<e.ventas?'ok':'mut'}" style="font-size:10px">${i<e.ventas?'vendida':'—'}</span></div></div>`).join('')}</div>`,
+    `<button class="btn ghost" onclick="cerrarModal()">Cerrar</button><button class="btn gold" onclick="alert('Demo: subir más fotos a ${e.id}')">⭱ Subir fotos</button>`);
+}
+
+/* ---- Nuevo evento (con checklist de consentimiento D4) ---- */
+vistas.nuevo = () => `
+  <div class="page-h"><div><h2>Nuevo evento</h2><p class="sub">Cargá los datos, confirmá el consentimiento y subí las fotos</p></div></div>
+  <div class="grid c2">
+    <div class="card"><h3>📝 Datos del evento</h3>
+      <label class="f">Título</label><input class="f" placeholder="Ej: Muestra Anual Academia X">
+      <label class="f">Tipo</label><select class="f"><option>danzas</option><option>actos escolares</option><option>bautismos</option><option>casamientos</option><option>otros</option></select>
+      <label class="f">Fecha del evento</label><input class="f" type="date">
+      <label class="f">Foto de portada</label><input class="f" type="file">
+      <label class="f">Visibilidad</label>
+      <div class="sw on" id="swVis" onclick="this.classList.toggle('on');document.getElementById('visTxt').textContent=this.classList.contains('on')?'🔒 Privado con código (recomendado)':'🌐 Público (requiere consentimiento)'">
+        <span class="track"></span><span id="visTxt">🔒 Privado con código (recomendado)</span></div>
+      <div class="hint">Se genera un código de acceso automático para repartir en el evento.</div>
+    </div>
+    <div class="card"><h3>🛡️ Checklist de consentimiento</h3>
+      <p class="card-desc">Obligatorio para eventos con menores (danzas, actos, bautismos). El evento no se publica sin esto (D4).</p>
+      <div class="check-item"><input type="checkbox" id="c1"><div class="t">Tengo autorización del organizador para tomar y vender estas fotos<small>Escuela, academia o familia responsable</small></div></div>
+      <div class="check-item"><input type="checkbox" id="c2"><div class="t">Entiendo que la galería será privada con código salvo consentimiento expreso para publicación abierta</div></div>
+      <div class="check-item"><input type="checkbox" id="c3"><div class="t">Las miniaturas públicas llevarán marca de agua y resolución reducida</div></div>
+      <div class="check-item"><input type="checkbox" id="c4"><div class="t">No incluiré datos personales de menores en títulos ni descripciones</div></div>
+      <button class="btn pri" style="margin-top:16px;width:100%" onclick="crearEvento()">Crear evento y subir fotos</button>
+      <div class="hint">Al crear, el evento queda “pendiente de revisión” hasta que un administrador lo publique.</div>
+    </div>
+  </div>`;
+function crearEvento(){
+  const ok = ['c1','c2','c3','c4'].every(id=>document.getElementById(id).checked);
+  if(!ok){ alert('Completá el checklist de consentimiento antes de crear el evento.'); return; }
+  abrirModal('Evento creado ✅',
+    `<p>Tu evento quedó en estado <b>pendiente de revisión</b>. Un administrador lo revisará y lo publicará.</p>
+     <label class="f">Código de acceso generado</label><span class="pill-code">NUEVO24</span>
+     <div class="aviso info" style="margin-top:14px"><span class="ai">🖼️</span><div>Ahora subí las fotos: el sistema guarda el original en privado y genera miniaturas con marca de agua en segundo plano.</div></div>`,
+    `<button class="btn ghost" onclick="cerrarModal();go('eventos')">Ir a mis eventos</button><button class="btn gold" onclick="cerrarModal();alert('Demo: selector de fotos')">⭱ Subir fotos</button>`);
+}
+
+/* ---- Ventas ---- */
+vistas.ventas = () => {
+  const bruto = MIS_VENTAS.reduce((a,v)=>a+v.precio,0);
+  const miParte = bruto*(1-YO.comision/100);
+  return `
+  <div class="page-h"><div><h2>Ventas</h2><p class="sub">Cada venta se divide 70/30 en el momento del pago</p></div></div>
+  <div class="grid c3" style="margin-bottom:18px">
+    <div class="kpi"><div class="l">Bruto</div><div class="v">${ars(bruto)}</div><div class="d">total vendido</div></div>
+    <div class="kpi acento"><div class="l">Tu parte (70%)</div><div class="v">${ars(miParte)}</div><div class="d up">acreditado</div></div>
+    <div class="kpi"><div class="l">Comisión casa (30%)</div><div class="v">${ars(bruto-miParte)}</div><div class="d">retenido</div></div>
+  </div>
+  <div class="card"><table class="tbl"><thead><tr><th>Venta</th><th>Fecha</th><th>Evento</th><th>Foto</th><th>Tipo</th><th class="num">Precio</th><th class="num">Tu 70%</th></tr></thead>
+  <tbody>${MIS_VENTAS.map(v=>`<tr><td class="mono">${v.id}</td><td>${v.fecha}</td><td>${v.evento}</td><td>${v.foto}</td><td>${nombreBonito(v.tipo)}</td><td class="num mono">${ars(v.precio)}</td><td class="num mono" style="color:var(--verde)">${ars(v.precio*(1-YO.comision/100))}</td></tr>`).join('')}</tbody></table></div>`;
+};
+
+/* ---- Cobros / Mercado Pago ---- */
+vistas.cobros = () => `
+  <div class="page-h"><div><h2>Mercado Pago</h2><p class="sub">Vinculación por OAuth · una sola vez, se renueva sola</p></div></div>
+  <div class="card"><h3>💳 Estado de tu cuenta</h3>
+    ${YO.mp
+      ? `<span class="chip ok">conectada</span><p style="margin-top:12px">Tus ventas se acreditan directo en tu cuenta de Mercado Pago. La casa retiene su ${YO.comision}% automáticamente (<b>marketplace_fee</b>) — no hay transferencias manuales.</p>
+         <button class="btn ghost" onclick="alert('Demo: reconectar')">Reconectar cuenta</button>`
+      : `<span class="chip warn">no conectada</span>
+         <div class="aviso warn" style="margin-top:12px"><span class="ai">⚠️</span><div>Estás en <b>modo respaldo</b>: la casa cobra el 100% y acumula tu 70% en liquidaciones para pagarte periódicamente. Conectá Mercado Pago para cobrar al instante.</div></div>
+         <button class="btn pri" onclick="alert('Demo: iniciar OAuth con Mercado Pago')">Conectar Mercado Pago</button>`}
+  </div>
+  <div class="card"><h3>ℹ️ Cómo funciona el reparto</h3>
+    <table class="tbl"><tbody>
+      <tr><td>El cliente paga una foto</td><td class="num mono">${ars(TARIFAS_EVENTO.digital)}</td></tr>
+      <tr><td>Va a tu cuenta (70%)</td><td class="num mono" style="color:var(--verde)">${ars(TARIFAS_EVENTO.digital*0.7)}</td></tr>
+      <tr><td>Comisión de la casa (30%)</td><td class="num mono">${ars(TARIFAS_EVENTO.digital*0.3)}</td></tr>
+    </tbody></table>
+    <div class="hint">La comisión propia de Mercado Pago se descuenta del lado del vendedor. Cada uno factura lo suyo (importante ante ARCA/AFIP).</div></div>`;
+
+/* ---- Tarifas vigentes (desde catálogo canónico) ---- */
+vistas.tarifas = () => `
+  <div class="page-h"><div><h2>Tarifas vigentes</h2><p class="sub">Las fija la casa · vos cobrás el 70% de cada una</p></div></div>
+  <div class="card"><table class="tbl"><thead><tr><th>Formato</th><th class="num">Precio al cliente</th><th class="num">Tu 70%</th></tr></thead>
+  <tbody>${Object.entries(TARIFAS_EVENTO).map(([k,v])=>`<tr><td>${nombreBonito(k)}</td><td class="num mono">${ars(v)}</td><td class="num mono" style="color:var(--verde)">${ars(v*0.7)}</td></tr>`).join('')}</tbody></table>
+  <div class="hint">Precios del catálogo canónico (fotos profesionales). Si la casa los actualiza, se reflejan acá automáticamente.</div></div>`;
+
+/* ---- Perfil ---- */
+vistas.perfil = () => `
+  <div class="page-h"><div><h2>Mi perfil</h2><p class="sub">Datos de contacto y estado de tu cuenta</p></div></div>
+  <div class="grid c2">
+    <div class="card"><h3>👤 Datos</h3>
+      <label class="f">Nombre</label><input class="f" value="${YO.nombre}">
+      <label class="f">Email</label><input class="f" value="${YO.email}">
+      <label class="f">Teléfono / WhatsApp</label><input class="f" value="${YO.tel}">
+      <button class="btn pri" style="margin-top:16px" onclick="alert('Demo: datos guardados')">Guardar</button></div>
+    <div class="card"><h3>📋 Estado de cuenta</h3>
+      <table class="tbl"><tbody>
+        <tr><td>Estado</td><td class="right">${chip(YO.estado)}</td></tr>
+        <tr><td>Mercado Pago</td><td class="right">${YO.mp?'<span class="chip ok">conectado</span>':'<span class="chip warn">respaldo</span>'}</td></tr>
+        <tr><td>Comisión de la casa</td><td class="right"><b>${YO.comision}%</b></td></tr>
+        <tr><td>Alta</td><td class="right">${YO.alta}</td></tr>
+      </tbody></table>
+      <div class="aviso info" style="margin-top:14px"><span class="ai">🔑</span><div>La comisión la ajusta la casa por acuerdo. Cualquier cambio te llega notificado y queda registrado en auditoría.</div></div></div>
+  </div>`;
+
+/* ================= Router ================= */
+const titulos = { inicio:'Mi resumen', eventos:'Mis eventos', nuevo:'Nuevo evento', ventas:'Ventas', cobros:'Mercado Pago', tarifas:'Tarifas vigentes', perfil:'Mi perfil' };
+function go(v){
+  $('#content').innerHTML = vistas[v]();
+  $('#topTitulo').textContent = titulos[v];
+  document.querySelectorAll('#nav a[data-v]').forEach(a=>a.classList.toggle('active', a.dataset.v===v));
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('#nav a[data-v]').forEach(a=>a.addEventListener('click',()=>go(a.dataset.v)));
+go('inicio');
+</script>
+</body>
+</html>
