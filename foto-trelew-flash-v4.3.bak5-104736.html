@@ -73,12 +73,12 @@
     .btn-menu:active { transform: scale(.99); }
     .caja-inicio { margin-top: 8px; padding: 16px 16px 4px; background: var(--gris-suave); border: 1px solid var(--gris-borde); border-radius: 14px; }
     .caja-inicio .caja-titulo { font-size: 15px; font-weight: bold; color: var(--color-principal); margin: 0 0 12px; }
-    .carrusel { position: relative; width: 100%; flex: 1 1 auto; height: clamp(200px, 46vh, 380px); min-height: 180px; margin: 16px 0 18px; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,.10); }
-    .carrusel-track { display: flex; height: 100%; transition: transform .5s cubic-bezier(.25,1,.5,1); }
-    .slide-nov { min-width: 100%; height: 100%; box-sizing: border-box; padding: 18px 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: #fff; text-align: center; }
-    .slide-nov .nov-emoji { font-size: clamp(38px, 10vw, 60px); line-height: 1; }
-    .slide-nov h3 { margin: 0; font-size: clamp(18px, 4.8vw, 24px); color: #fff; }
-    .slide-nov p { margin: 0; font-size: clamp(13px, 3.6vw, 16px); color: rgba(255,255,255,.92); line-height: 1.4; }
+    .carrusel { position: relative; width: 100%; margin: 16px 0 18px; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,.10); }
+    .carrusel-track { display: flex; transition: transform .5s cubic-bezier(.25,1,.5,1); }
+    .slide-nov { min-width: 100%; box-sizing: border-box; padding: 20px 22px; min-height: 128px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #fff; text-align: center; }
+    .slide-nov .nov-emoji { font-size: 34px; line-height: 1; }
+    .slide-nov h3 { margin: 0; font-size: 18px; color: #fff; }
+    .slide-nov p { margin: 0; font-size: 14px; color: rgba(255,255,255,.92); line-height: 1.4; }
     .carrusel-dots { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; }
     .carrusel-dots button { width: 8px; height: 8px; padding: 0; border-radius: 50%; border: none; background: rgba(255,255,255,.55); cursor: pointer; }
     .carrusel-dots button.activo { background: #fff; }
@@ -219,7 +219,7 @@
 <body>
 
 <!-- BIENVENIDA -->
-<div id="p-bienvenida" class="pantalla intro" style="display:flex;flex-direction:column;flex:1 1 auto;">
+<div id="p-bienvenida" class="pantalla intro">
     <h1>¡Hola! Bienvenido a Trelewflash</h1>
     <p>Armá tu pedido paso a paso y nos lo enviás por WhatsApp.</p>
 
