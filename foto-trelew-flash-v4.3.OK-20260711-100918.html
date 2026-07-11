@@ -149,7 +149,6 @@
     .btn-agregar { width: 100%; background: var(--color-wa); color: #fff; border: none; padding: 15px; font-size: 17px;
         font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(37,211,102,.3); }
     .btn-agregar:hover { background: var(--color-wa-hover); }
-    .btn-agregar:disabled { background: #cbd5e1; color:#fff; box-shadow: none; cursor: not-allowed; }
 
     .btn-tool { background: #fff; border: 2px solid #cbd5e1; padding: 9px 12px; font-size: 13px; font-weight: bold;
         border-radius: 8px; cursor: pointer; display:inline-block; }
@@ -487,7 +486,6 @@
     <h2>Souvenirs</h2>
     <p class="instruccion">Elegí el tipo de souvenir:</p>
     <div id="souv-subcats" class="lista-tipos"></div>
-    <button id="btn-cont-souv" class="btn-agregar" style="margin-top:4px;" disabled onclick="continuarSouv()">Continuar →</button>
 </div>
 
 <!-- SOUVENIRS: MODELO Y OPCIONES -->
@@ -2226,17 +2224,11 @@ function abrirSouvenirs() {
             selTipoSouv = key;
             cont.querySelectorAll(".btn-medida").forEach(b => b.classList.remove("activo"));
             e.currentTarget.classList.add("activo");
-            const bc = document.getElementById("btn-cont-souv");
-            if (bc) bc.disabled = false;
+            setTimeout(() => elegirTipoSouv(key), 220);
         };
         cont.appendChild(btn);
     });
-    const bc = document.getElementById("btn-cont-souv");
-    if (bc) bc.disabled = !selTipoSouv;
     mostrar("p-souvenirs");
-}
-function continuarSouv() {
-    if (selTipoSouv) elegirTipoSouv(selTipoSouv);
 }
 function elegirTipoSouv(key) {
     const grupo = CATALOGO_SOUVENIRS[key];

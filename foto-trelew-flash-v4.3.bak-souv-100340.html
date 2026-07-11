@@ -124,8 +124,6 @@
     .btn-medida { background: #fff; border: 3px solid #cbd5e1; padding: 11px 6px; font-size: 13px; font-weight: bold;
         border-radius: 8px; cursor: pointer; transition: all .2s; }
     .btn-medida.activo, .btn-medida:hover { border-color: var(--color-wa); background: #e8f9ef; color: #128C7E; }
-    .lista-tipos { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
-    .lista-tipos .btn-medida { width: 100%; text-align: left; padding: 16px 18px; font-size: 15px; border-radius: 14px; }
 
     .panel-retoque { background: var(--gris-suave); border: 2px dashed #cbd5e1; border-radius: 8px; padding: 12px;
         margin: 12px 0; display: flex; align-items: center; text-align: left; cursor: pointer; }
@@ -149,7 +147,6 @@
     .btn-agregar { width: 100%; background: var(--color-wa); color: #fff; border: none; padding: 15px; font-size: 17px;
         font-weight: bold; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(37,211,102,.3); }
     .btn-agregar:hover { background: var(--color-wa-hover); }
-    .btn-agregar:disabled { background: #cbd5e1; color:#fff; box-shadow: none; cursor: not-allowed; }
 
     .btn-tool { background: #fff; border: 2px solid #cbd5e1; padding: 9px 12px; font-size: 13px; font-weight: bold;
         border-radius: 8px; cursor: pointer; display:inline-block; }
@@ -486,8 +483,7 @@
     </div>
     <h2>Souvenirs</h2>
     <p class="instruccion">Elegí el tipo de souvenir:</p>
-    <div id="souv-subcats" class="lista-tipos"></div>
-    <button id="btn-cont-souv" class="btn-agregar" style="margin-top:4px;" disabled onclick="continuarSouv()">Continuar →</button>
+    <div id="souv-subcats" class="grid-botones"></div>
 </div>
 
 <!-- SOUVENIRS: MODELO Y OPCIONES -->
@@ -2214,29 +2210,17 @@ function snapshotTaza() {
 /* =========================================================
    4) SOUVENIRS
    ========================================================= */
-let selTipoSouv = null;
 function abrirSouvenirs() {
     const cont = document.getElementById("souv-subcats");
     cont.innerHTML = "";
     Object.keys(CATALOGO_SOUVENIRS).forEach((key) => {
         const btn = document.createElement("button");
-        btn.className = "btn-medida" + (key === selTipoSouv ? " activo" : "");
+        btn.className = "btn-medida";
         btn.innerText = CATALOGO_SOUVENIRS[key].titulo;
-        btn.onclick = (e) => {
-            selTipoSouv = key;
-            cont.querySelectorAll(".btn-medida").forEach(b => b.classList.remove("activo"));
-            e.currentTarget.classList.add("activo");
-            const bc = document.getElementById("btn-cont-souv");
-            if (bc) bc.disabled = false;
-        };
+        btn.onclick = () => elegirTipoSouv(key);
         cont.appendChild(btn);
     });
-    const bc = document.getElementById("btn-cont-souv");
-    if (bc) bc.disabled = !selTipoSouv;
     mostrar("p-souvenirs");
-}
-function continuarSouv() {
-    if (selTipoSouv) elegirTipoSouv(selTipoSouv);
 }
 function elegirTipoSouv(key) {
     const grupo = CATALOGO_SOUVENIRS[key];
@@ -3049,10 +3033,4 @@ function reiniciarAutoNov() { clearInterval(novTimer); autoNov(); }
         <h4>⭐ Stickers y Emojis</h4>
         <p style="font-size:13px;color:#64748b;margin:4px 0 8px;">Buscá y tocá uno para agregarlo (la búsqueda también funciona en inglés).</p>
         <input id="buscar-sticker" type="text" placeholder="🔎 Buscar: corazón, fuego, gato, star, cake..." oninput="filtrarStickers()" style="width:100%;box-sizing:border-box;padding:9px 12px;margin-bottom:10px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;">
-        <div id="grid-stickers" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-height:320px;overflow-y:auto;padding:6px;background:#f8fafc;border-radius:8px;border:1px solid #cbd5e1;"></div>
-        <div style="margin-top:14px;display:flex;justify-content:flex-end;">
-            <button class="btn-volver" onclick="cerrarStickers()">Cerrar ventana</button>
-        </div>
-    </div>
-</div>
-</body></html>
+        <div id="grid-stickers" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-height:320px;overflow-y:auto;
