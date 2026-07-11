@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<!-- Foto Trelew Flash · Panel de precios v4.3 -->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trelewflash · Precios</title>
+<style>
+  :root{
+    --color-principal:#4a4a00; --color-boton:#FCFC14; --color-boton-hover:#d6d600;
+    --color-boton-texto:#1a1a00; --gris-borde:#fff59d; --gris-suave:#fffde7;
+    --ok:#2e7d32; --ok-bg:#e8f5e9; --alerta:#b26a00; --alerta-bg:#fff4e0;
+    --err:#c0392b; --err-bg:#fdecea; --dirty:#f9a825;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:#fff9c4;color:#334155;
+       font-family:system-ui,-apple-system,sans-serif;display:flex;flex-direction:column;align-items:center}
+  .wrap{width:100%;max-width:640px;padding:16px 14px 40px}
+  h1{font-size:23px;color:var(--color-principal);margin:0 0 2px}
+  h2{font-size:17px;color:var(--color-principal);margin:22px 0 8px}
+  p.sub{font-size:13px;color:#7a7a52;margin:0 0 4px}
+  .card{background:#fff;border:2px solid var(--gris-borde);border-radius:16px;padding:16px;margin-bottom:14px;
+        box-shadow:0 2px 8px rgba(120,120,20,.08)}
+  label{display:block;font-size:13px;font-weight:bold;color:#475569;margin:10px 0 4px}
+  input[type=text],input[type=password]{width:100%;padding:11px 12px;border:1.5px solid var(--gris-borde);
+        border-radius:10px;font-size:16px;background:#fffdf2}
+  input:focus{outline:none;border-color:var(--color-boton-hover)}
+  .btn{display:block;width:100%;background:var(--color-boton);color:var(--color-boton-texto);border:none;
+       padding:13px;border-radius:12px;font-size:16px;font-weight:bold;cursor:pointer;
+       box-shadow:0 4px 6px rgba(252,252,20,.4);transition:transform .1s,background-color .2s}
+  .btn:hover{background:var(--color-boton-hover);transform:scale(1.01)}
+  .btn:disabled{background:#eee;color:#aaa;box-shadow:none;cursor:not-allowed;transform:none}
+  .btn.sec{background:#cbd5e1;color:#334155;box-shadow:none}
+  .btn.sec:hover{background:#94a3b8}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+  .quien{font-size:12.5px;color:#7a7a52}.quien b{color:var(--color-principal)}
+  .buscar{width:100%;padding:10px 12px;border:1.5px solid var(--gris-borde);border-radius:10px;
+          font-size:15px;background:#fffdf2;margin-bottom:6px}
+  .grupo-tit{font-size:15px;font-weight:bold;color:var(--color-principal);
+             border-bottom:1.5px solid var(--gris-borde);padding-bottom:5px;margin:18px 0 6px}
+  .fila{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid #fdf6c2}
+  .fila .nom{flex:1;font-size:14px;line-height:1.25}
+  .fila .nom small{display:block;color:#94a3b8;font-size:11.5px}
+  .fila .tag{display:inline-block;font-size:10px;font-weight:bold;padding:1px 6px;border-radius:8px;
+             background:var(--alerta-bg);color:var(--alerta);margin-left:4px;vertical-align:middle}
+  .precio-box{display:flex;align-items:center;gap:3px}
+  .precio-box .sig{color:#94a3b8;font-size:15px}
+  .precio-box input{width:104px;padding:9px 8px;border:1.5px solid var(--gris-borde);border-radius:9px;
+        font-size:15px;text-align:right;background:#fffdf2}
+  .precio-box.mod input{width:104px}
+  input.dirty{border-color:var(--dirty)!important;background:#fffce8!important;box-shadow:0 0 0 2px rgba(249,168,37,.25)}
+  .pct{color:#94a3b8;font-size:13px;margin-left:2px}
+  .barra-guardar{position:sticky;bottom:0;background:#fff9c4;padding:12px 0 4px;margin-top:8px}
+  .contador{text-align:center;font-size:13px;color:var(--alerta);font-weight:bold;margin-bottom:8px;min-height:18px}
+  .msg{padding:11px 13px;border-radius:10px;font-size:13.5px;margin:10px 0;line-height:1.4}
+  .msg.ok{background:var(--ok-bg);color:var(--ok);border:1px solid #a5d6a7}
+  .msg.err{background:var(--err-bg);color:var(--err);border:1px solid #f5b7b1}
+  .oculto{display:none}
+  .pie{text-align:center;color:#7a7a52;font-size:11.5px;margin-top:20px}
+  .pie b{color:var(--color-principal)}
+  .cargando{text-align:center;color:#7a7a52;font-size:14px;padding:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ LOGIN ============ -->
+  <section id="pantallaLogin">
+    <div style="text-align:center;margin:26px 0 6px">
+      <h1>Foto Trelew Flash</h1>
+      <p class="sub">Panel de precios · v4.3</p>
+    </div>
+    <div class="card">
+      <label for="inpUser">Usuario</label>
+      <input type="text" id="inpUser" autocomplete="username" autocapitalize="none" placeholder="tu usuario">
+      <label for="inpPass">Contraseña</label>
+      <input type="password" id="inpPass" autocomplete="current-password" placeholder="tu contraseña">
+      <div id="msgLogin"></div>
+      <div style="margin-top:14px"><button class="btn" id="btnLogin">Entrar</button></div>
+    </div>
+    <p class="pie">Solo personal autorizado. Cada cambio queda registrado con tu nombre.</p>
+  </section>
+
+  <!-- ============ EDITOR ============ -->
+  <section id="pantallaEditor" class="oculto">
+    <div class="topbar">
+      <div><h1 style="font-size:20px">Precios</h1>
+        <div class="quien">Editando como <b id="lblNombre">—</b></div></div>
+      <button class="btn sec" style="width:auto;padding:9px 14px;font-size:13px" id="btnSalir">Salir</button>
+    </div>
+    <p class="sub">Cambiá el precio y tocá <b>Guardar cambios</b>. Los valores se guardan en la hoja y la app los toma sola.</p>
+
+    <input class="buscar" id="inpBuscar" placeholder="🔍 Buscar producto, variante o SKU…">
+    <div id="msgEditor"></div>
+    <div id="listado"><div class="cargando">Cargando precios…</div></div>
+
+    <div class="barra-guardar">
+      <div class="contador" id="contador"></div>
+      <button class="btn" id="btnGuardar" disabled>Guardar cambios</button>
+    </div>
+    <p class="pie">Foto Trelew Flash · edición registrada en la pestaña <b>AuditoriaPrecios</b> de la hoja.</p>
+  </section>
+
+</div>
+
+<script>
+/* Misma URL del Apps Script que usa la app de pedidos v4.3 */
+const PEDIDOS_URL = "https://script.google.com/macros/s/AKfycbyIWoWJiOGnuplVw2-_f1Kv4Tc3TfoyhTsmXZn-xNCPjOcj__5f_JZ9Z3_M4Jpik65WCA/exec";
+
+const $ = s => document.querySelector(s);
+let sesion = null;          // { usuario, pass, nombre, rol }
+let catalogo = null;
+
+/* ---------- helpers ---------- */
+function fmt(n){ return n==null||n===''? '' : Number(n).toLocaleString('es-AR'); }
+function msg(el, texto, tipo){ el.innerHTML = texto ? `<div class="msg ${tipo}">${texto}</div>` : ''; }
+async function postJSON(payload){
+  const r = await fetch(PEDIDOS_URL, {
+    method:"POST", headers:{ "Content-Type":"text/plain;charset=utf-8" },
+    body: JSON.stringify(payload)
+  });
+  return r.json();
+}
+
+/* ---------- LOGIN ---------- */
+$('#btnLogin').addEventListener('click', login);
+$('#inpPass').addEventListener('keydown', e=>{ if(e.key==='Enter') login(); });
+
+async function login(){
+  const usuario = $('#inpUser').value.trim();
+  const pass = $('#inpPass').value;
+  if(!usuario || !pass){ msg($('#msgLogin'),'Completá usuario y contraseña.','err'); return; }
+  const btn = $('#btnLogin'); btn.disabled = true; btn.textContent = 'Entrando…';
+  msg($('#msgLogin'),'','');
+  try{
+    const r = await postJSON({ accion:'login', usuario, pass });
+    if(!r.ok){ msg($('#msgLogin'), r.error || 'No se pudo iniciar sesión.','err'); return; }
+    sesion = { usuario, pass, nombre:r.nombre, rol:r.rol };
+    $('#lblNombre').textContent = r.nombre;
+    $('#pantallaLogin').classList.add('oculto');
+    $('#pantallaEditor').classList.remove('oculto');
+    cargarCatalogo();
+  }catch(err){
+    msg($('#msgLogin'),'Error de conexión. Revisá internet e intentá de nuevo.','err');
+  }finally{ btn.disabled=false; btn.textContent='Entrar'; }
+}
+
+$('#btnSalir').addEventListener('click', ()=>{
+  if(contarCambios()>0 && !confirm('Tenés cambios sin guardar. ¿Salir igual?')) return;
+  sesion=null; catalogo=null;
+  $('#inpPass').value=''; $('#listado').innerHTML='<div class="cargando">Cargando precios…</div>';
+  $('#pantallaEditor').classList.add('oculto');
+  $('#pantallaLogin').classList.remove('oculto');
+});
+
+/* ---------- CARGAR CATÁLOGO ---------- */
+async function cargarCatalogo(){
+  try{
+    const r = await fetch(PEDIDOS_URL + "?accion=catalogo");
+    catalogo = await r.json();
+    render();
+  }catch(err){
+    $('#listado').innerHTML = '<div class="msg err">No se pudo cargar el catálogo. Revisá la conexión.</div>';
+  }
+}
+
+/* ---------- RENDER ---------- */
+function render(){
+  const cont = $('#listado');
+  let html = '';
+
+  // Productos y variantes
+  (catalogo.productos || []).forEach(p=>{
+    const filas = (p.variantes || []).map(v=>{
+      const tags = [];
+      if(v.a_cotizar) tags.push('<span class="tag">a cotizar</span>');
+      if(v.visible_web===false) tags.push('<span class="tag">no web</span>');
+      const nom = v.nombre && v.nombre!==p.nombre ? v.nombre : p.nombre;
+      return `<div class="fila" data-buscar="${(p.nombre+' '+nom+' '+v.sku).toLowerCase()}">
+        <div class="nom">${nom}${tags.join('')}<small>${v.sku}</small></div>
+        <div class="precio-box"><span class="sig">$</span>
+          <input type="text" inputmode="numeric" data-tipo="variante" data-key="${v.sku}"
+                 data-orig="${v.precio==null?'':v.precio}" value="${v.precio==null?'':v.precio}"
+                 placeholder="${v.a_cotizar?'a cotizar':'0'}"></div>
+      </div>`;
+    }).join('');
+    if(filas) html += `<div class="grupo-tit">${p.nombre}</div>${filas}`;
+  });
+
+  // Modificadores
+  const mods = (catalogo.modificadores || []).filter(m=>m.valor!=null || m.tipo);
+  if(mods.length){
+    html += `<h2>Modificadores (retoque, texto, armado…)</h2>`;
+    mods.forEach(m=>{
+      const esPct = String(m.tipo)==='porcentaje';
+      html += `<div class="fila" data-buscar="${(m.nombre+' '+m.id).toLowerCase()}">
+        <div class="nom">${m.nombre||m.id}<small>${m.id}${m.notas?' · '+m.notas:''}</small></div>
+        <div class="precio-box mod"><span class="sig">${esPct?'':'$'}</span>
+          <input type="text" inputmode="numeric" data-tipo="modificador" data-key="${m.id}"
+                 data-orig="${m.valor==null?'':m.valor}" value="${m.valor==null?'':m.valor}" placeholder="0">
+          ${esPct?'<span class="pct">%</span>':''}</div>
+      </div>`;
+    });
+  }
+
+  cont.innerHTML = html || '<div class="cargando">No hay precios para mostrar.</div>';
+  cont.querySelectorAll('input').forEach(inp=> inp.addEventListener('input', onEdit));
+  actualizarContador();
+}
+
+/* ---------- EDICIÓN / DIRTY ---------- */
+function normal(v){ v=String(v).trim(); return v===''? '' : String(Number(v)); }
+function onEdit(e){
+  const inp = e.target;
+  const cambio = normal(inp.value) !== normal(inp.dataset.orig);
+  inp.classList.toggle('dirty', cambio);
+  actualizarContador();
+}
+function inputsDirty(){
+  return [...document.querySelectorAll('#listado input')].filter(i=> i.classList.contains('dirty'));
+}
+function contarCambios(){ return inputsDirty().length; }
+function actualizarContador(){
+  const n = contarCambios();
+  $('#contador').textContent = n ? `${n} cambio${n>1?'s':''} sin guardar` : '';
+  $('#btnGuardar').disabled = n===0;
+}
+
+/* ---------- BUSCAR ---------- */
+$('#inpBuscar').addEventListener('input', e=>{
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('#listado .fila').forEach(f=>{
+    f.style.display = !q || f.dataset.buscar.includes(q) ? '' : 'none';
+  });
+});
+
+/* ---------- GUARDAR ---------- */
+$('#btnGuardar').addEventListener('click', guardar);
+async function guardar(){
+  const dirty = inputsDirty();
+  if(!dirty.length) return;
+  const cambios = dirty.map(i=>({
+    tipo: i.dataset.tipo,
+    [i.dataset.tipo==='variante'?'sku':'id']: i.dataset.key,
+    campo: i.dataset.tipo==='variante'?'precio':'valor',
+    valor: Number(normal(i.value)===''? 0 : i.value)
+  }));
+  const btn = $('#btnGuardar'); btn.disabled=true; btn.textContent='Guardando…';
+  msg($('#msgEditor'),'','');
+  try{
+    const r = await postJSON({ accion:'guardarPrecios', usuario:sesion.usuario, pass:sesion.pass, cambios });
+    if(!r.ok){ msg($('#msgEditor'), r.error || 'No se pudo guardar.','err'); return; }
+    // fijar nuevos valores como "originales"
+    dirty.forEach(i=>{ i.dataset.orig = normal(i.value); i.classList.remove('dirty'); });
+    const errs = (r.errores&&r.errores.length)? ` (con avisos: ${r.errores.join('; ')})` : '';
+    msg($('#msgEditor'), `✅ Guardado: ${r.aplicados} precio(s) actualizado(s) por <b>${sesion.nombre}</b> · ${r.fecha}${errs}`,'ok');
+    actualizarContador();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }catch(err){
+    msg($('#msgEditor'),'Error de conexión al guardar. Tus cambios siguen marcados; probá de nuevo.','err');
+  }finally{ btn.textContent='Guardar cambios'; actualizarContador(); }
+}
+</script>
+</body>
+</html>

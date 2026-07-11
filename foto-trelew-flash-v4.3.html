@@ -27,6 +27,9 @@
     .pie-pagina .cred-mr { font-weight: bold; color: var(--color-principal); }
     .pie-pagina a.cred-mr { text-decoration: none; }
     .pie-pagina a.cred-mr:hover { text-decoration: underline; }
+    .pie-admin { margin-top: 8px; }
+    .pie-admin a { color: #b8b88a; font-size: 11px; text-decoration: none; opacity: .6; transition: opacity .2s, color .2s; }
+    .pie-admin a:hover { opacity: 1; color: var(--color-principal); text-decoration: underline; }
     .pantalla {
         background: #fff; border: 2px solid var(--gris-borde); border-radius: 16px;
         padding: 26px 20px; width: 100%; max-width: 560px;
@@ -3042,6 +3045,11 @@ function reiniciarAutoNov() { clearInterval(novTimer); autoNov(); }
     Diseñado por <span class="cred-mr">MR</span>
     <!-- Para enlazar tu web en el futuro, reemplazá el span de arriba por:
          <a class="cred-mr" href="https://TU-SITIO.com" target="_blank" rel="noopener">MR</a> -->
+    <div class="pie-admin">
+        <a href="precios-admin.html" title="Zona administrativa · precios">
+            <span aria-hidden="true">🔒</span> Zona administrativa
+        </a>
+    </div>
 </footer>
 
 <div id="modal-stickers" class="modal-flotante oculto">

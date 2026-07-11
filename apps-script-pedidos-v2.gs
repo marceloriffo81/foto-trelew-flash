@@ -18,6 +18,8 @@ const CONFIG = {
   HOJA_ITEMS: 'Items',
   HOJA_CATALOGO: 'Catalogo',
   HOJA_MODIFICADORES: 'Modificadores',
+  HOJA_USUARIOS: 'Usuarios',
+  HOJA_AUDITORIA: 'AuditoriaPrecios',
   PREFIJO: 'A-',
   DIGITOS: 4,
   CARPETA_RAIZ: 'Pedidos Trelewflash - imágenes'
@@ -29,6 +31,10 @@ function doPost(e) {
   lock.waitLock(30000);
   try {
     const datos = JSON.parse(e.postData.contents);
+
+    // Enrutado por accion (login / edicion de precios)
+    if (datos.accion === 'login')          return respuestaJson_(loginAdmin_(datos));
+    if (datos.accion === 'guardarPrecios') return respuestaJson_(guardarPreciosAdmin_(datos));
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const hojaPedidos = obtenerHoja_(ss, CONFIG.HOJA_PEDIDOS);
     const hojaItems = obtenerHoja_(ss, CONFIG.HOJA_ITEMS);
@@ -1096,3 +1102,142 @@ const CATALOGO_FALLBACK = {
     }
   ]
 };
+
+/* ═══════════════════════════════════════════════════════════════════
+   EDICIÓN DE PRECIOS CON USUARIOS Y AUDITORÍA  (v4.3 · panel precios)
+   ─────────────────────────────────────────────────────────────────
+   Hojas nuevas (las crea setupAdmin()):
+     • Usuarios:         usuario | contraseña | nombre | rol | activo
+     • AuditoriaPrecios: Fecha | Usuario | Nombre | Tipo | SKU/ID |
+                         Detalle | Campo | Valor anterior | Valor nuevo
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Verifica credenciales contra la hoja Usuarios. Devuelve el usuario o null. */
+function verificarUsuario_(usuario, pass) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const h = ss.getSheetByName(CONFIG.HOJA_USUARIOS);
+  if (!h || h.getLastRow() < 2) return null;
+  const filas = h.getDataRange().getValues().slice(1);
+  const u = String(usuario || '').trim().toLowerCase();
+  const p = String(pass || '');
+  for (const f of filas) {
+    const fu = String(f[0] || '').trim().toLowerCase();
+    const fp = String(f[1] == null ? '' : f[1]);
+    if (fu && fu === u && fp === p && esVerdadero_(f[4])) {
+      return { usuario: String(f[0]).trim(), nombre: String(f[2] || f[0]).trim(), rol: String(f[3] || 'editor').trim() };
+    }
+  }
+  return null;
+}
+
+/* POST accion:'login' → { usuario, pass } */
+function loginAdmin_(datos) {
+  const u = verificarUsuario_(datos.usuario, datos.pass);
+  if (!u) return { ok: false, error: 'Usuario o contraseña incorrectos.' };
+  return { ok: true, nombre: u.nombre, rol: u.rol, usuario: u.usuario };
+}
+
+/* POST accion:'guardarPrecios' → { usuario, pass, cambios:[
+     { tipo:'variante', sku, campo:'precio', valor:Number },
+     { tipo:'modificador', id, campo:'valor', valor:Number }, ... ] }
+   Revalida credenciales en cada guardado (sin sesión persistente). */
+function guardarPreciosAdmin_(datos) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    const user = verificarUsuario_(datos.usuario, datos.pass);
+    if (!user) return { ok: false, error: 'Sesión inválida. Volvé a iniciar sesión.' };
+
+    const cambios = Array.isArray(datos.cambios) ? datos.cambios : [];
+    if (!cambios.length) return { ok: false, error: 'No hay cambios para guardar.' };
+
+    const ss  = SpreadsheetApp.getActiveSpreadsheet();
+    const hCat = ss.getSheetByName(CONFIG.HOJA_CATALOGO);
+    const hMod = ss.getSheetByName(CONFIG.HOJA_MODIFICADORES);
+    const hAud = obtenerHoja_(ss, CONFIG.HOJA_AUDITORIA);
+    if (hAud.getLastRow() === 0) {
+      hAud.appendRow(['Fecha', 'Usuario', 'Nombre', 'Tipo', 'SKU/ID', 'Detalle',
+                      'Campo', 'Valor anterior', 'Valor nuevo']);
+    }
+
+    const catVals = hCat ? hCat.getDataRange().getValues() : [];
+    const modVals = hMod ? hMod.getDataRange().getValues() : [];
+    const fecha = new Date().toLocaleString('es-AR');
+    const registros = [];   // filas de auditoría a agregar
+    let aplicados = 0;
+    const errores = [];
+
+    cambios.forEach(c => {
+      const nuevoNum = numeroONull_(c.valor);
+      if (nuevoNum == null) { errores.push('Valor inválido en ' + (c.sku || c.id || '?')); return; }
+
+      if (c.tipo === 'variante') {
+        // Catalogo: sku en col índice 3, precio en col índice 6
+        let rowIdx = -1;
+        for (let i = 1; i < catVals.length; i++) {
+          if (String(catVals[i][3]).trim() === String(c.sku).trim()) { rowIdx = i; break; }
+        }
+        if (rowIdx < 0) { errores.push('SKU no encontrado: ' + c.sku); return; }
+        const anterior = catVals[rowIdx][6];
+        if (numeroONull_(anterior) === nuevoNum) return; // sin cambio real
+        hCat.getRange(rowIdx + 1, 7).setValue(nuevoNum);
+        catVals[rowIdx][6] = nuevoNum;
+        const detalle = String(catVals[rowIdx][1] || '') + ' · ' + String(catVals[rowIdx][4] || '');
+        registros.push([fecha, user.usuario, user.nombre, 'Variante', c.sku, detalle,
+                        'precio', anterior === '' || anterior == null ? '' : anterior, nuevoNum]);
+        aplicados++;
+
+      } else if (c.tipo === 'modificador') {
+        // Modificadores: id en col índice 0, valor en col índice 4
+        let rowIdx = -1;
+        for (let i = 1; i < modVals.length; i++) {
+          if (String(modVals[i][0]).trim() === String(c.id).trim()) { rowIdx = i; break; }
+        }
+        if (rowIdx < 0) { errores.push('Modificador no encontrado: ' + c.id); return; }
+        const anterior = modVals[rowIdx][4];
+        if (numeroONull_(anterior) === nuevoNum) return;
+        hMod.getRange(rowIdx + 1, 5).setValue(nuevoNum);
+        modVals[rowIdx][4] = nuevoNum;
+        const detalle = String(modVals[rowIdx][1] || c.id);
+        registros.push([fecha, user.usuario, user.nombre, 'Modificador', c.id, detalle,
+                        'valor', anterior === '' || anterior == null ? '' : anterior, nuevoNum]);
+        aplicados++;
+      }
+    });
+
+    if (registros.length) {
+      hAud.getRange(hAud.getLastRow() + 1, 1, registros.length, registros[0].length).setValues(registros);
+    }
+    return { ok: true, aplicados: aplicados, fecha: fecha, errores: errores };
+  } catch (err) {
+    return { ok: false, error: String(err) };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+/* Ejecutar UNA vez desde el editor: crea las hojas Usuarios y AuditoriaPrecios.
+   No pisa datos existentes. Crea un usuario admin inicial (cambialo). */
+function setupAdmin() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  let hU = ss.getSheetByName(CONFIG.HOJA_USUARIOS);
+  if (!hU) {
+    hU = ss.insertSheet(CONFIG.HOJA_USUARIOS);
+    hU.appendRow(['usuario', 'contraseña', 'nombre', 'rol', 'activo']);
+    hU.appendRow(['marcelo', 'cambiar123', 'Marcelo', 'admin', 'SI']);
+    hU.getRange(1, 1, 1, 5).setFontWeight('bold');
+    hU.setFrozenRows(1);
+  }
+
+  let hA = ss.getSheetByName(CONFIG.HOJA_AUDITORIA);
+  if (!hA) {
+    hA = ss.insertSheet(CONFIG.HOJA_AUDITORIA);
+    hA.appendRow(['Fecha', 'Usuario', 'Nombre', 'Tipo', 'SKU/ID', 'Detalle',
+                  'Campo', 'Valor anterior', 'Valor nuevo']);
+    hA.getRange(1, 1, 1, 9).setFontWeight('bold');
+    hA.setFrozenRows(1);
+  }
+
+  SpreadsheetApp.getUi && SpreadsheetApp.getActive().toast('Listo: hojas Usuarios y AuditoriaPrecios creadas.', 'setupAdmin', 5);
+}
