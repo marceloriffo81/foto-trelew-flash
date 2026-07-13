@@ -54,6 +54,7 @@
     .intro > p                      { animation: intro-arriba .8s cubic-bezier(0.25, 1, 0.5, 1) .22s both; }
     .intro .btn-menu:nth-of-type(1) { animation: intro-izq    .85s cubic-bezier(0.25, 1, 0.5, 1) .38s both; }
     .intro .btn-menu:nth-of-type(2) { animation: intro-der    .85s cubic-bezier(0.25, 1, 0.5, 1) .54s both; }
+    .intro .btn-menu:nth-of-type(3) { animation: intro-izq    .85s cubic-bezier(0.25, 1, 0.5, 1) .70s both; }
     @media (prefers-reduced-motion: reduce) { .intro h1, .intro > p, .intro .btn-menu { animation: none; } }
     h1 { font-size: 26px; color: var(--color-principal); margin: 0 0 6px; }
     h2 { font-size: 22px; color: var(--color-principal); margin: 0 0 20px; }
@@ -294,6 +295,53 @@
         .ftf-logo.play .ltr{ transform:none !important; } .ftf-fx{ transform:translateX(-46%) !important; } .ftf-cam{ transform:translateY(-50%) !important; }
         .ftf-flash{ display:none; }
     }
+
+    /* ===== Catálogo tipo market ===== */
+    .cat-seccion { text-align: left; margin: 22px 0 4px; }
+    .cat-seccion h3 { font-size: 17px; color: var(--color-principal); margin: 0 0 2px; }
+    .cat-seccion p { font-size: 13px; color: #7a7a52; margin: 0 0 12px; }
+    .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+    .cat-grid.mini { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+    .cat-card { background: #fff; border: 2px solid var(--gris-borde); border-radius: 14px; overflow: hidden;
+        display: flex; flex-direction: column; text-align: left; transition: transform .15s, box-shadow .15s; }
+    .cat-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,.10); }
+    /* Escena de pared donde "cuelga" el cuadro */
+    .cat-preview { position: relative; aspect-ratio: 1.35; background: linear-gradient(#efe6d2, #e2d4b8);
+        display: flex; align-items: flex-end; justify-content: center; padding: 12px 0 16px; overflow: hidden; }
+    .cat-preview::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 26%;
+        background: linear-gradient(#d8c6a2, #cbb487); } /* "mesada"/piso */
+    .cat-marco { position: relative; z-index: 1; box-sizing: border-box; background: #6b4a2b;
+        padding: 7px; border-radius: 3px; box-shadow: 0 8px 14px rgba(0,0,0,.28); }
+    .cat-marco.claro { background: #c9a36a; } .cat-marco.negro { background: #2b2b2b; }
+    .cat-marco.blanco { background: #f5f5f0; box-shadow: 0 6px 12px rgba(0,0,0,.18); }
+    .cat-lienzo { width: 100%; height: 100%; min-width: 44px; }
+    .cat-card .cat-cuerpo { padding: 11px 13px 13px; display: flex; flex-direction: column; flex: 1; }
+    .cat-card .cat-titulo { font-weight: bold; color: var(--color-principal); font-size: 15px; line-height: 1.2; }
+    .cat-card .cat-sub { font-size: 12.5px; color: #7a7a52; margin: 3px 0 0; flex: 1; }
+    .cat-card .cat-precio { font-size: 16px; font-weight: bold; color: #1a1a00; margin-top: 9px; }
+    .cat-card .cat-precio small { font-size: 11px; font-weight: normal; color: #7a7a52; }
+    .cat-card .cat-pedir { margin-top: 10px; background: var(--color-wa); color: #fff; border: none; border-radius: 10px;
+        padding: 9px; font-size: 14px; font-weight: bold; cursor: pointer; }
+    .cat-card .cat-pedir:hover { background: var(--color-wa-hover); }
+    /* Tarjetas mini (resto de productos) */
+    .cat-card.mini .cat-preview { aspect-ratio: 1.5; font-size: 40px; align-items: center; padding: 0; }
+    .cat-card.mini .cat-preview::after { display: none; }
+    .cat-card.mini .cat-cuerpo { padding: 9px 11px 11px; }
+    .cat-card.mini .cat-titulo { font-size: 14px; }
+
+    /* ===== Ficha de producto (cuadro) ===== */
+    .ficha-escena { position: relative; width: 100%; aspect-ratio: 1.5; border-radius: 12px;
+        background: linear-gradient(#efe6d2, #e2d4b8); display: flex; align-items: flex-end; justify-content: center;
+        padding: 22px 0 30px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(0,0,0,.04); }
+    .ficha-escena::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 24%;
+        background: linear-gradient(#d8c6a2, #cbb487); }
+    .ficha-marco { position: relative; z-index: 1; box-sizing: border-box; background: #6b4a2b;
+        padding: 3.6%; border-radius: 4px; box-shadow: 0 12px 22px rgba(0,0,0,.32); }
+    .ficha-marco.claro { background: #c9a36a; } .ficha-marco.negro { background: #2b2b2b; }
+    .ficha-marco.blanco { background: #f5f5f0; box-shadow: 0 10px 18px rgba(0,0,0,.2); }
+    .ficha-lienzo { width: 100%; height: 100%; background-size: cover; background-position: center;
+        background-repeat: no-repeat; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+    .ficha-desc { color: #7a7a52; margin: 0 0 4px; font-size: 14px; }
 </style>
 </head>
 <body>
@@ -357,7 +405,70 @@
 <div class="caja-inicio">
         <p class="caja-titulo">¿Qué querés hacer?</p>
 <button class="btn-menu" onclick="irAPedido()">🛒 Empezar mi pedido</button>
+    <button class="btn-menu" onclick="abrirCatalogo()">🖼️ Ver catálogo de cuadros</button>
     <button class="btn-menu" onclick="window.location.href='https://digitalflashtw.wordpress.com/eventos/'">🥳 Ver fotos de eventos sociales</button>
+    </div>
+</div>
+
+<!-- CATÁLOGO (market) -->
+<div id="p-catalogo" class="pantalla oculto">
+    <div class="barra-sup">
+        <button class="btn-volver" onclick="mostrar(&#39;p-bienvenida&#39;)">⬅ Volver</button>
+        <button class="chip-carrito" onclick="mostrar(&#39;p-carrito&#39;)">🛒 Carrito (<span id="badge-catalogo">0</span>)</button>
+    </div>
+    <h2>Nuestro catálogo</h2>
+    <p>Tu foto en la pared: cuadros listos para colgar, y más productos para regalar. Tocá <b>Pedir</b> y armá tu pedido.</p>
+
+    <div class="cat-seccion">
+        <h3>🖼️ Cuadros</h3>
+        <p>Impresión de calidad en gran formato, lista para decorar.</p>
+    </div>
+    <div id="cat-cuadros" class="cat-grid"></div>
+
+    <div class="cat-seccion">
+        <h3>🎁 Más productos</h3>
+        <p>Todo lo que también podés pedir.</p>
+    </div>
+    <div id="cat-mas" class="cat-grid mini"></div>
+</div>
+
+<!-- FICHA DE PRODUCTO (cuadro) -->
+<div id="p-ficha" class="pantalla oculto">
+    <div class="barra-sup">
+        <button class="btn-volver" onclick="mostrar(&#39;p-catalogo&#39;)">⬅ Volver al catálogo</button>
+        <button class="chip-carrito" onclick="mostrar(&#39;p-carrito&#39;)">🛒 Carrito (<span id="badge-ficha">0</span>)</button>
+    </div>
+    <div class="ficha-escena">
+        <div id="ficha-marco" class="ficha-marco"><div id="ficha-lienzo" class="ficha-lienzo"></div></div>
+    </div>
+    <h2 id="ficha-titulo" style="margin-top:16px;">Cuadro</h2>
+    <p id="ficha-desc" class="ficha-desc"></p>
+
+    <p class="instruccion">1. Elegí el marco (referencial):</p>
+    <div id="ficha-marcos" class="grid-botones"></div>
+
+    <p class="instruccion">2. Subí tu foto (opcional):</p>
+    <label class="btn-tool">📷 Adjuntar foto<input type="file" accept="image/*" multiple="" style="display:none" onchange="adjuntarFicha(event)"></label>
+    <div id="thumbs-ficha" class="thumbs"></div>
+
+    <div class="panel-retoque" style="margin-top:12px;">
+        <label style="display:flex;align-items:center;cursor:pointer;text-align:left;">
+            <input type="checkbox" id="ficha-retoque" onchange="recalcularFicha()">
+            <span><h4>Retoque digital <span id="ficha-retoque-precio" style="color:var(--color-wa-hover);"></span></h4>
+            <small style="color:#64748b;">Mejoramos color, luz y detalles de tu foto.</small></span>
+        </label>
+    </div>
+
+    <div class="fila-cantidad">
+        <label>3. Cantidad:</label>
+        <input id="ficha-cant" type="number" min="1" value="1" onchange="recalcularFicha()">
+    </div>
+
+    <p class="nota-info">El precio corresponde a la impresión en gran formato. El armado del marco se coordina y cotiza con el local.</p>
+
+    <div class="caja-precio" style="margin-top:14px;">
+        <div class="monto">Subtotal de este ítem: <strong id="ficha-precio">$ 0</strong></div>
+        <button class="btn-agregar" onclick="agregarFichaAlCarrito()">➕ Agregar al carrito</button>
     </div>
 </div>
 
@@ -1677,6 +1788,199 @@ function mostrar(id) {
 }
 function irAPedido() { flujo = "pedido"; mostrar("p-cliente"); }
 function irAEventos() { flujo = "eventos"; mostrar("p-cliente"); }
+
+/* Intención elegida en el catálogo: se aplica después de cargar los datos
+   del cliente, para dejarlo directamente en el producto que tocó "Pedir". */
+let intencionCatalogo = null;
+function pedirDeCatalogo(tipo, arg) { intencionCatalogo = { tipo, arg }; irAPedido(); }
+function aplicarIntencionCatalogo(ic) {
+    if (ic.tipo === "foto") { cargarSimulador(ic.arg); }
+    else if (ic.tipo === "ficha") { abrirFicha(ic.arg); }
+    else if (ic.tipo === "categorias") { mostrar("p-categorias"); }
+    else if (ic.tipo === "taza") { abrirTaza(); }
+    else if (ic.tipo === "souvenirs") { abrirSouvenirs(); }
+    else { mostrar("p-menu"); }
+}
+
+/* =========================================================
+   CATÁLOGO tipo market (previsualizaciones + precios del catálogo)
+   ========================================================= */
+const CAT_GRADS = [
+    "linear-gradient(135deg,#f6d365,#fda085)", "linear-gradient(135deg,#a1c4fd,#c2e9fb)",
+    "linear-gradient(135deg,#84fab0,#8fd3f4)", "linear-gradient(135deg,#fbc2eb,#a6c1ee)",
+    "linear-gradient(135deg,#ffecd2,#fcb69f)", "linear-gradient(160deg,#5ee7df,#b490ca)"
+];
+const CAT_MARCOS = ["", "claro", "negro", "blanco"]; // tonos de marco para dar variedad
+function minPrecio(items) {
+    const ps = (items || []).map(i => i.precio).filter(p => p != null && p > 0);
+    return ps.length ? Math.min(...ps) : null;
+}
+function previewCuadro(w, h, marcoClass, gradIndex) {
+    const landscape = (w || 1) >= (h || 1);
+    const size = landscape ? "width:70%;" : "height:82%;";
+    const grad = CAT_GRADS[gradIndex % CAT_GRADS.length];
+    return '<div class="cat-preview"><div class="cat-marco ' + marcoClass +
+        '" style="aspect-ratio:' + (w || 1) + '/' + (h || 1) + ';' + size + '">' +
+        '<div class="cat-lienzo" style="background:' + grad + '"></div></div></div>';
+}
+const FICHAS = {}; // registro de cuadros que abren una ficha de producto (por SKU)
+function tarjetaCuadro(item, etiqueta, sub, marcoClass, gradIndex) {
+    FICHAS[item.sku] = { sku: item.sku, nombre: item.nombre, precio: item.precio,
+        w: item.w, h: item.h, tipoLabel: etiqueta, esCollage: item.grupo === "collage" };
+    return '<div class="cat-card">' +
+        previewCuadro(item.w, item.h, marcoClass, gradIndex) +
+        '<div class="cat-cuerpo">' +
+            '<div class="cat-titulo">' + etiqueta + ' ' + item.nombre + '</div>' +
+            '<div class="cat-sub">' + sub + '</div>' +
+            '<div class="cat-precio">' + formatear(item.precio) + '</div>' +
+            '<button class="cat-pedir" onclick="pedirDeCatalogo(\'ficha\',\'' + item.sku + '\')">Ver / pedir →</button>' +
+        '</div></div>';
+}
+function tarjetaMini(emoji, titulo, precioMin, intento, arg) {
+    const precio = precioMin != null ? '<div class="cat-precio"><small>desde </small>' + formatear(precioMin) + '</div>' : '';
+    const onclick = arg ? "pedirDeCatalogo('" + intento + "','" + arg + "')" : "pedirDeCatalogo('" + intento + "')";
+    return '<div class="cat-card mini">' +
+        '<div class="cat-preview">' + emoji + '</div>' +
+        '<div class="cat-cuerpo">' +
+            '<div class="cat-titulo">' + titulo + '</div>' + precio +
+            '<button class="cat-pedir" onclick="' + onclick + '">Pedir →</button>' +
+        '</div></div>';
+}
+function renderCatalogo() {
+    // --- Cuadros: grandes (revelado) + collage grande ---
+    let g = 0, cuadros = "";
+    const grandes = (CATALOGO_FOTOS.grandes && CATALOGO_FOTOS.grandes.items) || [];
+    grandes.filter(it => !it.especial && it.precio != null).forEach(it => {
+        cuadros += tarjetaCuadro({ ...it, grupo: "grandes" }, "Cuadro", "Tu foto en gran formato, lista para colgar.",
+            CAT_MARCOS[g % CAT_MARCOS.length], g); g++;
+    });
+    const collage = (CATALOGO_FOTOS.collage && CATALOGO_FOTOS.collage.items) || [];
+    collage.filter(it => { if (it.especial || it.precio == null) return false; const cm = medidasCm(it.nombre); return Math.max(cm.w, cm.h) >= 30; }).forEach(it => {
+        cuadros += tarjetaCuadro({ ...it, grupo: "collage" }, "Cuadro collage", "Varias fotos en un solo diseño.",
+            "negro", g); g++;
+    });
+    document.getElementById("cat-cuadros").innerHTML = cuadros ||
+        '<p class="cat-sub">Pronto vas a ver acá nuestros cuadros.</p>';
+
+    // --- Más productos ---
+    let reveladoMin = null;
+    ["chicos", "medianos", "grandes", "polaroid"].forEach(k => {
+        const m = minPrecio((CATALOGO_FOTOS[k] && CATALOGO_FOTOS[k].items) || []);
+        if (m != null && (reveladoMin == null || m < reveladoMin)) reveladoMin = m;
+    });
+    const tazaMin = minPrecio(TIPOS_TAZA);
+    let souvMin = null;
+    Object.keys(CATALOGO_SOUVENIRS).forEach(k => {
+        const m = minPrecio(CATALOGO_SOUVENIRS[k].items);
+        if (m != null && (souvMin == null || m < souvMin)) souvMin = m;
+    });
+    document.getElementById("cat-mas").innerHTML =
+        tarjetaMini("📸", "Revelado de fotos", reveladoMin, "categorias") +
+        tarjetaMini("☕", "Taza personalizada", tazaMin, "taza") +
+        tarjetaMini("🎁", "Souvenirs", souvMin, "souvenirs");
+}
+function abrirCatalogo() { renderCatalogo(); mostrar("p-catalogo"); }
+
+/* --- Ficha de producto (cuadro) --- */
+const FICHA_MARCOS = [
+    { clase: "", nombre: "Madera" }, { clase: "claro", nombre: "Roble claro" },
+    { clase: "negro", nombre: "Negro" }, { clase: "blanco", nombre: "Blanco" }
+];
+let fichaSel = null, fichaMarco = "", adjuntosFicha = [];
+function abrirFicha(sku) {
+    if (!FICHAS[sku]) renderCatalogo(); // asegura el registro si aún no se pobló
+    const it = FICHAS[sku];
+    if (!it) { mostrar("p-catalogo"); return; }
+    fichaSel = it; fichaMarco = ""; adjuntosFicha = [];
+    document.getElementById("ficha-titulo").innerText = it.tipoLabel + " " + it.nombre;
+    document.getElementById("ficha-desc").innerText = it.esCollage
+        ? "Varias fotos en un solo diseño, impreso en gran formato para decorar."
+        : "Tu foto favorita impresa en gran formato, lista para enmarcar y colgar.";
+    const cont = document.getElementById("ficha-marcos");
+    cont.innerHTML = "";
+    FICHA_MARCOS.forEach((m, idx) => {
+        const b = document.createElement("button");
+        b.className = "btn-medida" + (idx === 0 ? " activo" : "");
+        b.innerText = m.nombre;
+        b.onclick = (e) => {
+            fichaMarco = m.clase;
+            cont.querySelectorAll(".btn-medida").forEach(x => x.classList.remove("activo"));
+            e.currentTarget.classList.add("activo");
+            pintarFicha();
+        };
+        cont.appendChild(b);
+    });
+    adjuntosFicha = [];
+    renderThumbs("thumbs-ficha", adjuntosFicha, "ficha");
+    document.getElementById("ficha-retoque").checked = false;
+    document.getElementById("ficha-retoque-precio").innerText = "+" + formatear(COSTO_RETOQUE);
+    document.getElementById("ficha-cant").value = 1;
+    pintarFicha();
+    recalcularFicha();
+    mostrar("p-ficha");
+}
+function pintarFicha() {
+    const it = fichaSel; if (!it) return;
+    const marco = document.getElementById("ficha-marco");
+    marco.className = "ficha-marco " + fichaMarco;
+    const landscape = (it.w || 1) >= (it.h || 1);
+    marco.style.aspectRatio = (it.w || 1) + "/" + (it.h || 1);
+    marco.style.height = landscape ? "" : "78%";
+    marco.style.width = landscape ? "62%" : "";
+    const lienzo = document.getElementById("ficha-lienzo");
+    // Nota: usamos backgroundColor/backgroundImage por separado (no el atajo
+    // 'background') para no resetear el background-size:cover del CSS.
+    if (adjuntosFicha.length) {
+        lienzo.style.backgroundColor = "#111";
+        lienzo.style.backgroundImage = "url('" + adjuntosFicha[0].url + "')";
+    } else {
+        lienzo.style.backgroundColor = "";
+        lienzo.style.backgroundImage = "linear-gradient(135deg,#f6d365,#fda085)";
+    }
+}
+function adjuntarFicha(ev) {
+    leerAdjuntos(ev, adjuntosFicha, "thumbs-ficha", "ficha", () => { pintarFicha(); recalcularFicha(); });
+}
+function precioFicha() {
+    const cant = Math.max(1, parseInt(document.getElementById("ficha-cant").value) || 1);
+    const retoqueOn = document.getElementById("ficha-retoque").checked;
+    const base = fichaSel ? fichaSel.precio : 0;
+    const retoque = retoqueOn
+        ? COSTO_RETOQUE * retoquesFacturables(cant, adjuntosFicha.length, !!(fichaSel && fichaSel.esCollage)) : 0;
+    return base * cant + retoque;
+}
+function recalcularFicha() {
+    document.getElementById("ficha-precio").innerText = formatear(precioFicha());
+}
+function agregarFichaAlCarrito() {
+    if (!fichaSel) return;
+    const cant = Math.max(1, parseInt(document.getElementById("ficha-cant").value) || 1);
+    const retoqueOn = document.getElementById("ficha-retoque").checked;
+    const marcoNombre = (FICHA_MARCOS.find(m => m.clase === fichaMarco) || FICHA_MARCOS[0]).nombre;
+    const mods = [];
+    if (retoqueOn) {
+        const n = retoquesFacturables(cant, adjuntosFicha.length, !!fichaSel.esCollage);
+        mods.push({ id: "retoque", nombre: "Retoque digital", cantidad: n, valor_unit: COSTO_RETOQUE, monto: n * COSTO_RETOQUE });
+    }
+    const partes = ["Marco " + marcoNombre];
+    partes.push(adjuntosFicha.length ? adjuntosFicha.length + " img adjuntas" : "sin foto (la definimos juntos)");
+    if (retoqueOn) partes.push("retoque digital");
+    carrito.push({
+        id: Date.now() + Math.random(),
+        tipo: "Cuadro",
+        sku: fichaSel.sku || "", producto: fichaSel.tipoLabel, variante: fichaSel.nombre + " · marco " + marcoNombre,
+        cant: cant, precioUnit: fichaSel.precio, mods: mods,
+        desc: fichaSel.tipoLabel + " " + fichaSel.nombre + " × " + cant,
+        detalle: partes.join(" · "),
+        subtotal: fichaSel.precio * cant + montoMods(mods),
+        aCotizar: false,
+        fotos: adjuntosFicha.slice()
+    });
+    adjuntosFicha = [];
+    actualizarBadges();
+    avisoAgregado();
+    mostrar("p-catalogo");
+}
 function guardarCliente() {
     const nombre = document.getElementById("in-nombre").value.trim();
     const telefono = document.getElementById("in-telefono").value.trim();
@@ -1684,7 +1988,9 @@ function guardarCliente() {
     if (!nombre || !telefono) { document.getElementById("error-cliente").classList.remove("oculto"); return; }
     document.getElementById("error-cliente").classList.add("oculto");
     cliente = { nombre, telefono, email };
-    mostrar(flujo === "eventos" ? "p-eventos" : "p-menu");
+    if (flujo === "eventos") { mostrar("p-eventos"); }
+    else if (intencionCatalogo) { const ic = intencionCatalogo; intencionCatalogo = null; aplicarIntencionCatalogo(ic); }
+    else { mostrar("p-menu"); }
 }
 
 /* =========================================================
@@ -2611,13 +2917,14 @@ function cerrarModalTexto() { document.getElementById("modal-texto").classList.a
 function quitarAdjunto(tipo, i) {
     if (tipo === "sim")  { adjuntosSim.splice(i, 1);  renderThumbs("thumbs-sim", adjuntosSim, "sim"); recalcularSim(); }
     if (tipo === "souv") { adjuntosSouv.splice(i, 1); renderThumbs("thumbs-souv", adjuntosSouv, "souv"); }
+    if (tipo === "ficha") { adjuntosFicha.splice(i, 1); renderThumbs("thumbs-ficha", adjuntosFicha, "ficha"); pintarFicha(); recalcularFicha(); }
 }
 
 /* =========================================================
    8) CARRITO Y ENVÍO
    ========================================================= */
 function actualizarBadges() {
-    ["badge-menu", "badge-cat", "badge-sim", "badge-souv", "badge-souv-2", "badge-taza"].forEach(id => {
+    ["badge-menu", "badge-cat", "badge-sim", "badge-souv", "badge-souv-2", "badge-taza", "badge-catalogo", "badge-ficha"].forEach(id => {
         const el = document.getElementById(id); if (el) el.innerText = carrito.length;
     });
 }
